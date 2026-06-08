@@ -647,5 +647,52 @@ function getInitialStudents() {
   ];
 }
 </script>
+  <div class="report-signature-container">
+    <div class="signature-col">
+        <p>ลงชื่อ..........................................................ครูเวร</p>
+        <p>(..........................................................)</p>
+        <p>ครูเวรประจำวัน</p>
+    </div>
+
+    <div class="signature-col">
+        <p>ลงชื่อ..........................................................ผู้ตรวจสอบ</p>
+        <p>( นายวิชชชาติ ยิ่งยงยุทธ )</p>
+        <p>ตำแหน่ง ผู้อำนวยการโรงเรียนบ้านรัตนะ</p>
+    </div>
+</div>
+
+<style>
+/* ซ่อนส่วนลายเซ็นไว้เมื่อดูบนหน้าจอปกติ (มือถือ/คอม) */
+.report-signature-container {
+    display: none;
+}
+
+/* แสดงผลและจัดทรงเฉพาะเวลาสั่งพิมพ์ (Print Preview / PDF) */
+@media print {
+    .report-signature-container {
+        display: block !important;
+        margin-top: 60px; /* ระยะห่างจากตารางรายงานด้านบน */
+        width: 100%;
+        clear: both;
+        page-break-inside: avoid; /* ป้องกันลายเซ็นโดนฉีกขาดแบ่งคนละหน้า */
+    }
+    
+    /* แบ่งพื้นที่เป็น 2 บล็อก ซ้าย-ขวา */
+    .signature-col {
+        float: left;
+        width: 50%; /* แบ่งคนละครึ่งหน้ากระดาษ */
+        text-align: center; /* จัดข้อความทุกบรรทัดให้อยู่กึ่งกลางของช่อง */
+        margin-bottom: 20px;
+    }
+    
+    /* ตั้งค่าตัวอักษรให้อ่านง่าย เป็นระเบียบ */
+    .signature-col p {
+        margin: 6px 0;
+        font-size: 16px; 
+        font-family: "Sarabun", "TH Sarabun PSK", sans-serif;
+        line-height: 1.8;
+    }
+}
+</style>
 </body>
 </html>
