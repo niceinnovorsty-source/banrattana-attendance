@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ระบบเช็คชื่อ โรงเรียนบ้านรัตนะ (Firebase Online)</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Sarabun',sans-serif;font-size:15px;background:#f5f4f0;color:#2C2C2A;min-height:100vh}
+.app{max-width:960px;margin:0 auto;padding:0 0 60px}
+.header{background:#fff;border-bottom:1px solid #D3D1C7;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;position:sticky;top:0;z-index:50}
+.school-name{font-size:17px;font-weight:600;color:#2C2C2A}
+.school-sub{font-size:12px;color:#888780;margin-top:1px}
+.logo-circle{width:38px;height:38px;border-radius:50%;background:#E1F5EE;display:flex;align-items:center;justify-content:center;font-size:18px;margin-right:10px}
+.header-left{display:flex;align-items:center}
+.today-display{font-size:13px;color:#5F5E5A;background:#F1EFE8;padding:5px 12px;border-radius:99px}
+.tabs{display:flex;background:#fff;border-bottom:1px solid #D3D1C7;padding:0 16px}
+.tab{padding:12px 18px;border-bottom:2.5px solid transparent;font-size:14px;cursor:pointer;color:#888780;font-weight:500;transition:all 0.15s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Sarabun',sans-serif}
+.tab:hover{color:#2C2C2A}
+.tab.active{color:#0F6E56;border-bottom-color:#1D9E75}
+.content{padding:18px 16px}
+.date-bar{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.date-bar label{font-size:13px;color:#5F5E5A;font-weight:500}
+input[type=date]{padding:7px 10px;border-radius:8px;border:1px solid #D3D1C7;font-size:13px;font-family:'Sarabun',sans-serif;background:#fff;color:#2C2C2A}
+input[type=text]{padding:7px 10px;border-radius:8px;border:1px solid #D3D1C7;font-size:13px;font-family:'Sarabun',sans-serif;background:#fff;color:#2C2C2A;width:100%}
+select{padding:7px 10px;border-radius:8px;border:1px solid #D3D1C7;font-size:13px;font-family:'Sarabun',sans-serif;background:#fff;color:#2C2C2A}
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:18px}
+.sum-card{background:#fff;border-radius:10px;padding:13px 14px;border:1px solid #D3D1C7}
+.sum-label{font-size:11px;color:#888780;margin-bottom:4px;font-weight:500}
+.sum-val{font-size:24px;font-weight:600}
+.sum-sub{font-size:11px;color:#888780;margin-top:1px}
+.class-grid{display:flex;flex-direction:column;gap:10px}
+.class-card{background:#fff;border:1px solid #D3D1C7;border-radius:10px;overflow:hidden}
+.class-header{padding:11px 14px;display:flex;align-items:center;justify-content:space-between;background:#F1EFE8;cursor:pointer;user-select:none}
+.class-title{font-size:14px;font-weight:600;color:#2C2C2A}
+.class-stats{display:flex;gap:6px;flex-wrap:wrap}
+.stat-badge{padding:2px 9px;border-radius:99px;font-size:12px;font-weight:500}
+.s-green{background:#E1F5EE;color:#0F6E56}
+.s-amber{background:#FAEEDA;color:#854F0B}
+.s-red{background:#FCEBEB;color:#A32D2D}
+.s-blue{background:#E6F1FB;color:#185FA5}
+.student-table{width:100%;border-collapse:collapse;font-size:13px}
+.student-table th{padding:8px 12px;text-align:left;color:#5F5E5A;font-weight:500;font-size:12px;border-bottom:1px solid #D3D1C7;background:#F1EFE8}
+.student-table td{padding:8px 12px;border-bottom:1px solid #D3D1C7;vertical-align:middle}
+.student-table tr:last-child td{border-bottom:none}
+.student-table tr:hover td{background:#F1EFE8}
+.att-btns{display:flex;gap:4px;flex-wrap:wrap}
+.att-btn{padding:4px 11px;border-radius:99px;border:1px solid #D3D1C7;font-size:12px;cursor:pointer;background:transparent;color:#888780;font-family:'Sarabun',sans-serif;transition:all 0.12s}
+.att-btn:hover{background:#F1EFE8}
+.att-btn.sel-มา{background:#E1F5EE;color:#0F6E56;border-color:#5DCAA5;font-weight:600}
+.att-btn.sel-สาย{background:#FAEEDA;color:#854F0B;border-color:#FAC775;font-weight:600}
+.att-btn.sel-ขาด{background:#FCEBEB;color:#A32D2D;border-color:#F09995;font-weight:600}
+.att-btn.sel-ลาป่วย{background:#E6F1FB;color:#185FA5;border-color:#85B7EB;font-weight:600}
+.gender-badge{font-size:11px;padding:2px 7px;border-radius:99px}
+.m-badge{background:#E6F1FB;color:#185FA5}
+.f-badge{background:#FBEAF0;color:#993556}
+.btn-primary{padding:8px 16px;border-radius:8px;border:none;background:#1D9E75;color:#fff;font-size:13px;cursor:pointer;font-family:'Sarabun',sans-serif;font-weight:500;transition:background 0.15s}
+.btn-primary:hover{background:#0F6E56}
+.btn-danger{padding:5px 10px;border-radius:8px;border:none;background:#FCEBEB;color:#A32D2D;font-size:12px;cursor:pointer;font-family:'Sarabun',sans-serif}
+.btn-danger:hover{background:#F7C1C1}
+.btn-edit{padding:5px 10px;border-radius:8px;border:1px solid #D3D1C7;background:#fff;color:#5F5E5A;font-size:12px;cursor:pointer;font-family:'Sarabun',sans-serif}
+.btn-edit:hover{background:#F1EFE8}
+.btn-print{padding:8px 16px;border-radius:8px;border:1px solid #D3D1C7;background:#fff;color:#2C2C2A;font-size:13px;cursor:pointer;font-family:'Sarabun',sans-serif;font-weight:500}
+.btn-print:hover{background:#F1EFE8}
+.action-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.section{display:none}
+.section.active{display:block}
+
+/* Report table */
+.report-table{width:100%;border-collapse:collapse;font-size:13px;background:#fff}
+.report-table th,.report-table td{border:1px solid #D3D1C7;padding:8px 10px;text-align:center}
+.report-table th{background:#F1EFE8;font-weight:500;color:#5F5E5A;font-size:12px}
+.report-table .class-col{text-align:left;font-weight:500;color:#2C2C2A}
+.report-table tfoot td{font-weight:600;background:#E1F5EE;color:#0F6E56}
+.report-wrap{background:#fff;border:1px solid #D3D1C7;border-radius:10px;padding:16px;overflow-x:auto}
+
+/* Modal */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:12px;border:1px solid #D3D1C7;padding:22px;width:360px;max-width:95vw}
+.modal h3{font-size:15px;font-weight:600;margin-bottom:16px;color:#2C2C2A}
+.form-row{margin-bottom:12px}
+.form-row label{display:block;font-size:12px;color:#5F5E5A;margin-bottom:4px;font-weight:500}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+.btn-cancel{padding:8px 16px;border-radius:8px;border:1px solid #D3D1C7;background:#fff;color:#5F5E5A;font-size:13px;cursor:pointer;font-family:'Sarabun',sans-serif}
+
+/* Notice box */
+.notice{background:#E1F5EE;border:1px solid #5DCAA5;border-radius:8px;padding:12px 14px;font-size:13px;color:#0F6E56;margin-bottom:14px;line-height:1.6}
+.notice strong{font-weight:600}
+
+/* PRINT */
+@media print {
+  .no-print{display:none!important}
+  .header{position:static;box-shadow:none}
+  .app{max-width:100%;padding:0}
+  body{background:#fff}
+  .report-wrap{border:none;padding:0}
+  .print-header{display:block!important}
+  .section{display:block!important}
+  #tab-attendance,#tab-students{display:none!important}
+  #tab-report{display:block!important}
+  .tabs{display:none}
+  .action-bar{display:none}
+}
+.print-header{display:none;text-align:center;margin-bottom:16px}
+.print-header h2{font-size:16px;font-weight:600}
+.print-header p{font-size:13px;color:#5F5E5A;margin-top:4px}
+
+/* Student list table */
+.stu-list-table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:10px;overflow:hidden;border:1px solid #D3D1C7}
+.stu-list-table th{padding:8px 12px;text-align:left;color:#5F5E5A;font-weight:500;font-size:12px;border-bottom:1px solid #D3D1C7;background:#F1EFE8}
+.stu-list-table td{padding:8px 12px;border-bottom:1px solid #D3D1C7;vertical-align:middle}
+.stu-list-table tr:last-child td{border-bottom:none}
+.stu-list-table tr:hover td{background:#F1EFE8}
+
+.toggle-btn{font-size:16px;color:#888780;margin-left:8px}
+.save-notice{font-size:12px;color:#0F6E56;margin-left:8px;opacity:0;transition:opacity 0.4s}
+.save-notice.show{opacity:1}
+.loading-overlay{position:fixed;inset:0;background:rgba(255,255,255,0.7);display:flex;align-items:center;justify-content:center;z-index:9999;font-weight:600;color:#0F6E56}
+</style>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+  // ใส่ค่าคอนฟิก Firebase ของโรงเรียนบ้านรัตนะที่ได้รับมาเรียบร้อยแล้ว
+  const firebaseConfig = {
+    apiKey: "AIzaSyCR3L7HpslKdRN4MYcfUxyeTXIiGLx6Rho",
+    authDomain: "rattana-658c6.firebaseapp.com",
+    projectId: "rattana-658c6",
+    storageBucket: "rattana-658c6.firebasestorage.app",
+    messagingSenderId: "246780523649",
+    appId: "1:246780523649:web:5f6d6d9e562d5a9caa4980",
+    measurementId: "G-SN49D89H8D"
+  };
+
+  // Initialize Firebase
+  const firebaseApp = initializeApp(firebaseConfig);
+  const db = getFirestore(firebaseApp);
+
+  // ส่งข้อมูลออกไปที่ global scope เพื่อทำงานร่วมกับระบบ HTML ด้านล่าง
+  window.db = db;
+  window.fbDoc = doc;
+  window.fbGetDoc = getDoc;
+  window.fbSetDoc = setDoc;
+  window.fbOnSnapshot = onSnapshot;
+  window.fbCollection = collection;
+  
+  // สั่งเริ่มต้นระบบงานหลัก
+  window.initFirebaseSystem();
+</script>
+</head>
+<body>
+
+<div id="loading" class="loading-overlay">⏳ กำลังเชื่อมต่อฐานข้อมูลออนไลน์ Real-time...</div>
+
+<div class="app">
+
+<div class="header">
+  <div class="header-left">
+    <div class="logo-circle">🏫</div>
+    <div>
+      <div class="school-name">โรงเรียนบ้านรัตนะ</div>
+      <div class="school-sub">ระบบเช็คชื่อนักเรียนรายวัน (ระบบคลาวด์ออนไลน์)</div>
+    </div>
+  </div>
+  <div id="today-display" class="today-display"></div>
+</div>
+
+<div class="tabs no-print">
+  <button class="tab active" onclick="switchTab('attendance',this)">📋 เช็คชื่อ</button>
+  <button class="tab" onclick="switchTab('report',this)">📊 รายงาน</button>
+  <button class="tab" onclick="switchTab('students',this)">👥 จัดการนักเรียน</button>
+</div>
+
+<div id="tab-attendance" class="section active">
+<div class="content">
+  <div class="date-bar">
+    <label>📅 วันที่เช็คชื่อ</label>
+    <input type="date" id="att-date" onchange="renderAttendance()">
+    <span class="save-notice" id="save-notice">✓ อัพเดทข้อมูลลงคลาวด์แล้ว Real-time</span>
+  </div>
+  <div class="summary-grid" id="att-summary"></div>
+  <div class="class-grid" id="class-list"></div>
+</div>
+</div>
+
+<div id="tab-report" class="section">
+<div class="content">
+  <div class="print-header">
+    <h2>โรงเรียนบ้านรัตนะ</h2>
+    <p id="print-date-label"></p>
+  </div>
+  <div class="action-bar no-print">
+    <div class="date-bar" style="margin:0">
+      <label>📅 วันที่</label>
+      <input type="date" id="rep-date" onchange="renderReport()">
+    </div>
+    <button class="btn-print" onclick="window.print()">🖨️ พิมพ์รายงาน</button>
+  </div>
+  <div class="report-wrap">
+    <div id="report-content"></div>
+  </div>
+</div>
+</div>
+
+<div id="tab-students" class="section">
+<div class="content">
+  <div class="notice">
+    <strong>✨ ระบบออนไลน์พร้อมใช้งาน:</strong> ข้อมูลนักเรียนและการเช็คชื่อทั้งหมดถูกบันทึกบน Firebase Firestore แล้ว คุณครูและผู้บริหารสามารถเปิดใช้งานไฟล์นี้จากมือถือหรือคอมพิวเตอร์พร้อมๆ กันได้ทันที ข้อมูลจะอัพเดทตรงกันแบบ Real-time ครับ
+  </div>
+  <div class="action-bar">
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <select id="class-filter" onchange="renderStudentList()"></select>
+      <span id="stu-count" style="font-size:13px;color:#888780"></span>
+    </div>
+    <button class="btn-primary" onclick="openAddModal()">+ เพิ่มนักเรียน</button>
+  </div>
+  <div id="student-list"></div>
+</div>
+</div>
+
+</div><div class="modal-bg" id="student-modal">
+  <div class="modal">
+    <h3 id="modal-title">เพิ่มนักเรียนใหม่</h3>
+    <div class="form-row">
+      <label>ชื่อ-นามสกุล</label>
+      <input type="text" id="s-name" placeholder="เช่น เด็กชาย สมชาย ใจดี">
+    </div>
+    <div class="form-row">
+      <label>เพศ</label>
+      <select id="s-gender" style="width:100%">
+        <option value="ชาย">ชาย</option>
+        <option value="หญิง">หญิง</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label>ชั้น</label>
+      <select id="s-class" style="width:100%"></select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">ยกเลิก</button>
+      <button class="btn-primary" onclick="saveStudent()">💾 บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const CLASSES = ['อนุบาล 1','อนุบาล 2','อนุบาล 3','ป.1','ป.2','ป.3','ป.4','ป.5','ป.6'];
+const STATUS = ['มา','สาย','ขาด','ลาป่วย'];
+
+let students = [];
+let attendance = {}; 
+let editingId = null;
+let unsubStudents = null;
+let unsubAttendance = null;
+
+window.initFirebaseSystem = function() {
+  initSelects();
+  const d = todayStr();
+  document.getElementById('att-date').value = d;
+  document.getElementById('rep-date').value = d;
+  document.getElementById('today-display').textContent =
+    new Date().toLocaleDateString('th-TH',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+
+  // ซิงค์รายชื่อนักเรียนจากคลาวด์สม่ำเสมอ
+  unsubStudents = window.fbOnSnapshot(window.fbDoc(window.db, "school_data", "students_list"), (docSnap) => {
+    if (docSnap.exists()) {
+      students = docSnap.data().list || [];
+    } else {
+      students = getInitialStudents();
+      window.fbSetDoc(window.fbDoc(window.db, "school_data", "students_list"), { list: students });
+    }
+    document.getElementById('loading').style.display = 'none';
+    renderAttendance();
+    renderStudentList();
+  });
+
+  // ซิงค์ประวัติการมาเรียนตามเวลาจริง
+  unsubAttendance = window.fbOnSnapshot(window.fbDoc(window.db, "school_data", "attendance_records"), (docSnap) => {
+    if (docSnap.exists()) {
+      attendance = docSnap.data().records || {};
+    } else {
+      attendance = {};
+    }
+    renderAttendance();
+    if(document.getElementById('tab-report').classList.contains('active')) renderReport();
+  });
+}
+
+function todayStr(){
+  return new Date().toISOString().slice(0,10);
+}
+
+function getAtt(date, sid){
+  return (attendance[date] && attendance[date][sid]) || '';
+}
+
+async function markAtt(e, date, sid, status){
+  if(!attendance[date]) attendance[date] = {};
+  attendance[date][sid] = status;
+  
+  showSaveNotice();
+  
+  try {
+    await window.fbSetDoc(window.fbDoc(window.db, "school_data", "attendance_records"), { records: attendance });
+  } catch(err) {
+    console.error("Firebase save error:", err);
+  }
+}
+
+function showSaveNotice() {
+  const n = document.getElementById('save-notice');
+  n.classList.add('show');
+  setTimeout(() => n.classList.remove('show'), 1500);
+}
+
+function switchTab(t, btn){
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-'+t).classList.add('active');
+  btn.classList.add('active');
+  if(t === 'report') renderReport();
+  if(t === 'students') renderStudentList();
+}
+
+function renderAttendance(){
+  const date = document.getElementById('att-date').value || todayStr();
+  document.getElementById('att-date').value = date;
+
+  const byClass = {};
+  CLASSES.forEach(c => { byClass[c] = students.filter(s => s.cls === c); });
+
+  let counts = {มา:0,สาย:0,ขาด:0,ลาป่วย:0};
+  let total = students.length;
+  students.forEach(s => {
+    const st = getAtt(date, s.id);
+    if(counts[st] !== undefined) counts[st]++;
+  });
+
+  document.getElementById('att-summary').innerHTML = `
+    <div class="sum-card"><div class="sum-label">นักเรียนทั้งหมด</div><div class="sum-val">${total}</div><div class="sum-sub">คน</div></div>
+    <div class="sum-card"><div class="sum-label" style="color:#0F6E56">✅ มาเรียน</div><div class="sum-val" style="color:#0F6E56">${counts['มา']}</div><div class="sum-sub">คน</div></div>
+    <div class="sum-card"><div class="sum-label" style="color:#854F0B">⏰ มาสาย</div><div class="sum-val" style="color:#854F0B">${counts['สาย']}</div><div class="sum-sub">คน</div></div>
+    <div class="sum-card"><div class="sum-label" style="color:#A32D2D">❌ ขาดเรียน</div><div class="sum-val" style="color:#A32D2D">${counts['ขาด']}</div><div class="sum-sub">คน</div></div>
+    <div class="sum-card"><div class="sum-label" style="color:#185FA5">🏥 ลาป่วย</div><div class="sum-val" style="color:#185FA5">${counts['ลาป่วย']}</div><div class="sum-sub">คน</div></div>
+    <div class="sum-card"><div class="sum-label" style="color:#888780">ยังไม่เช็ค</div><div class="sum-val" style="color:#888780">${total - counts['มา'] - counts['สาย'] - counts['ขาด'] - counts['ลาป่วย']}</div><div class="sum-sub">คน</div></div>
+  `;
+
+  let html = '';
+  CLASSES.forEach(cls => {
+    const ss = byClass[cls];
+    if(!ss || !ss.length) return;
+    const c2 = {มา:0,สาย:0,ขาด:0,ลาป่วย:0};
+    ss.forEach(s => { const st = getAtt(date, s.id); if(c2[st] !== undefined) c2[st]++; });
+    const safeId = 'cls-' + cls.replace(/\s/g,'_');
+    html += `
+    <div class="class-card">
+      <div class="class-header" onclick="toggleCls('${safeId}',this)">
+        <span class="class-title">${cls} <span style="font-weight:400;color:#888780;font-size:12px">(${ss.length} คน)</span></span>
+        <div style="display:flex;align-items:center;gap:6px">
+          <div class="class-stats">
+            <span class="stat-badge s-green">มา ${c2['มา']}</span>
+            <span class="stat-badge s-amber">สาย ${c2['สาย']}</span>
+            <span class="stat-badge s-red">ขาด ${c2['ขาด']}</span>
+            <span class="stat-badge s-blue">ลา ${c2['ลาป่วย']}</span>
+          </div>
+          <span class="toggle-btn" id="${safeId}-arrow">▼</span>
+        </div>
+      </div>
+      <div id="${safeId}">
+        <table class="student-table">
+          <thead><tr><th style="width:36px">#</th><th>ชื่อ-นามสกุล</th><th style="width:60px">เพศ</th><th>สถานะ</th></tr></thead>
+          <tbody>
+            ${ss.map((s,i) => {
+              const cur = getAtt(date, s.id);
+              return `<tr>
+                <td style="color:#888780;text-align:center">${i+1}</td>
+                <td>${s.name}</td>
+                <td><span class="gender-badge ${s.gender==='ชาย'?'m-badge':'f-badge'}">${s.gender}</span></td>
+                <td>
+                  <div class="att-btns">
+                    ${STATUS.map(st => `<button class="att-btn ${cur===st?'sel-'+st:''}" onclick="markAtt(event,'${date}','${s.id}','${st}')">${st}</button>`).join('')}
+                  </div>
+                </td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+  });
+  document.getElementById('class-list').innerHTML = html;
+}
+
+function toggleCls(id, header){
+  const el = document.getElementById(id);
+  const arrow = document.getElementById(id+'-arrow');
+  if(!el) return;
+  const hidden = el.style.display === 'none';
+  el.style.display = hidden ? 'block' : 'none';
+  if(arrow) arrow.textContent = hidden ? '▼' : '▶';
+}
+
+function renderReport(){
+  const date = document.getElementById('rep-date').value || todayStr();
+  document.getElementById('rep-date').value = date;
+  const thDate = new Date(date+'T00:00:00').toLocaleDateString('th-TH',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('print-date-label').textContent = 'รายงานการมาเรียนประจำวัน ' + thDate;
+
+  let rows = '';
+  let tM=0,tF=0,tAll=0,tMam=0,tMaf=0,tMa=0,tSai=0,tKhad=0,tLa=0;
+
+  CLASSES.forEach(cls => {
+    const ss = students.filter(s => s.cls === cls);
+    if(!ss.length) return;
+    const males = ss.filter(s => s.gender==='ชาย');
+    const females = ss.filter(s => s.gender==='หญิง');
+    let ma_m=0,ma_f=0,sai=0,khad=0,la=0;
+    ss.forEach(s => {
+      const st = getAtt(date, s.id);
+      if(st==='มา'){ if(s.gender==='ชาย') ma_m++; else ma_f++; }
+      else if(st==='สาย') sai++;
+      else if(st==='ขาด') khad++;
+      else if(st==='ลาป่วย') la++;
+    });
+    const ma = ma_m + ma_f;
+    tM+=males.length; tF+=females.length; tAll+=ss.length;
+    tMam+=ma_m; tMaf+=ma_f; tMa+=ma; tSai+=sai; tKhad+=khad; tLa+=la;
+    rows += `<tr>
+      <td class="class-col">${cls}</td>
+      <td>${males.length}</td><td>${females.length}</td><td><strong>${ss.length}</strong></td>
+      <td style="color:#0F6E56">${ma_m}</td>
+      <td style="color:#993556">${ma_f}</td>
+      <td style="color:#0F6E56"><strong>${ma}</strong></td>
+      <td style="color:#854F0B">${sai}</td>
+      <td style="color:#A32D2D">${khad}</td>
+      <td style="color:#185FA5">${la}</td>
+    </tr>`;
+  });
+
+  document.getElementById('report-content').innerHTML = `
+    <p style="font-size:13px;color:#5F5E5A;margin-bottom:12px;font-weight:500">วันที่ ${thDate}</p>
+    <table class="report-table">
+      <thead>
+        <tr>
+          <th rowspan="2" class="class-col" style="text-align:left;min-width:90px">ชั้น</th>
+          <th colspan="3" style="background:#D3D1C7">จำนวนนักเรียนทั้งหมด</th>
+          <th colspan="3" style="background:#9FE1CB;color:#0F6E56">มาเรียนวันนี้</th>
+          <th rowspan="2" style="color:#854F0B">มาสาย</th>
+          <th rowspan="2" style="color:#A32D2D">ขาด</th>
+          <th rowspan="2" style="color:#185FA5">ลาป่วย</th>
+        </tr>
+        <tr>
+          <th>ชาย</th><th>หญิง</th><th>รวม</th>
+          <th style="color:#185FA5">ชาย</th><th style="color:#993556">หญิง</th><th style="color:#0F6E56">รวม</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+      <tfoot>
+        <tr>
+          <td class="class-col">รวมทั้งโรงเรียน</td>
+          <td>${tM}</td><td>${tF}</td><td>${tAll}</td>
+          <td>${tMam}</td><td>${tMaf}</td><td>${tMa}</td>
+          <td>${tSai}</td><td>${tKhad}</td><td>${tLa}</td>
+        </tr>
+      </tfoot>
+    </table>
+    <p style="font-size:11px;color:#888780;margin-top:10px;text-align:right">พิมพ์เมื่อ: ${new Date().toLocaleString('th-TH')}</p>
+  `;
+}
+
+function renderStudentList(){
+  const filter = document.getElementById('class-filter').value;
+  const sel = filter ? students.filter(s => s.cls === filter) : students;
+  document.getElementById('stu-count').textContent = `(${sel.length} คน)`;
+  let html = `<table class="stu-list-table">
+    <thead><tr><th>#</th><th>ชื่อ-นามสกุล</th><th>เพศ</th><th>ชั้น</th><th>จัดการ</th></tr></thead>
+    <tbody>
+    ${sel.map((s,i) => `<tr>
+      <td style="color:#888780;text-align:center;width:36px">${i+1}</td>
+      <td>${s.name}</td>
+      <td><span class="gender-badge ${s.gender==='ชาย'?'m-badge':'f-badge'}">${s.gender}</span></td>
+      <td>${s.cls}</td>
+      <td style="display:flex;gap:6px">
+        <button class="btn-edit" onclick="openEditModal('${s.id}')">✏️ แก้ไข</button>
+        <button class="btn-danger" onclick="deleteStudent('${s.id}')">🗑️</button>
+      </td>
+    </tr>`).join('')}
+    </tbody>
+  </table>`;
+  document.getElementById('student-list').innerHTML = html;
+}
+
+function openAddModal(){
+  editingId = null;
+  document.getElementById('modal-title').textContent = 'เพิ่มนักเรียนใหม่';
+  document.getElementById('s-name').value = '';
+  document.getElementById('s-gender').value = 'ชาย';
+  document.getElementById('s-class').value = CLASSES[0];
+  document.getElementById('student-modal').classList.add('open');
+}
+
+function openEditModal(id){
+  editingId = id;
+  const s = students.find(x => x.id === id);
+  if(!s) return;
+  document.getElementById('modal-title').textContent = 'แก้ไขข้อมูลนักเรียน';
+  document.getElementById('s-name').value = s.name;
+  document.getElementById('s-gender').value = s.gender;
+  document.getElementById('s-class').value = s.cls;
+  document.getElementById('student-modal').classList.add('open');
+}
+
+function closeModal(){
+  document.getElementById('student-modal').classList.remove('open');
+}
+
+async function saveStudent(){
+  const name = document.getElementById('s-name').value.trim();
+  const gender = document.getElementById('s-gender').value;
+  const cls = document.getElementById('s-class').value;
+  if(!name){ alert('กรุณากรอกชื่อนักเรียน'); return; }
+  
+  if(editingId){
+    const idx = students.findIndex(s => s.id === editingId);
+    if(idx >= 0) students[idx] = {...students[idx], name, gender, cls};
+  } else {
+    students.push({ id:'s'+Date.now(), name, gender, cls });
+  }
+  
+  closeModal();
+  renderStudentList();
+  
+  await window.fbSetDoc(window.fbDoc(window.db, "school_data", "students_list"), { list: students });
+}
+
+async function deleteStudent(id){
+  const s = students.find(x => x.id === id);
+  if(!s) return;
+  if(!confirm(`ยืนยันการลบ\n"${s.name}"\nออกจากระบบคลาวด์?`)) return;
+  students = students.filter(x => x.id !== id);
+  renderStudentList();
+  
+  await window.fbSetDoc(window.fbDoc(window.db, "school_data", "students_list"), { list: students });
+}
+
+function initSelects(){
+  const opts = CLASSES.map(c => `<option value="${c}">${c}</option>`).join('');
+  document.getElementById('s-class').innerHTML = opts;
+  document.getElementById('class-filter').innerHTML = `<option value="">ทุกชั้นเรียน</option>` + opts;
+}
+
+function getInitialStudents() {
+  return [
+    {id:'s001',name:'เด็กชาย ณัฐพล สุขใจ',gender:'ชาย',cls:'อนุบาล 1'},
+    {id:'s002',name:'เด็กชาย ภานุพงศ์ ทองดี',gender:'ชาย',cls:'อนุบาล 1'},
+    {id:'s003',name:'เด็กชาย วรินทร์ มีสุข',gender:'ชาย',cls:'อนุบาล 1'},
+    {id:'s004',name:'เด็กชาย อภิสิทธิ์ แก้วใส',gender:'ชาย',cls:'อนุบาล 1'},
+    {id:'s005',name:'เด็กชาย ปิยะ ศรีสวัสดิ์',gender:'ชาย',cls:'อนุบาล 1'},
+    {id:'s006',name:'เด็กหญิง สุมิตรา พลอยงาม',gender:'หญิง',cls:'อนุบาล 1'},
+    {id:'s007',name:'เด็กหญิง ปณิตา วงศ์สว่าง',gender:'หญิง',cls:'อนุบาล 1'},
+    {id:'s008',name:'เด็กหญิง กัญญารัตน์ บุญมาก',gender:'หญิง',cls:'อนุบาล 1'},
+    {id:'s009',name:'เด็กหญิง ณัฐธิดา รักษาดี',gender:'หญิง',cls:'อนุบาล 1'},
+    {id:'s010',name:'เด็กหญิง วรรณิสา จันทร์เพ็ญ',gender:'หญิง',cls:'อนุบาล 1'},
+    {id:'s011',name:'เด็กชาย ชยพล รุ่งเรือง',gender:'ชาย',cls:'อนุบาล 2'},
+    {id:'s012',name:'เด็กชาย ธีรภัทร นาคประดิษฐ์',gender:'ชาย',cls:'อนุบาล 2'},
+    {id:'s013',name:'เด็กชาย ปัณณวิชญ์ สมศรี',gender:'ชาย',cls:'อนุบาล 2'},
+    {id:'s014',name:'เด็กชาย รัฐกร เมืองแก้ว',gender:'ชาย',cls:'อนุบาล 2'},
+    {id:'s015',name:'เด็กชาย สิทธิชัย ภูมิดี',gender:'ชาย',cls:'อนุบาล 2'},
+    {id:'s016',name:'เด็กหญิง อรนุช ชาติเจริญ',gender:'หญิง',cls:'อนุบาล 2'},
+    {id:'s017',name:'เด็กหญิง ทิพวรรณ ปัญญาดี',gender:'หญิง',cls:'อนุบาล 2'},
+    {id:'s018',name:'เด็กหญิง มนัสนันท์ สุขสำราญ',gender:'หญิง',cls:'อนุบาล 2'},
+    {id:'s019',name:'เด็กหญิง ลลิตา บุปผาชาติ',gender:'หญิง',cls:'อนุบาล 2'},
+    {id:'s020',name:'เด็กหญิง สิริวิมล แสงทอง',gender:'หญิง',cls:'อนุบาล 2'},
+    {id:'s021',name:'เด็กชาย กรวิชญ์ ดอกไม้งาม',gender:'ชาย',cls:'อนุบาล 3'},
+    {id:'s022',name:'เด็กชาย จิรายุ ลือชัย',gender:'ชาย',cls:'อนุบาล 3'},
+    {id:'s023',name:'เด็กชาย นันทกร ศรีเมือง',gender:'ชาย',cls:'อนุบาล 3'},
+    {id:'s024',name:'เด็กชาย พีรพัฒน์ ใจดี',gender:'ชาย',cls:'อนุบาล 3'},
+    {id:'s025',name:'เด็กชาย วัชระ มั่นคง',gender:'ชาย',cls:'อนุบาล 3'},
+    {id:'s026',name:'เด็กหญิง กนกวรรณ พรหมดี',gender:'หญิง',cls:'อนุบาล 3'},
+    {id:'s027',name:'เด็กหญิง จุฑามาศ เพชรงาม',gender:'หญิง',cls:'อนุบาล 3'},
+    {id:'s028',name:'เด็กหญิง นภสร ฟ้าใส',gender:'หญิง',cls:'อนุบาล 3'},
+    {id:'s029',name:'เด็กหญิง พิมพ์ชนก วิชัย',gender:'หญิง',cls:'อนุบาล 3'},
+    {id:'s030',name:'เด็กหญิง ศิริพร บุญประเสริฐ',gender:'หญิง',cls:'อนุบาล 3'},
+    {id:'s031',name:'เด็กชาย กษิดิ์เดช บุญส่ง',gender:'ชาย',cls:'ป.1'},
+    {id:'s032',name:'เด็กชาย ชนาธิป สว่างศรี',gender:'ชาย',cls:'ป.1'},
+    {id:'s033',name:'เด็กชาย ธนกร ดีงาม',gender:'ชาย',cls:'ป.1'},
+    {id:'s034',name:'เด็กชาย ปวริศ หาญกล้า',gender:'ชาย',cls:'ป.1'},
+    {id:'s035',name:'เด็กชาย ภูมิพัฒน์ สุขสม',gender:'ชาย',cls:'ป.1'},
+    {id:'s036',name:'เด็กหญิง กุลนิษฐ์ จงดี',gender:'หญิง',cls:'ป.1'},
+    {id:'s037',name:'เด็กหญิง ชนิกานต์ รัตนมณี',gender:'หญิง',cls:'ป.1'},
+    {id:'s038',name:'เด็กหญิง ธัญญลักษณ์ บำรุงรักษ์',gender:'หญิง',cls:'ป.1'},
+    {id:'s039',name:'เด็กหญิง ปาริชาติ ผลดี',gender:'หญิง',cls:'ป.1'},
+    {id:'s040',name:'เด็กหญิง ภาวิณี ตั้งใจ',gender:'หญิง',cls:'ป.1'},
+    {id:'s041',name:'เด็กชาย กันต์ธีร์ พูลสุข',gender:'ชาย',cls:'ป.2'},
+    {id:'s042',name:'เด็กชาย จักรพรรดิ ดีมาก',gender:'ชาย',cls:'ป.2'},
+    {id:'s043',name:'เด็กชาย ณัฐวัฒน์ เจริญพร',gender:'ชาย',cls:'ป.2'},
+    {id:'s044',name:'เด็กชาย ภัทรพล คงมั่น',gender:'ชาย',cls:'ป.2'},
+    {id:'s045',name:'เด็กชาย อานุภาพ ทรงชัย',gender:'ชาย',cls:'ป.2'},
+    {id:'s046',name:'เด็กหญิง กมลชนก อุ่นใจ',gender:'หญิง',cls:'ป.2'},
+    {id:'s047',name:'เด็กหญิง ณัฏฐณิชา สมหวัง',gender:'หญิง',cls:'ป.2'},
+    {id:'s048',name:'เด็กหญิง นวรัตน์ แสนดี',gender:'หญิง',cls:'ป.2'},
+    {id:'s049',name:'เด็กหญิง พัชราภรณ์ สุขสวัสดิ์',gender:'หญิง',cls:'ป.2'},
+    {id:'s050',name:'เด็กหญิง รุจิรา งามดี',gender:'หญิง',cls:'ป.2'},
+    {id:'s051',name:'เด็กชาย กิตติภูมิ มีทรัพย์',gender:'ชาย',cls:'ป.3'},
+    {id:'s052',name:'เด็กชาย ชัยวัฒน์ บุญมี',gender:'ชาย',cls:'ป.3'},
+    {id:'s053',name:'เด็กชาย ธัชพล เสถียร',gender:'ชาย',cls:'ป.3'},
+    {id:'s054',name:'เด็กชาย นันทวัฒน์ วงศ์งาม',gender:'ชาย',cls:'ป.3'},
+    {id:'s055',name:'เด็กชาย รุ่งโรจน์ ขยันดี',gender:'ชาย',cls:'ป.3'},
+    {id:'s056',name:'เด็กหญิง กัลยกร สมใจ',gender:'หญิง',cls:'ป.3'},
+    {id:'s057',name:'เด็กหญิง จิรนันท์ ยิ้มงาม',gender:'หญิง',cls:'ป.3'},
+    {id:'s058',name:'เด็กหญิง ณิชาภัทร เพียรดี',gender:'หญิง',cls:'ป.3'},
+    {id:'s059',name:'เด็กหญิง ปิยะฉัตร รักเรียน',gender:'หญิง',cls:'ป.3'},
+    {id:'s060',name:'เด็กหญิง สิรามล โชคดี',gender:'หญิง',cls:'ป.3'},
+    {id:'s061',name:'เด็กชาย กฤษณะ พันธ์งาม',gender:'ชาย',cls:'ป.4'},
+    {id:'s062',name:'เด็กชาย ชาญวิทย์ สุขประเสริฐ',gender:'ชาย',cls:'ป.4'},
+    {id:'s063',name:'เด็กชาย ทักษิณ ดำรงชัย',gender:'ชาย',cls:'ป.4'},
+    {id:'s064',name:'เด็กชาย ปฏิพัทธ์ ชัยมงคล',gender:'ชาย',cls:'ป.4'},
+    {id:'s065',name:'เด็กชาย วิทวัส เกษตรดี',gender:'ชาย',cls:'ป.4'},
+    {id:'s066',name:'เด็กหญิง กัญชพร อรุณงาม',gender:'หญิง',cls:'ป.4'},
+    {id:'s067',name:'เด็กหญิง จุฑาทิพย์ ฝึกฝน',gender:'หญิง',cls:'ป.4'},
+    {id:'s068',name:'เด็กหญิง ณัชชา บุญเรือง',gender:'หญิง',cls:'ป.4'},
+    {id:'s069',name:'เด็กหญิง ปวีณา สมบูรณ์ดี',gender:'หญิง',cls:'ป.4'},
+    {id:'s070',name:'เด็กหญิง สุภาพร ใจงาม',gender:'หญิง',cls:'ป.4'},
+    {id:'s071',name:'เด็กชาย กิตติ์ธเนศ แสงวิไล',gender:'ชาย',cls:'ป.5'},
+    {id:'s072',name:'เด็กชาย จิรพงศ์ สุดดี',gender:'ชาย',cls:'ป.5'},
+    {id:'s073',name:'เด็กชาย ณัฐภัทร วานิช',gender:'ชาย',cls:'ป.5'},
+    {id:'s074',name:'เด็กชาย ปัณณทัต บุญเลิศ',gender:'ชาย',cls:'ป.5'},
+    {id:'s075',name:'เด็กชาย ยุทธนา ศรีทอง',gender:'ชาย',cls:'ป.5'},
+    {id:'s076',name:'เด็กหญิง กนกพร มั่งมี',gender:'หญิง',cls:'ป.5'},
+    {id:'s077',name:'เด็กหญิง ชุติกาญจน์ สง่างาม',gender:'หญิง',cls:'ป.5'},
+    {id:'s078',name:'เด็กหญิง นิลุบล เจริญสุข',gender:'หญิง',cls:'ป.5'},
+    {id:'s079',name:'เด็กหญิง พิชามญชุ์ วิทยาดี',gender:'หญิง',cls:'ป.5'},
+    {id:'s080',name:'เด็กหญิง วิชุดา ผ่องแผ้ว',gender:'หญิง',cls:'ป.5'},
+    {id:'s081',name:'เด็กชาย กานต์ดนัย พลทวี',gender:'ชาย',cls:'ป.6'},
+    {id:'s082',name:'เด็กชาย จักรกฤษณ์ เสนงาม',gender:'ชาย',cls:'ป.6'},
+    {id:'s083',name:'เด็กชาย ทัศน์พล กลั่นดี',gender:'ชาย',cls:'ป.6'},
+    {id:'s084',name:'เด็กชาย ธีรวัฒน์ นิลดำ',gender:'ชาย',cls:'ป.6'},
+    {id:'s085',name:'เด็กชาย ภาสกร พานิช',gender:'ชาย',cls:'ป.6'},
+    {id:'s086',name:'เด็กหญิง กมลพรรณ เอี่ยมสะอาด',gender:'หญิง',cls:'ป.6'},
+    {id:'s087',name:'เด็กหญิง ชนัญธิดา สุขสม',gender:'หญิง',cls:'ป.6'},
+    {id:'s088',name:'เด็กหญิง ธนิดา ประเสริฐ',gender:'หญิง',cls:'ป.6'},
+    {id:'s089',name:'เด็กหญิง มัญชุสา สว่างจิต',gender:'หญิง',cls:'ป.6'},
+    {id:'s090',name:'เด็กหญิง ศุภสุตา บุญเจริญ',gender:'หญิง',cls:'ป.6'}
+  ];
+}
+</script>
+</body>
+</html>
