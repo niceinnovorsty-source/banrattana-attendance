@@ -169,10 +169,11 @@ select{padding:7px 10px;border-radius:8px;border:1px solid #D3D1C7;font-size:13p
   <div id="today-display" class="today-display"></div>
 </div>
 
-<div class="tabs no-print">
-  <button class="tab active" onclick="switchTab('attendance',this)">📋 เช็คชื่อ</button>
-  <button class="tab" onclick="switchTab('report',this)">📊 รายงาน</button>
-  <button class="tab" onclick="switchTab('students',this)">👥 จัดการนักเรียน</button>
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('checkin')">เช็คชื่อ</button>
+  <button class="tab-btn" onclick="switchTab('report')">รายงานประจำวัน</button>
+  <button class="tab-btn" onclick="switchTab('students')">จัดการนักเรียน</button>
+  <button class="tab-btn" onclick="switchTab('stats')">สถิติสะสม</button>
 </div>
 
 <div id="tab-attendance" class="section active">
@@ -227,7 +228,80 @@ select{padding:7px 10px;border-radius:8px;border:1px solid #D3D1C7;font-size:13p
   <div id="student-list"></div>
 </div>
 </div>
+<div id="tab-stats" class="tab-content" style="display:none">
+  <div class="card" style="margin-bottom: 20px;">
+    <h3 style="margin-bottom:15px; font-size:16px; color:#2C2C2A; font-weight:600;">📊 ตัวกรองข้อมูลสถิติ</h3>
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap:12px;">
+      
+      <div>
+        <label style="font-size:12px; color:#666; display:block; margin-bottom:4px;">เลือกภาคเรียน</label>
+        <select id="stats-term" onchange="renderStatsTable()" style="width:100%; padding:8px; border:1px solid #D3D1C7; border-radius:6px; font-family:inherit;">
+          <option value="1">ภาคเรียนที่ 1 (มิ.ย. - ต.ค.)</option>
+          <option value="2" selected>ภาคเรียนที่ 2 (พ.ย. - มี.ค.)</option>
+        </select>
+      </div>
 
+      <div>
+        <label style="font-size:12px; color:#666; display:block; margin-bottom:4px;">เลือกช่วงเวลา</label>
+        <select id="stats-month" onchange="renderStatsTable()" style="width:100%; padding:8px; border:1px solid #D3D1C7; border-radius:6px; font-family:inherit;">
+          <option value="all" selected>ดูภาพรวมทั้งภาคเรียน</option>
+          <option value="05">พฤษภาคม</option>
+          <option value="06">มิถุนายน</option>
+          <option value="07">กรกฎาคม</option>
+          <option value="08">สิงหาคม</option>
+          <option value="09">กันยายน</option>
+          <option value="10">ตุลาคม</option>
+          <option value="11">พฤศจิกายน</option>
+          <option value="12">ธันวาคม</option>
+          <option value="01">มกราคม</option>
+          <option value="02">กุมภาพันธ์</option>
+          <option value="03">มีนาคม</option>
+        </select>
+      </div>
+
+      <div>
+        <label style="font-size:12px; color:#666; display:block; margin-bottom:4px;">กรองระดับชั้น</label>
+        <select id="stats-class" onchange="renderStatsTable()" style="width:100%; padding:8px; border:1px solid #D3D1C7; border-radius:6px; font-family:inherit;">
+          <option value="all">นักเรียนทั้งหมด</option>
+          <option value="อนุบาล 1">อนุบาล 1</option>
+          <option value="อนุบาล 2">อนุบาล 2</option>
+          <option value="อนุบาล 3">อนุบาล 3</option>
+          <option value="ป.1">ป.1</option>
+          <option value="ป.2">ป.2</option>
+          <option value="ป.3">ป.3</option>
+          <option value="ป.4">ป.4</option>
+          <option value="ป.5">ป.5</option>
+          <option value="ป.6">ป.6</option>
+        </select>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="card" style="padding:10px; overflow-x:auto;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin: 5px 10px 12px 10px;">
+      <span id="stats-title-label" style="font-weight:600; font-size:14px; color:#2C2C2A;">รายชื่อสถิติการมาเรียน</span>
+      <button class="btn btn-secondary no-print" onclick="window.print()" style="padding:5px 12px; font-size:12px;">🖨️ พิมพ์สถิตินี้</button>
+    </div>
+    
+    <table class="report-table" style="width:100%; border-collapse:collapse;">
+      <thead>
+        <tr style="background:#F2ECE4;">
+          <th style="width:50px; text-align:center;">ที่</th>
+          <th style="min-width:160px; text-align:left; padding-left:10px;">ชื่อ - นามสกุล</th>
+          <th style="width:80px; text-align:center;">ชั้น</th>
+          <th style="width:80px; text-align:center; color:#0F6E56; background:#E1F5EE;">มา (วัน)</th>
+          <th style="width:80px; text-align:center; color:#185FA5; background:#EBF3FB;">ลา (วัน)</th>
+          <th style="width:80px; text-align:center; color:#A32D2D; background:#FCEBEB;">ขาด (วัน)</th>
+          <th style="width:90px; text-align:center; background:#FAF8F2;">ร้อยละมาเรียน</th>
+        </tr>
+      </thead>
+      <tbody id="stats-table-body">
+        </tbody>
+    </table>
+  </div>
+</div>
+  
 </div><div class="modal-bg" id="student-modal">
   <div class="modal">
     <h3 id="modal-title">เพิ่มนักเรียนใหม่</h3>
@@ -315,7 +389,11 @@ async function markAtt(e, date, sid, status){
   } catch(err) {
     console.error("Firebase save error:", err);
   }
-}
+
+  if(document.getElementById('tab-stats') && document.getElementById('tab-stats').style.display !== 'none') {
+    renderStatsTable();
+  }
+} 
 
 function showSaveNotice() {
   const n = document.getElementById('save-notice');
@@ -672,6 +750,125 @@ function renderStudentList(){
     </tbody>
   </table>`;
   document.getElementById('student-list').innerHTML = html;
+}
+  // ฟังก์ชันสลับหน้าแท็บ (รองรับเมนูสถิติเพิ่มเข้ามา)
+function switchTab(tab) {
+  document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  
+  if (tab === 'checkin') document.getElementById('tab-checkin').style.display = 'block';
+  if (tab === 'report') { 
+    document.getElementById('tab-report').style.display = 'block'; 
+    renderReport(); 
+  }
+  if (tab === 'students') { 
+    document.getElementById('tab-students').style.display = 'block'; 
+    renderStudentList(); 
+  }
+  if (tab === 'stats') {
+    document.getElementById('tab-stats').style.display = 'block';
+    renderStatsTable();
+  }
+  
+  // ไฮไลต์ปุ่มที่เลือก
+  const btnIdx = ['checkin', 'report', 'students', 'stats'].indexOf(tab);
+  if(btnIdx !== -1) document.querySelectorAll('.tab-btn')[btnIdx].classList.add('active');
+}
+
+// ฟังก์ชันหลักในการคำนวณและแสดงตารางสถิติสะสมนักเรียนทั้งหมด
+function renderStatsTable() {
+  const selectedTerm = document.getElementById('stats-term').value;
+  const selectedMonth = document.getElementById('stats-month').value;
+  const selectedClass = document.getElementById('stats-class').value;
+  const tbody = document.getElementById('stats-table-body');
+  
+  // อัปเดตหัวข้อตารางให้สอดคล้องกับตัวกรอง
+const termText = `ภาคเรียนที่ ${selectedTerm}`;
+  const monthText = selectedMonth === 'all' ? 'ตลอดทั้งภาคเรียน' : 'ประจำเดือน ' + document.getElementById('stats-month').options[document.getElementById('stats-month').selectedIndex].text;
+  document.getElementById('stats-title-label').textContent = `📊 ตารางสถิติสะสม (${termText} : ${monthText})`;
+
+  // 1. ดึงข้อมูลจากตัวแปรคลาวด์ออนไลน์ (ใส่เงื่อนไขดักไว้เผื่อกรณีระบบคลาวด์ยังโหลดไม่เสร็จ)
+  let savedData = (typeof attendance !== 'undefined' && attendance) ? attendance : {};
+
+  // 2. คัดกรองเฉพาะวันที่ที่ตรงกับเงื่อนไข เทอม และ เดือน ที่เลือก
+  const activeDates = Object.keys(savedData).filter(dateStr => {
+    if (!dateStr) return false;
+    
+    // แยกปี เดือน วัน ออกมา เช่น "2026-06-09"
+    const parts = dateStr.split('-');
+    if(parts.length !== 3) return false;
+    
+    const year = parseInt(parts[0]);
+    const month = parts[1]; // เก็บรหัสเดือนแบบ string เช่น "06"
+    
+    // 1. ตรวจสอบเงื่อนไขเดือนรายเดือน
+    if(selectedMonth !== 'all' && month !== selectedMonth) {
+      return false; 
+    }
+    
+    // 2. ตรวจสอบเงื่อนไขช่วงเวลาของภาคเรียน (เทอม 1: มิถุนายน - ตุลาคม | เทอม 2: พฤศจิกายน - มีนาคม)
+    // หมายเหตุ: เดือน พฤษภาคม ถือเป็นช่วงเปิดเทอม 1 หรือเตรียมการ สามารถยืดหยุ่นได้
+    if(selectedTerm === '1') {
+      // เทอม 1 ประกอบด้วยเดือน 05, 06, 07, 08, 09, 10
+      if(!['05', '06', '07', '08', '09', '10'].includes(month)) return false;
+    } else if(selectedTerm === '2') {
+      // เทอม 2 ประกอบด้วยเดือน 11, 12, 01, 02, 03
+      if(!['11', '12', '01', '02', '03'].includes(month)) return false;
+    }
+    
+    return true;
+  });
+
+  // กรองรายชื่อนักเรียนตามระดับชั้นที่เลือก
+  const filteredStudents = selectedClass === 'all' ? students : students.filter(s => s.cls === selectedClass);
+
+  if(filteredStudents.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#888; padding:20px;">ไม่พบข้อมูลรายชื่อนักเรียนในระดับชั้นนี้</td></tr>`;
+    return;
+  }
+
+  let htmlRows = '';
+  
+  // วนลูปคำนวณยอดสะสมของนักเรียนทุกคนทีละรายคน
+  filteredStudents.forEach((student, index) => {
+    let countMa = 0;
+    let countLa = 0;
+    let countKhad = 0;
+    
+    activeDates.forEach(dateStr => {
+      // ดึงสถานะของนักเรียนในวันที่นั้นๆ
+      const dayRecords = savedData[dateStr] || {};
+      const status = dayRecords[student.id];
+      
+      if(status === 'มา' || status === 'สาย') {
+        countMa++;
+      } else if(status === 'ลา' || status === 'ลาป่วย') {
+        countLa++;
+      } else if(status === 'ขาด') {
+        countKhad++;
+      }
+    });
+
+    const totalDays = countMa + countLa + countKhad;
+    const attendancePercentage = totalDays > 0 ? ((countMa / totalDays) * 100).toFixed(1) : '0.0';
+    
+    // ตั้งค่าสีเตือนเปอร์เซ็นต์มาเรียนต่ำกว่าเกณฑ์ (80%)
+    const pctColor = parseFloat(attendancePercentage) >= 80 ? '#0F6E56' : '#D32F2F';
+
+    htmlRows += `
+      <tr style="border-bottom: 1px solid #EAE9E4;">
+        <td style="text-align:center; padding:6px 4px; font-size:13px;">${index + 1}</td>
+        <td style="text-align:left; padding:6px 10px; font-size:13px; font-weight:500;">${student.name}</td>
+        <td style="text-align:center; padding:6px 4px; font-size:13px; color:#5F5E5A;">${student.cls}</td>
+        <td style="text-align:center; padding:6px 4px; font-size:13px; font-weight:600; color:#0F6E56; background:#F4FBF9;">${countMa}</td>
+        <td style="text-align:center; padding:6px 4px; font-size:13px; font-weight:600; color:#185FA5; background:#F4F8FC;">${countLa}</td>
+        <td style="text-align:center; padding:6px 4px; font-size:13px; font-weight:600; color:#A32D2D; background:#FFF5F5;">${countKhad}</td>
+        <td style="text-align:center; padding:6px 4px; font-size:13px; font-weight:700; color:${pctColor}; background:#FAF8F2;">${attendancePercentage}%</td>
+      </tr>
+    `;
+  });
+
+  tbody.innerHTML = htmlRows;
 }
 
 function openAddModal(){
