@@ -174,7 +174,8 @@ select{padding:7px 10px;border-radius:8px;border:1px solid #D3D1C7;font-size:13p
       <label>📅 วันที่</label>
       <input type="date" id="rep-date" onchange="renderReport()">
     </div>
-    <button class="btn-print" onclick="window.print()">🖨️ พิมพ์รายงาน</button>
+    <button class="btn-print" onclick="window.print()">🖨️ พิมพ์วันนี้</button>
+    <button class="btn-print" onclick="openRangePrintModal()" style="border-color:#854F0B;color:#854F0B">🖨️ พิมพ์หลายวัน</button>
     <button class="btn-print" onclick="exportReportExcel()" style="background:#fff;border-color:#1D9E75;color:#0F6E56">📥 ส่งออก Excel</button>
   </div>
   <div class="report-wrap">
@@ -1040,7 +1041,245 @@ function initSelects(){
   document.getElementById('stat-class').innerHTML = `<option value="">ทุกชั้นเรียน</option>` + opts;
 }
 
-// ============ EXPORT EXCEL ============
+// ============ RANGE PRINT ============
+function openRangePrintModal() {
+  let existing = document.getElementById('range-print-modal');
+  if(existing) existing.remove();
+
+  const today = todayStr();
+  const modal = document.createElement('div');
+  modal.id = 'range-print-modal';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:300;display:flex;align-items:center;justify-content:center;padding:16px';
+  modal.innerHTML = `
+    <div style="background:#fff;border-radius:12px;padding:22px;width:360px;max-width:95vw;border:1px solid #D3D1C7">
+      <h3 style="font-size:15px;font-weight:600;color:#2C2C2A;margin-bottom:16px">🖨️ พิมพ์รายงานหลายวัน</h3>
+      <div style="margin-bottom:12px">
+        <label style="display:block;font-size:12px;color:#5F5E5A;font-weight:500;margin-bottom:4px">จากวันที่</label>
+        <input type="date" id="range-from" value="${today}" style="width:100%;padding:8px 10px;border-radius:8px;border:1px solid #D3D1C7;font-size:13px;font-family:'Sarabun',sans-serif">
+      </div>
+      <div style="margin-bottom:16px">
+        <label style="display:block;font-size:12px;color:#5F5E5A;font-weight:500;margin-bottom:4px">ถึงวันที่</label>
+        <input type="date" id="range-to" value="${today}" style="width:100%;padding:8px 10px;border-radius:8px;border:1px solid #D3D1C7;font-size:13px;font-family:'Sarabun',sans-serif">
+      </div>
+      <div id="range-preview" style="font-size:12px;color:#5F5E5A;background:#F1EFE8;border-radius:8px;padding:10px 12px;margin-bottom:16px">
+        เลือกช่วงวันที่แล้วกดดูตัวอย่าง
+      </div>
+      <div style="display:flex;gap:8px;justify-content:flex-end">
+        <button onclick="document.getElementById('range-print-modal').remove()" style="padding:8px 16px;border-radius:8px;border:1px solid #D3D1C7;background:#fff;color:#5F5E5A;font-size:13px;cursor:pointer;font-family:'Sarabun',sans-serif">ยกเลิก</button>
+        <button onclick="previewRangeDays()" style="padding:8px 16px;border-radius:8px;border:1px solid #D3D1C7;background:#fff;color:#854F0B;font-size:13px;cursor:pointer;font-family:'Sarabun',sans-serif;border-color:#854F0B">🔍 ดูตัวอย่าง</button>
+        <button onclick="printRangeReport()" style="padding:8px 16px;border-radius:8px;border:none;background:#854F0B;color:#fff;font-size:13px;cursor:pointer;font-family:'Sarabun',sans-serif;font-weight:600">🖨️ พิมพ์</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  modal.addEventListener('click', e => { if(e.target === modal) modal.remove(); });
+
+  // อัปเดต preview อัตโนมัติเมื่อเปลี่ยนวันที่
+  modal.querySelector('#range-from').addEventListener('change', previewRangeDays);
+  modal.querySelector('#range-to').addEventListener('change', previewRangeDays);
+  previewRangeDays();
+}
+
+function getRangeDays() {
+  const from = document.getElementById('range-from')?.value;
+  const to = document.getElementById('range-to')?.value;
+  if(!from || !to) return [];
+  const days = [];
+  let cur = new Date(from + 'T00:00:00');
+  const end = new Date(to + 'T00:00:00');
+  if(cur > end) return [];
+  while(cur <= end) {
+    days.push(cur.toISOString().slice(0,10));
+    cur.setDate(cur.getDate() + 1);
+  }
+  return days;
+}
+
+function previewRangeDays() {
+  const days = getRangeDays();
+  const preview = document.getElementById('range-preview');
+  if(!preview) return;
+  if(days.length === 0) {
+    preview.innerHTML = '<span style="color:#A32D2D">⚠️ วันที่เริ่มต้นต้องไม่เกินวันที่สิ้นสุด</span>';
+    return;
+  }
+  const hasDays = days.filter(d => attendance[d]);
+  preview.innerHTML = `
+    <div>ช่วงวันที่เลือก: <strong>${days.length} วัน</strong></div>
+    <div style="margin-top:4px">มีข้อมูลเช็คชื่อ: <strong style="color:#0F6E56">${hasDays.length} วัน</strong>${hasDays.length === 0 ? ' <span style="color:#A32D2D">(ไม่มีข้อมูล)</span>' : ''}</div>
+    ${hasDays.length > 0 ? `<div style="margin-top:4px;color:#5F5E5A">จะพิมพ์รายงาน ${hasDays.length} หน้า (เฉพาะวันที่มีข้อมูล)</div>` : ''}
+  `;
+}
+
+function buildReportHTML(date) {
+  const thDate = new Date(date+'T00:00:00').toLocaleDateString('th-TH',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  let rows = '';
+  let tM=0,tF=0,tAll=0,tMam=0,tMaf=0,tMa=0,tKhad=0,tLa=0,tKhadLa=0;
+  let absentList = [];
+  let subAnuban={m:0,f:0,total:0,ma_m:0,ma_f:0,ma_total:0,khad:0,la:0,khad_la:0};
+  let subPrathom={m:0,f:0,total:0,ma_m:0,ma_f:0,ma_total:0,khad:0,la:0,khad_la:0};
+
+  CLASSES.forEach(cls => {
+    const ss = students.filter(s => s.cls === cls);
+    const males = ss.filter(s => s.gender==='ชาย');
+    const females = ss.filter(s => s.gender==='หญิง');
+    let ma_m=0,ma_f=0,khad=0,la=0;
+    ss.forEach((s,idx) => {
+      const st = getAtt(date, s.id);
+      if(st==='มา'){ if(s.gender==='ชาย') ma_m++; else ma_f++; }
+      else if(st==='ขาด'){ khad++; absentList.push({cls,no:idx+1,name:s.name,status:'ขาดเรียน'}); }
+      else if(st==='ลาป่วย'||st==='ลา'){ la++; absentList.push({cls,no:idx+1,name:s.name,status:'ลา'}); }
+    });
+    const ma=ma_m+ma_f, khad_la=khad+la;
+    const percent = ss.length>0?((ma/ss.length)*100).toFixed(1):'0.0';
+    if(cls.includes('อนุบาล')){
+      subAnuban.m+=males.length;subAnuban.f+=females.length;subAnuban.total+=ss.length;
+      subAnuban.ma_m+=ma_m;subAnuban.ma_f+=ma_f;subAnuban.ma_total+=ma;
+      subAnuban.khad+=khad;subAnuban.la+=la;subAnuban.khad_la+=khad_la;
+    } else {
+      subPrathom.m+=males.length;subPrathom.f+=females.length;subPrathom.total+=ss.length;
+      subPrathom.ma_m+=ma_m;subPrathom.ma_f+=ma_f;subPrathom.ma_total+=ma;
+      subPrathom.khad+=khad;subPrathom.la+=la;subPrathom.khad_la+=khad_la;
+    }
+    tM+=males.length;tF+=females.length;tAll+=ss.length;
+    tMam+=ma_m;tMaf+=ma_f;tMa+=ma;tKhad+=khad;tLa+=la;tKhadLa+=khad_la;
+    rows+=`<tr>
+      <td class="class-col">${cls}</td>
+      <td>${males.length}</td><td>${females.length}</td><td><strong>${ss.length}</strong></td>
+      <td style="color:#185FA5">${ma_m}</td><td style="color:#993556">${ma_f}</td><td style="color:#0F6E56"><strong>${ma}</strong></td>
+      <td style="color:#A32D2D">${khad}</td><td style="color:#185FA5">${la}</td>
+      <td style="color:#D32F2F;font-weight:600;background:#FFF5F5">${khad_la}</td>
+      <td style="color:#0F6E56;font-weight:700;background:#F8FDFB">${percent}%</td>
+    </tr>`;
+    if(cls==='อนุบาล 3'&&subAnuban.total>0){
+      const p=((subAnuban.ma_total/subAnuban.total)*100).toFixed(1);
+      rows+=`<tr style="background:#FAF8F2;font-weight:600;border-bottom:2px solid #D3D1C7">
+        <td class="class-col" style="color:#854F0B;padding-left:15px">↳ รวมช่วงชั้นอนุบาล</td>
+        <td>${subAnuban.m}</td><td>${subAnuban.f}</td><td>${subAnuban.total}</td>
+        <td style="color:#185FA5">${subAnuban.ma_m}</td><td style="color:#993556">${subAnuban.ma_f}</td><td style="color:#0F6E56">${subAnuban.ma_total}</td>
+        <td style="color:#A32D2D">${subAnuban.khad}</td><td style="color:#185FA5">${subAnuban.la}</td>
+        <td style="color:#D32F2F">${subAnuban.khad_la}</td><td style="color:#0F6E56;font-weight:700">${p}%</td>
+      </tr>`;
+    }
+    if(cls==='ป.6'&&subPrathom.total>0){
+      const p=((subPrathom.ma_total/subPrathom.total)*100).toFixed(1);
+      rows+=`<tr style="background:#FAF8F2;font-weight:600;border-bottom:2px solid #D3D1C7">
+        <td class="class-col" style="color:#854F0B;padding-left:15px">↳ รวมช่วงชั้นประถมฯ</td>
+        <td>${subPrathom.m}</td><td>${subPrathom.f}</td><td>${subPrathom.total}</td>
+        <td style="color:#185FA5">${subPrathom.ma_m}</td><td style="color:#993556">${subPrathom.ma_f}</td><td style="color:#0F6E56">${subPrathom.ma_total}</td>
+        <td style="color:#A32D2D">${subPrathom.khad}</td><td style="color:#185FA5">${subPrathom.la}</td>
+        <td style="color:#D32F2F">${subPrathom.khad_la}</td><td style="color:#0F6E56;font-weight:700">${p}%</td>
+      </tr>`;
+    }
+  });
+
+  const totalPercent = tAll>0?((tMa/tAll)*100).toFixed(1):'0.0';
+  let absentHTML = '';
+  if(absentList.length>0){
+    absentHTML=`<div style="margin-top:12px">
+      <p style="font-size:13px;font-weight:600;color:#2C2C2A;margin-bottom:5px">⚠️ รายชื่อนักเรียนที่ไม่มาเรียน</p>
+      <table class="report-table" style="width:100%;max-width:600px">
+        <thead><tr style="background:#F2ECE4">
+          <th style="width:40px">ที่</th><th style="width:90px">ชั้น</th>
+          <th style="text-align:left;padding-left:8px">เลขที่ - ชื่อ-นามสกุล</th><th style="width:80px">สถานะ</th>
+        </tr></thead>
+        <tbody>${absentList.map((item,i)=>`<tr>
+          <td>${i+1}</td><td>${item.cls}</td>
+          <td style="text-align:left;padding-left:8px">เลขที่ ${item.no} ${item.name}</td>
+          <td style="color:${item.status==='ขาดเรียน'?'#A32D2D':'#185FA5'};font-weight:600">${item.status}</td>
+        </tr>`).join('')}</tbody>
+      </table></div>`;
+  } else {
+    absentHTML=`<div style="margin-top:10px;text-align:center;color:#0F6E56;font-weight:600;font-size:13px;padding:8px;background:#E1F5EE;border-radius:6px">🎉 วันนี้ไม่มีนักเรียนขาดหรือลาเรียน</div>`;
+  }
+
+  return `
+    <div style="text-align:center;margin-bottom:10px">
+      <div style="font-size:16px;font-weight:700">โรงเรียนบ้านรัตนะ</div>
+      <div style="font-size:13px;color:#5F5E5A">รายงานการมาเรียนประจำวัน ${thDate}</div>
+    </div>
+    <table class="report-table">
+      <thead>
+        <tr>
+          <th rowspan="2" class="class-col" style="text-align:left;min-width:110px">ชั้น / ช่วงชั้น</th>
+          <th colspan="3" style="background:#D3D1C7">จำนวนนักเรียนทั้งหมด</th>
+          <th colspan="3" style="background:#9FE1CB;color:#0F6E56">มาเรียนวันนี้</th>
+          <th colspan="3" style="background:#FCEBEB;color:#A32D2D">การขาด / ลา</th>
+          <th rowspan="2" style="background:#E1F5EE;color:#0F6E56;min-width:70px">มาเรียน<br>ร้อยละ</th>
+        </tr>
+        <tr>
+          <th>ชาย</th><th>หญิง</th><th>รวม</th>
+          <th style="color:#185FA5;background:#E1F5EE">ชาย</th><th style="color:#993556;background:#E1F5EE">หญิง</th><th style="color:#0F6E56;background:#9FE1CB">รวม</th>
+          <th style="color:#A32D2D;background:#FCEBEB">ขาด</th><th style="color:#185FA5;background:#FCEBEB">ลา</th><th style="color:#C62828;background:#F9D5D5">รวม</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+      <tfoot><tr>
+        <td class="class-col">รวมทั้งโรงเรียน</td>
+        <td>${tM}</td><td>${tF}</td><td>${tAll}</td>
+        <td>${tMam}</td><td>${tMaf}</td><td>${tMa}</td>
+        <td>${tKhad}</td><td>${tLa}</td><td>${tKhadLa}</td>
+        <td style="font-weight:700;background:#0F6E56;color:#fff">${totalPercent}%</td>
+      </tr></tfoot>
+    </table>
+    ${absentHTML}
+    <div class="report-signature-container">
+      <div class="signature-col">
+        <p>ลงชื่อ..........................................................ครูเวร</p>
+        <p>(..........................................................)</p>
+        <p>ครูเวรประจำวัน</p>
+      </div>
+      <div class="signature-col">
+        <p>ลงชื่อ..........................................................ผู้ตรวจสอบ</p>
+        <p>( นายวิชชชาติ ยิ่งยงยุทธ )</p>
+        <p>ตำแหน่ง ผู้อำนวยการโรงเรียนบ้านรัตนะ</p>
+      </div>
+    </div>`;
+}
+
+function printRangeReport() {
+  const days = getRangeDays();
+  if(!days.length){ showToast('⚠️ กรุณาเลือกช่วงวันที่'); return; }
+  const hasDays = days.filter(d => attendance[d]);
+  if(!hasDays.length){ showToast('⚠️ ไม่มีข้อมูลเช็คชื่อในช่วงวันที่เลือก'); return; }
+
+  document.getElementById('range-print-modal').remove();
+
+  // สร้างหน้าต่างพิมพ์ใหม่
+  const win = window.open('', '_blank');
+  win.document.write(`<!DOCTYPE html><html lang="th"><head>
+    <meta charset="UTF-8">
+    <title>รายงานการมาเรียน</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+      *{box-sizing:border-box;margin:0;padding:0}
+      body{font-family:'Sarabun',sans-serif;font-size:13px;color:#000;background:#fff}
+      .page{padding:12mm 10mm;page-break-after:always}
+      .page:last-child{page-break-after:auto}
+      table{width:100%;border-collapse:collapse}
+      th,td{border:1px solid #999;padding:5px 7px;text-align:center}
+      th{background:#eee;font-weight:600}
+      .class-col{text-align:left;font-weight:500}
+      tfoot td{font-weight:700;background:#c8ead9}
+      .report-signature-container{display:flex;justify-content:space-between;margin-top:16px}
+      .signature-col{width:48%;text-align:center}
+      .signature-col p{margin:3px 0;font-size:13px;line-height:1.6}
+      @page{size:A4 portrait;margin:10mm}
+      @media print{body{background:#fff}}
+    </style>
+  </head><body>`);
+
+  hasDays.forEach(date => {
+    win.document.write(`<div class="page">${buildReportHTML(date)}</div>`);
+  });
+
+  win.document.write('</body></html>');
+  win.document.close();
+  win.onload = () => { win.focus(); win.print(); };
+}
+// ============ END RANGE PRINT ============
+
+
 function exportReportExcel() {
   const date = document.getElementById('rep-date').value || todayStr();
   const thDate = new Date(date+'T00:00:00').toLocaleDateString('th-TH',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
