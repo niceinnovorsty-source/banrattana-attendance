@@ -221,35 +221,39 @@ function showSaveNotice() {
 }
 
 function switchTab(t, btn){
-  // 1. เคลียร์สถานะการเปิดหน้าจอทั้งหมด
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  // 1. ซ่อนหน้าจอทั้งหมดก่อนเพื่อเตรียมเปิดหน้าใหม่
+  document.querySelectorAll('.section, .tab-content').forEach(s => {
+    s.classList.remove('active');
+    s.style.display = 'none';
+  });
   
-  // จัดการหน้าสถิติสะสมให้รองรับคลาสเดิมของคุณครู
-  const statsTab = document.getElementById('tab-stats');
-  if(statsTab) statsTab.classList.remove('active');
-
-  // 2. สั่งเปิดหน้าจอที่คลิกเลือก
-  if(t === 'checkin') {
-    document.getElementById('tab-attendance').classList.add('active');
-  } else {
-    const target = document.getElementById('tab-' + t);
-    if(target) target.classList.add('active');
+  // 2. ล้างแถบสีเขียวของปุ่มเมนูทั้งหมดเพื่อแก้ปัญหาปุ่มค้างซ้อน
+  document.querySelectorAll('.tab-btn, .tab').forEach(b => b.classList.remove('active'));
+  
+  // 3. เปิดหน้าจอตามแท็บที่เลือกให้ถูกต้อง
+  let targetId = (t === 'checkin' || t === 'attendance') ? 'tab-attendance' : 'tab-' + t;
+  const targetEl = document.getElementById(targetId);
+  if(targetEl) {
+    targetEl.classList.add('active');
+    targetEl.style.display = 'block';
   }
   
-  // 3. ไฮไลต์ปุ่มสีเขียว
+  // 4. ไฮไลต์สีเขียวให้ปุ่มที่ถูกกดล่าสุด
   if(btn) {
     btn.classList.add('active');
   } else {
-    // หาปุ่มที่กดจากค่า t
     const btnIdx = ['checkin', 'report', 'students', 'stats'].indexOf(t);
-    if(btnIdx !== -1) document.querySelectorAll('.tab-btn')[btnIdx].classList.add('active');
+    if(btnIdx !== -1) {
+      const allButtons = document.querySelectorAll('.tab-btn');
+      if(allButtons[btnIdx]) allButtons[btnIdx].classList.add('active');
+    }
   }
 
-  // 4. สั่งดึงข้อมูลออนไลน์มาแสดงผลทันที
-  if(t === 'report') renderReport();
-  if(t === 'students') renderStudentList();
-  if(t === 'stats') renderStatsTable();
+  // 5. สั่งดึงข้อมูลมาวาดตารางของแต่ละหน้าทันที (หน้ารายงานจะไม่ว่างเปล่า)
+  if(t === 'checkin' || t === 'attendance') { if(typeof renderAttendance === 'function') renderAttendance(); }
+  if(t === 'report') { if(typeof renderReport === 'function') renderReport(); }
+  if(t === 'students') { if(typeof renderStudentList === 'function') renderStudentList(); }
+  if(t === 'stats') { if(typeof renderStatsTable === 'function') renderStatsTable(); }
 }
 
 function renderAttendance(){
@@ -811,6 +815,83 @@ function getInitialStudents() {
     }
     switchTab('checkin');
   });
+
+  // ฟังก์ชันสร้างตารางสถิติสะสม และคำนวณอัตราร้อยละการมาเรียนอัตโนมัติ
+function renderStatsTable() {
+  const selectedTerm = document.getElementById('stats-term').value;
+  const selectedMonth = document.getElementById('stats-month').value;
+  const selectedClass = document.getElementById('stats-class').value;
+  const tbody = document.getElementById('stats-table-body');
+  
+  if(!tbody) return;
+  
+  const termText = `ภาคเรียนที่ ${selectedTerm}`;
+  const monthText = selectedMonth === 'all' ? 'ตลอดทั้งภาคเรียน' : 'ประจำเดือน ' + document.getElementById('stats-month').options[document.getElementById('stats-month').selectedIndex].text;
+  document.getElementById('stats-title-label').textContent = `📊 ตารางสถิติสะสม (${termText} : ${monthText})`;
+
+  let savedData = (typeof attendance !== 'undefined' && attendance) ? attendance : {};
+
+  const activeDates = Object.keys(savedData).filter(dateStr => {
+    if(!dateStr) return false;
+    const parts = dateStr.split('-');
+    if(parts.length !== 3) return false;
+    
+    const month = parts[1];
+    if(selectedMonth !== 'all' && month !== selectedMonth) return false;
+    
+    if(selectedTerm === '1') {
+      if(!['05', '06', '07', '08', '09', '10'].includes(month)) return false;
+    } else if(selectedTerm === '2') {
+      if(!['11', '12', '01', '02', '03'].includes(month)) return false;
+    }
+    return true;
+  });
+
+  const filteredStudents = selectedClass === 'all' ? students : students.filter(s => s.cls === selectedClass);
+
+  if(filteredStudents.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#888; padding:20px;">ไม่พบข้อมูลรายชื่อนักเรียนในระดับชั้นนี้</td></tr>`;
+    return;
+  }
+
+  let htmlRows = '';
+  filteredStudents.forEach((student, index) => {
+    let countMa = 0;
+    let countLa = 0;
+    let countKhad = 0;
+    
+    activeDates.forEach(dateStr => {
+      const dayRecords = savedData[dateStr] || {};
+      const status = dayRecords[student.id];
+      
+      if(status === 'มา' || status === 'สาย') {
+        countMa++;
+      } else if(status === 'ลา' || status === 'ลาป่วย') {
+        countLa++;
+      } else if(status === 'ขาด') {
+        countKhad++;
+      }
+    });
+
+    const totalDays = countMa + countLa + countKhad;
+    const attendancePercentage = totalDays > 0 ? ((countMa / totalDays) * 100).toFixed(1) : '0.0';
+    const pctColor = parseFloat(attendancePercentage) >= 80 ? '#0F6E56' : '#D32F2F';
+
+    htmlRows += `
+      <tr style="border-bottom: 1px solid #EAE9E4;">
+        <td style="text-align:center; padding:8px 4px; font-size:13px;">${index + 1}</td>
+        <td style="text-align:left; padding:8px 10px; font-size:13px; font-weight:500;">${student.name}</td>
+        <td style="text-align:center; padding:8px 4px; font-size:13px; color:#5F5E5A;">${student.cls}</td>
+        <td style="text-align:center; padding:8px 4px; font-size:13px; font-weight:600; color:#0F6E56; background:#F4FBF9;">${countMa}</td>
+        <td style="text-align:center; padding:8px 4px; font-size:13px; font-weight:600; color:#185FA5; background:#F4F8FC;">${countLa}</td>
+        <td style="text-align:center; padding:8px 4px; font-size:13px; font-weight:600; color:#A32D2D; background:#FFF5F5;">${countKhad}</td>
+        <td style="text-align:center; padding:8px 4px; font-size:13px; font-weight:700; color:${pctColor}; background:#FAF8F2;">${attendancePercentage}%</td>
+      </tr>
+    `;
+  });
+
+  tbody.innerHTML = htmlRows;
+}
 </script>
 </body>
 </html>
