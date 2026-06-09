@@ -401,13 +401,43 @@ function showSaveNotice() {
   setTimeout(() => n.classList.remove('show'), 1500);
 }
 
-function switchTab(t, btn){
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-'+t).classList.add('active');
-  btn.classList.add('active');
-  if(t === 'report') renderReport();
-  if(t === 'students') renderStudentList();
+//  วางฟังก์ชันสลับหน้าแท็บเดียวที่ถูกต้องและรองรับคลาวด์ทั้งหมด
+function switchTab(tab) {
+  // 1. ซ่อนทุกหน้าจอและเคลียร์สถานะปุ่มกดทั้งหมด
+  document.querySelectorAll('.section, .tab-content').forEach(el => {
+    el.style.display = 'none';
+    el.classList.remove('active');
+  });
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  
+  // 2. แสดงผลหน้าจอตามแท็บที่กดเลือกให้ถูกต้องตามโครงสร้าง ID
+  if (tab === 'checkin' || tab === 'attendance') {
+    const target = document.getElementById('tab-attendance');
+    if(target) { target.style.display = 'block'; target.classList.add('active'); }
+    if(typeof renderAttendance === 'function') renderAttendance();
+  }
+  if (tab === 'report') { 
+    const target = document.getElementById('tab-report');
+    if(target) { target.style.display = 'block'; target.classList.add('active'); }
+    if(typeof renderReport === 'function') renderReport(); 
+  }
+  if (tab === 'students') { 
+    const target = document.getElementById('tab-students');
+    if(target) { target.style.display = 'block'; target.classList.add('active'); }
+    if(typeof renderStudentList === 'function') renderStudentList(); 
+  }
+  if (tab === 'stats') {
+    const target = document.getElementById('tab-stats');
+    if(target) { target.style.display = 'block'; target.classList.add('active'); }
+    if(typeof renderStatsTable === 'function') renderStatsTable();
+  }
+  
+  // 3. ทำไฮไลต์ปุ่มสีเขียวที่ถูกกดใช้งาน
+  const btnIdx = ['checkin', 'report', 'students', 'stats'].indexOf(tab);
+  if(btnIdx !== -1) {
+    const allButtons = document.querySelectorAll('.tab-btn');
+    if(allButtons[btnIdx]) allButtons[btnIdx].classList.add('active');
+  }
 }
 
 function renderAttendance(){
