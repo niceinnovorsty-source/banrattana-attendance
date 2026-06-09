@@ -203,8 +203,10 @@ select{padding:7px 10px;border-radius:8px;border:1px solid #D3D1C7;font-size:13p
   <div class="report-wrap">
     <div id="report-content"></div>
     
-    <div id="chart-container" style="max-width: 100%; margin: 30px auto 0 auto; background: #fff; padding: 15px; border: 1px solid #D3D1C7; border-radius: 10px;">
-      <canvas id="attendanceChart" style="max-height: 320px; width: 100%;"></style></canvas>
+    <div id="chart-container" class="no-print" style="max-width: 100%; margin: 25px auto 0 auto; background: #fff; padding: 15px; border: 1px solid #D3D1C7; border-radius: 10px;">
+      <canvas id="attendanceChart" style="max-height: 280px; width: 100%;"></canvas>
+    </div>
+  </div>
     </div>
   </div>
 </div>
@@ -253,7 +255,7 @@ select{padding:7px 10px;border-radius:8px;border:1px solid #D3D1C7;font-size:13p
 
 <script>
 const CLASSES = ['อนุบาล 1','อนุบาล 2','อนุบาล 3','ป.1','ป.2','ป.3','ป.4','ป.5','ป.6'];
-const STATUS = ['มา','สาย','ขาด','ลาป่วย'];
+const STATUS = ['มา', 'ขาด', 'ลา'];
 
 let students = [];
 let attendance = {}; 
@@ -420,7 +422,6 @@ function renderReport(){
   let tMam=0, tMaf=0, tMa=0;
   let tKhad=0, tLa=0, tKhadLa=0;
 
-  // ตัวแปรสะสมยอดสรุปแยกตามช่วงชั้น
   let subAnuban = { m:0, f:0, total:0, ma_m:0, ma_f:0, ma_total:0, khad:0, la:0, khad_la:0 };
   let subPrathom = { m:0, f:0, total:0, ma_m:0, ma_f:0, ma_total:0, khad:0, la:0, khad_la:0 };
 
@@ -432,11 +433,11 @@ function renderReport(){
     
     ss.forEach(s => {
       const st = getAtt(date, s.id);
-      if(st==='มา' || st==='สาย'){ 
+      if(st==='มา'){ 
         if(s.gender==='ชาย') ma_m++; else ma_f++; 
       } else if(st==='ขาด') {
         khad++;
-      } else if(st==='ลาป่วย') {
+      } else if(st==='ลาป่วย' || st==='ลา') {
         la++;
       }
     });
@@ -445,7 +446,6 @@ function renderReport(){
     const khad_la = khad + la;
     const percent = ss.length > 0 ? ((ma / ss.length) * 100).toFixed(1) : '0.0';
     
-    // สะสมยอดลงตัวแปรแต่ละช่วงชั้น
     if(cls.includes('อนุบาล')) {
       subAnuban.m += males.length; subAnuban.f += females.length; subAnuban.total += ss.length;
       subAnuban.ma_m += ma_m; subAnuban.ma_f += ma_f; subAnuban.ma_total += ma;
@@ -456,11 +456,9 @@ function renderReport(){
       subPrathom.khad += khad; subPrathom.la += la; subPrathom.khad_la += khad_la;
     }
     
-    // สะสมยอดรวมทั้งโรงเรียน
     tM+=males.length; tF+=females.length; tAll+=ss.length;
     tMam+=ma_m; tMaf+=ma_f; tMa+=ma; tKhad+=khad; tLa+=la; tKhadLa+=khad_la;
     
-    // แถวข้อมูลรายชั้นปกติ (แยก 3 ช่อง: ขาด | ลา | รวมขาด/ลา)
     rows += `<tr>
       <td class="class-col">${cls}</td>
       <td>${males.length}</td><td>${females.length}</td><td><strong>${ss.length}</strong></td>
@@ -471,7 +469,6 @@ function renderReport(){
       <td style="color:#0F6E56; font-weight:700; background:#F8FDFB">${percent}%</td>
     </tr>`;
     
-    // แถวคั่นสรุปผล "รวมช่วงชั้นอนุบาล"
     if(cls === 'อนุบาล 3' && subAnuban.total > 0) {
       const subPct = ((subAnuban.ma_total / subAnuban.total) * 100).toFixed(1);
       rows += `<tr style="background:#FAF8F2; font-weight:600; border-bottom:2px solid #D3D1C7">
@@ -485,7 +482,6 @@ function renderReport(){
       </tr>`;
     }
     
-    // แถวคั่นสรุปผล "รวมช่วงชั้นประถมศึกษา"
     if(cls === 'ป.6' && subPrathom.total > 0) {
       const subPct = ((subPrathom.ma_total / subPrathom.total) * 100).toFixed(1);
       rows += `<tr style="background:#FAF8F2; font-weight:600; border-bottom:2px solid #D3D1C7">
@@ -545,6 +541,9 @@ function renderReport(){
         </div>
     </div>
   `;
+
+  // เรียกฟังก์ชันวาดกราฟแท่งสรุป
+  generateChart(subAnuban, subPrathom);
 }
 
 function generateChart(anuban, prathom) {
@@ -780,38 +779,62 @@ function getInitialStudents() {
 }
 </script>
   <style>
-/* ตั้งค่าให้แสดงผลบล็อกลายเซ็นอย่างเหมาะสม */
+/* 1. สไตล์ลายเซ็น: ซ่อนไว้เป็นค่าเริ่มต้นเมื่ออยู่บนหน้าจอมือถือหรือคอมพิวเตอร์ */
 .report-signature-container {
-    display: flex !important;
+    display: none !important; 
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    margin-top: 40px;
-    padding-top: 10px;
-    page-break-inside: avoid; /* ป้องกันเบราว์เซอร์ตัดแบ่งหน้า */
+    margin-top: 30px;
+    clear: both;
 }
 
 .signature-col {
-    width: 46%;
+    width: 48%;
     text-align: center;
+    display: inline-block;
 }
 
 .signature-col p {
-    margin: 8px 0;
-    font-size: 15px; 
+    margin: 4px 0;
+    font-size: 14px; 
     color: #2C2C2A;
     font-family: "Sarabun", sans-serif;
-    line-height: 1.8;
+    line-height: 1.6;
 }
 
+/* 2. สไตล์ควบคุมพิเศษเมื่อสั่งพิมพ์ผ่านเบราว์เซอร์ (Print / PDF) */
 @media print {
+    /* ซ่อนแผนภูมิแท่ง และปุ่มกดจัดการต่างๆ ไม่ให้โผล่บนกระดาษ */
+    .no-print, #chart-container, #attendanceChart {
+        display: none !important;
+    }
+
+    /* บังคับให้ส่วนลายเซ็นโผล่ขึ้นมาเฉพาะในกระดาษพิมพ์เท่านั้น */
     .report-signature-container {
-        display: flex !important;
-        margin-top: 45px !important;
+        display: flex !important; /* เปิดการแสดงผลเฉพาะตอนปริ้น */
+        margin-top: 35px !important;
+        page-break-inside: avoid !important; /* ป้องกันลายเซ็นฉีกขาดแบ่งหน้า */
+    }
+
+    body {
+        background: #fff !important;
+    }
+    .report-wrap {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    .report-table {
+        width: 100% !important;
+        margin-bottom: 8px !important;
+    }
+    .report-table th, .report-table td {
+        padding: 4px 5px !important; 
+        font-size: 13px !important;
     }
     .signature-col p {
-        font-size: 15px;
-        color: #000;
+        font-size: 14px !important;
+        color: #000 !important;
     }
 }
 </style>
