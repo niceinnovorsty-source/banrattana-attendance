@@ -172,6 +172,7 @@ select{padding:7px 10px;border-radius:8px;border:1px solid #D3D1C7;font-size:13p
 <div class="tabs no-print">
   <button class="tab active" onclick="switchTab('attendance',this)">📋 เช็คชื่อ</button>
   <button class="tab" onclick="switchTab('report',this)">📊 รายงาน</button>
+  <button class="tab" onclick="switchTab('stats',this)">📈 สถิติ</button>
   <button class="tab" onclick="switchTab('students',this)">👥 จัดการนักเรียน</button>
 </div>
 
@@ -209,6 +210,84 @@ select{padding:7px 10px;border-radius:8px;border:1px solid #D3D1C7;font-size:13p
   </div>
     </div>
   </div>
+</div>
+</div>
+
+<!-- ===== TAB สถิติ ===== -->
+<div id="tab-stats" class="section">
+<div class="content">
+  <div class="notice">
+    <strong>📈 สถิติการมาเรียนรายนักเรียน</strong> คำนวณจากข้อมูลการเช็คชื่อที่บันทึกไว้จริงในระบบ เลือกดูตามภาคเรียน/ปีการศึกษา หรือเลือกดูเฉพาะเดือนได้
+  </div>
+  <div style="background:#fff;border:1px solid #D3D1C7;border-radius:10px;padding:14px 16px;margin-bottom:16px">
+    <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end">
+      <div>
+        <div style="font-size:12px;color:#5F5E5A;font-weight:500;margin-bottom:4px">ปีการศึกษา</div>
+        <select id="stat-year" onchange="onStatFilterChange()" style="min-width:110px">
+          <option value="2567">2567</option>
+          <option value="2568" selected>2568</option>
+          <option value="2569">2569</option>
+        </select>
+      </div>
+      <div>
+        <div style="font-size:12px;color:#5F5E5A;font-weight:500;margin-bottom:4px">ภาคเรียน / ช่วงเวลา</div>
+        <select id="stat-term" onchange="onStatFilterChange()" style="min-width:165px">
+          <option value="term1">ภาคเรียนที่ 1 (พ.ค.–ต.ค.)</option>
+          <option value="term2">ภาคเรียนที่ 2 (พ.ย.–มี.ค.)</option>
+          <option value="year">ทั้งปีการศึกษา</option>
+          <option value="month">เลือกเดือน...</option>
+        </select>
+      </div>
+      <div id="stat-month-wrap" style="display:none">
+        <div style="font-size:12px;color:#5F5E5A;font-weight:500;margin-bottom:4px">เดือน</div>
+        <select id="stat-month" onchange="renderStats()" style="min-width:130px">
+          <option value="01">มกราคม</option>
+          <option value="02">กุมภาพันธ์</option>
+          <option value="03">มีนาคม</option>
+          <option value="05">พฤษภาคม</option>
+          <option value="06">มิถุนายน</option>
+          <option value="07">กรกฎาคม</option>
+          <option value="08">สิงหาคม</option>
+          <option value="09">กันยายน</option>
+          <option value="10">ตุลาคม</option>
+          <option value="11">พฤศจิกายน</option>
+          <option value="12">ธันวาคม</option>
+        </select>
+      </div>
+      <div>
+        <div style="font-size:12px;color:#5F5E5A;font-weight:500;margin-bottom:4px">ชั้นเรียน</div>
+        <select id="stat-class" onchange="renderStats()" style="min-width:130px">
+          <option value="">ทุกชั้นเรียน</option>
+        </select>
+      </div>
+      <button class="btn-primary" onclick="renderStats()">🔍 ดูสถิติ</button>
+    </div>
+    <div id="stat-period-label" style="font-size:12px;color:#888780;margin-top:8px"></div>
+  </div>
+  <div id="stats-summary-grid" class="summary-grid" style="grid-template-columns:repeat(auto-fit,minmax(130px,1fr))"></div>
+  <div style="background:#fff;border:1px solid #D3D1C7;border-radius:10px;overflow:hidden">
+    <div style="overflow-x:auto">
+      <table class="report-table" style="min-width:660px">
+        <thead>
+          <tr>
+            <th style="text-align:center;min-width:36px">#</th>
+            <th style="text-align:left;min-width:185px">ชื่อ-นามสกุล</th>
+            <th style="min-width:70px">ชั้น</th>
+            <th style="min-width:50px">เพศ</th>
+            <th style="background:#E1F5EE;color:#0F6E56;min-width:72px">มา (วัน)</th>
+            <th style="background:#FAEEDA;color:#854F0B;min-width:72px">ลา (วัน)</th>
+            <th style="background:#FCEBEB;color:#A32D2D;min-width:72px">ขาด (วัน)</th>
+            <th style="background:#F1EFE8;min-width:72px">วันทั้งหมด</th>
+            <th style="background:#0F6E56;color:#fff;min-width:70px">มา %</th>
+          </tr>
+        </thead>
+        <tbody id="stats-tbody">
+          <tr><td colspan="9" style="text-align:center;color:#888780;padding:24px">กดปุ่ม "ดูสถิติ" เพื่อโหลดข้อมูล</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <p style="font-size:11px;color:#888780;margin-top:8px;text-align:right" id="stats-note"></p>
 </div>
 </div>
 
@@ -330,7 +409,147 @@ function switchTab(t, btn){
   btn.classList.add('active');
   if(t === 'report') renderReport();
   if(t === 'students') renderStudentList();
+  if(t === 'stats') renderStats();
 }
+
+// ======= STATS FUNCTIONS =======
+
+// วันเปิด-ปิดภาคเรียนจริงของประเทศไทย (ปีการศึกษา -> ภาคเรียน -> วันที่)
+function getTermDates(acadYear, term) {
+  // acadYear เป็น พ.ศ. เช่น 2568
+  // ภาคเรียนที่ 1: พ.ค. – ต.ค. (ปีเดียวกัน) = ค.ศ. -543
+  // ภาคเรียนที่ 2: พ.ย. – มี.ค. (ข้ามปี) 
+  const ce = parseInt(acadYear) - 543;
+  if(term === 'term1') {
+    return { start: `${ce}-05-16`, end: `${ce}-10-11`, label: `ภาคเรียนที่ 1 ปีการศึกษา ${acadYear} (16 พ.ค. – 11 ต.ค. ${acadYear})` };
+  } else if(term === 'term2') {
+    return { start: `${ce}-11-01`, end: `${ce+1}-03-31`, label: `ภาคเรียนที่ 2 ปีการศึกษา ${acadYear} (1 พ.ย. ${acadYear} – 31 มี.ค. ${parseInt(acadYear)+1})` };
+  } else if(term === 'year') {
+    return { start: `${ce}-05-16`, end: `${ce+1}-03-31`, label: `ทั้งปีการศึกษา ${acadYear} (16 พ.ค. ${acadYear} – 31 มี.ค. ${parseInt(acadYear)+1})` };
+  }
+  return null;
+}
+
+function onStatFilterChange() {
+  const term = document.getElementById('stat-term').value;
+  const mw = document.getElementById('stat-month-wrap');
+  mw.style.display = term === 'month' ? '' : 'none';
+  renderStats();
+}
+
+function renderStats() {
+  const year = document.getElementById('stat-year').value;
+  const term = document.getElementById('stat-term').value;
+  const clsFilter = document.getElementById('stat-class').value;
+  const tbody = document.getElementById('stats-tbody');
+  const noteEl = document.getElementById('stats-note');
+  const summaryEl = document.getElementById('stats-summary-grid');
+  const labelEl = document.getElementById('stat-period-label');
+
+  // หาช่วงวันที่
+  let dateKeys = [];
+  let periodLabel = '';
+
+  if(term === 'month') {
+    const mon = document.getElementById('stat-month').value;
+    const ce = parseInt(year) - 543;
+    const monthNames = {
+      '01':'มกราคม','02':'กุมภาพันธ์','03':'มีนาคม','04':'เมษายน',
+      '05':'พฤษภาคม','06':'มิถุนายน','07':'กรกฎาคม','08':'สิงหาคม',
+      '09':'กันยายน','10':'ตุลาคม','11':'พฤศจิกายน','12':'ธันวาคม'
+    };
+    // เดือน พ.ย.–มี.ค. ของภาค 2 ใช้ปี ce+1 สำหรับ มค-มีค
+    let useYear = ce;
+    if(['01','02','03'].includes(mon)) useYear = ce; // ปีถัดไปถ้าต้องการ แต่ใช้ปีที่เลือกตรงๆ
+    const daysInMonth = new Date(useYear, parseInt(mon), 0).getDate();
+    for(let d=1; d<=daysInMonth; d++){
+      const dd = String(d).padStart(2,'0');
+      dateKeys.push(`${useYear}-${mon}-${dd}`);
+    }
+    periodLabel = `เดือน${monthNames[mon]} ปีการศึกษา ${year} (${daysInMonth} วันในปฏิทิน)`;
+  } else {
+    const td = getTermDates(year, term);
+    if(!td) return;
+    periodLabel = td.label;
+    // สร้าง array วันที่ทุกวันในช่วง
+    let cur = new Date(td.start + 'T00:00:00');
+    const endD = new Date(td.end + 'T00:00:00');
+    while(cur <= endD) {
+      dateKeys.push(cur.toISOString().slice(0,10));
+      cur.setDate(cur.getDate() + 1);
+    }
+  }
+
+  // กรองเฉพาะวันที่มีข้อมูลในระบบ
+  const recordedDays = dateKeys.filter(d => attendance[d]);
+  labelEl.textContent = `📅 ${periodLabel} — มีข้อมูลเช็คชื่อ ${recordedDays.length} วัน จากทั้งหมด ${dateKeys.length} วันในปฏิทิน`;
+
+  // กรองนักเรียน
+  const filteredStudents = clsFilter ? students.filter(s => s.cls === clsFilter) : students;
+
+  if(filteredStudents.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;color:#888780;padding:24px">ไม่พบนักเรียน</td></tr>`;
+    return;
+  }
+
+  // คำนวณสถิติรายนักเรียน
+  let totalMa=0, totalLa=0, totalKhad=0;
+  const rows = filteredStudents.map((s, i) => {
+    let ma=0, la=0, khad=0;
+    recordedDays.forEach(d => {
+      const st = (attendance[d] && attendance[d][s.id]) || '';
+      if(st === 'มา') ma++;
+      else if(st === 'ลาป่วย' || st === 'ลา') la++;
+      else if(st === 'ขาด') khad++;
+    });
+    const total = ma + la + khad;
+    const pct = total > 0 ? ((ma/total)*100).toFixed(1) : '–';
+    const pctNum = total > 0 ? (ma/total)*100 : 100;
+    totalMa+=ma; totalLa+=la; totalKhad+=khad;
+
+    let pctColor = '#0F6E56';
+    if(pctNum < 70) pctColor = '#A32D2D';
+    else if(pctNum < 80) pctColor = '#854F0B';
+
+    return `<tr>
+      <td style="text-align:center;color:#888780">${i+1}</td>
+      <td style="text-align:left">${s.name}</td>
+      <td>${s.cls}</td>
+      <td><span class="gender-badge ${s.gender==='ชาย'?'m-badge':'f-badge'}">${s.gender}</span></td>
+      <td style="color:#0F6E56;font-weight:600">${ma}</td>
+      <td style="color:#854F0B">${la}</td>
+      <td style="color:#A32D2D;font-weight:${khad>0?'600':'400'}">${khad}</td>
+      <td style="color:#5F5E5A">${recordedDays.length}</td>
+      <td style="color:${pctColor};font-weight:700">${pct}${pct!=='–'?'%':''}</td>
+    </tr>`;
+  });
+
+  tbody.innerHTML = rows.join('') + `<tr style="background:#E1F5EE;font-weight:700">
+    <td colspan="4" style="text-align:right;color:#0F6E56;padding-right:12px">รวมทั้งหมด (${filteredStudents.length} คน)</td>
+    <td style="color:#0F6E56">${totalMa}</td>
+    <td style="color:#854F0B">${totalLa}</td>
+    <td style="color:#A32D2D">${totalKhad}</td>
+    <td style="color:#5F5E5A">${recordedDays.length}</td>
+    <td style="color:#0F6E56">–</td>
+  </tr>`;
+
+  // summary cards
+  const avgPct = (totalMa+totalLa+totalKhad) > 0 
+    ? (totalMa/(totalMa+totalLa+totalKhad)*100).toFixed(1) 
+    : '–';
+  summaryEl.innerHTML = `
+    <div class="sum-card"><div class="sum-label">วันที่มีข้อมูล</div><div class="sum-val" style="color:#2C2C2A">${recordedDays.length}</div><div class="sum-sub">วัน</div></div>
+    <div class="sum-card"><div class="sum-label" style="color:#0F6E56">✅ รวมมาเรียน</div><div class="sum-val" style="color:#0F6E56">${totalMa}</div><div class="sum-sub">ครั้ง</div></div>
+    <div class="sum-card"><div class="sum-label" style="color:#854F0B">📋 รวมลา</div><div class="sum-val" style="color:#854F0B">${totalLa}</div><div class="sum-sub">ครั้ง</div></div>
+    <div class="sum-card"><div class="sum-label" style="color:#A32D2D">❌ รวมขาด</div><div class="sum-val" style="color:#A32D2D">${totalKhad}</div><div class="sum-sub">ครั้ง</div></div>
+    <div class="sum-card"><div class="sum-label" style="color:#0F6E56">📊 เฉลี่ยมา</div><div class="sum-val" style="color:#0F6E56;font-size:20px">${avgPct}${avgPct!=='–'?'%':''}</div><div class="sum-sub">ร้อยละ</div></div>
+  `;
+
+  noteEl.textContent = `คำนวณ ณ ${new Date().toLocaleString('th-TH')} | นับเฉพาะวันที่มีการเช็คชื่อในระบบ`;
+}
+// ======= END STATS =======
+
+
 
 function renderAttendance(){
   const date = document.getElementById('att-date').value || todayStr();
@@ -731,6 +950,7 @@ function initSelects(){
   const opts = CLASSES.map(c => `<option value="${c}">${c}</option>`).join('');
   document.getElementById('s-class').innerHTML = opts;
   document.getElementById('class-filter').innerHTML = `<option value="">ทุกชั้นเรียน</option>` + opts;
+  document.getElementById('stat-class').innerHTML = `<option value="">ทุกชั้นเรียน</option>` + opts;
 }
 
 function getInitialStudents() {
