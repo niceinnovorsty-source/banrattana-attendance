@@ -416,25 +416,23 @@ function renderReport(){
   document.getElementById('print-date-label').textContent = 'รายงานการมาเรียนประจำวัน ' + thDate;
 
   let rows = '';
-  
-  // ตัวแปรรวมทั้งโรงเรียน
-  let tM=0, tF=0, tAll=0, tMa=0, tKhad=0, tLa=0, tKhadLa=0;
-  
-  // ตัวแปรรวมสะสมแยกตามช่วงชั้น
-  let subAnuban = { m:0, f:0, total:0, ma:0, khad:0, la:0, khadLa:0 };
-  let subPrathom = { m:0, f:0, total:0, ma:0, khad:0, la:0, khadLa:0 };
+  let tM=0, tF=0, tAll=0;
+  let tMam=0, tMaf=0, tMa=0;
+  let tKhad=0, tLa=0, tKhadLa=0;
 
-  CLASSES.forEach((cls, index) => {
+  // ตัวแปรสะสมยอดรวมแยกตามช่วงชั้น
+  let subAnuban = { m:0, f:0, total:0, ma_m:0, ma_f:0, ma_total:0, khad:0, la:0, total_kl:0 };
+  let subPrathom = { m:0, f:0, total:0, ma_m:0, ma_f:0, ma_total:0, khad:0, la:0, total_kl:0 };
+
+  CLASSES.forEach(cls => {
     const ss = students.filter(s => s.cls === cls);
-    if(!ss.length) return;
-    
     const males = ss.filter(s => s.gender==='ชาย');
     const females = ss.filter(s => s.gender==='หญิง');
     let ma_m=0, ma_f=0, khad=0, la=0;
     
     ss.forEach(s => {
       const st = getAtt(date, s.id);
-      if(st==='มา'){ if(s.gender==='ชาย') ma_m++; else ma_f++; }
+      if(st==='มา' || st==='สาย'){ if(s.gender==='ชาย') ma_m++; else ma_f++; }
       else if(st==='ขาด') khad++;
       else if(st==='ลาป่วย') la++;
     });
@@ -443,54 +441,56 @@ function renderReport(){
     const khadLa = khad + la;
     const percent = ss.length > 0 ? ((ma / ss.length) * 100).toFixed(1) : '0.0';
     
-    // สะสมยอดลงช่วงชั้นที่ถูกต้อง
+    // สะสมข้อมูลแยกช่วงชั้น
     if(cls.includes('อนุบาล')) {
       subAnuban.m += males.length; subAnuban.f += females.length; subAnuban.total += ss.length;
-      subAnuban.ma += ma; subAnuban.khad += khad; subAnuban.la += la; subAnuban.khadLa += khadLa;
+      subAnuban.ma_m += ma_m; subAnuban.ma_f += ma_f; subAnuban.ma_total += ma;
+      subAnuban.khad += khad; subAnuban.la += la; subAnuban.total_kl += khadLa;
     } else {
       subPrathom.m += males.length; subPrathom.f += females.length; subPrathom.total += ss.length;
-      subPrathom.ma += ma; subPrathom.khad += khad; subPrathom.la += la; subPrathom.khadLa += khadLa;
+      subPrathom.ma_m += ma_m; subPrathom.ma_f += ma_f; subPrathom.ma_total += ma;
+      subPrathom.khad += khad; subPrathom.la += la; subPrathom.total_kl += khadLa;
     }
     
-    // ยอดรวมสะสมทั้งโรงเรียน
+    // สะสมข้อมูลรวมทั้งโรงเรียน
     tM+=males.length; tF+=females.length; tAll+=ss.length;
-    tMa+=ma; tKhad+=khad; tLa+=la; tKhadLa+=khadLa;
+    tMam+=ma_m; tMaf+=ma_f; tMa+=ma; tKhad+=khad; tLa+=la; tKhadLa+=khadLa;
     
-    // เพิ่มแถวข้อมูลชั้นเรียนปกติ
+    // เพิ่มแถวข้อมูลรายชั้นเรียนปกติ (แยก ชาย หญิง รวม ในช่องมาเรียน)
     rows += `<tr>
       <td class="class-col">${cls}</td>
       <td>${males.length}</td><td>${females.length}</td><td><strong>${ss.length}</strong></td>
-      <td style="color:#0F6E56"><strong>${ma}</strong></td>
+      <td style="color:#185FA5">${ma_m}</td><td style="color:#993556">${ma_f}</td><td style="color:#0F6E56"><strong>${ma}</strong></td>
       <td style="color:#A32D2D">${khad}</td>
       <td style="color:#185FA5">${la}</td>
       <td style="color:#854F0B; font-weight:600">${khadLa}</td>
       <td style="color:#0F6E56; font-weight:700; background:#F8FDFB">${percent}%</td>
     </tr>`;
     
-    // แทรกแถวสรุปผล "รวมช่วงชั้นอนุบาล" หลังจบบล็อก อนุบาล 3
-    if(cls === 'อนุบาล 3' && subAnuban.total > 0) {
-      const subPct = ((subAnuban.ma / subAnuban.total) * 100).toFixed(1);
+    // แทรกแถวสรุป "รวมช่วงชั้นอนุบาล"
+    if(cls === 'อนุบาล 3') {
+      const subPct = subAnuban.total > 0 ? ((subAnuban.ma_total / subAnuban.total) * 100).toFixed(1) : '0.0';
       rows += `<tr style="background:#FAF8F2; font-weight:600; border-bottom:2px solid #D3D1C7">
         <td class="class-col" style="color:#854F0B; padding-left:15px;">↳ รวมช่วงชั้นอนุบาล</td>
         <td>${subAnuban.m}</td><td>${subAnuban.f}</td><td>${subAnuban.total}</td>
-        <td style="color:#0F6E56">${subAnuban.ma}</td>
+        <td style="color:#185FA5">${subAnuban.ma_m}</td><td style="color:#993556">${subAnuban.ma_f}</td><td style="color:#0F6E56">${subAnuban.ma_total}</td>
         <td style="color:#A32D2D">${subAnuban.khad}</td>
         <td style="color:#185FA5">${subAnuban.la}</td>
-        <td style="color:#854F0B">${subAnuban.khadLa}</td>
+        <td style="color:#854F0B">${subAnuban.total_kl}</td>
         <td style="color:#0F6E56; font-weight:700">${subPct}%</td>
       </tr>`;
     }
     
-    // แทรกแถวสรุปผล "รวมช่วงชั้นประถมศึกษา" หลังจบบล็อก ป.6
-    if(cls === 'ป.6' && subPrathom.total > 0) {
-      const subPct = ((subPrathom.ma / subPrathom.total) * 100).toFixed(1);
+    // แทรกแถวสรุป "รวมช่วงชั้นประถมศึกษา"
+    if(cls === 'ป.6') {
+      const subPct = subPrathom.total > 0 ? ((subPrathom.ma_total / subPrathom.total) * 100).toFixed(1) : '0.0';
       rows += `<tr style="background:#FAF8F2; font-weight:600; border-bottom:2px solid #D3D1C7">
         <td class="class-col" style="color:#854F0B; padding-left:15px;">↳ รวมช่วงชั้นประถมฯ</td>
         <td>${subPrathom.m}</td><td>${subPrathom.f}</td><td>${subPrathom.total}</td>
-        <td style="color:#0F6E56">${subPrathom.ma}</td>
+        <td style="color:#185FA5">${subPrathom.ma_m}</td><td style="color:#993556">${subPrathom.ma_f}</td><td style="color:#0F6E56">${subPrathom.ma_total}</td>
         <td style="color:#A32D2D">${subPrathom.khad}</td>
         <td style="color:#185FA5">${subPrathom.la}</td>
-        <td style="color:#854F0B">${subPrathom.khadLa}</td>
+        <td style="color:#854F0B">${subPrathom.total_kl}</td>
         <td style="color:#0F6E56; font-weight:700">${subPct}%</td>
       </tr>`;
     }
@@ -505,7 +505,7 @@ function renderReport(){
         <tr>
           <th rowspan="2" class="class-col" style="text-align:left;min-width:110px">ชั้น</th>
           <th colspan="3" style="background:#D3D1C7">จำนวนนักเรียนทั้งหมด</th>
-          <th rowspan="2" style="background:#9FE1CB; color:#0F6E56">มาเรียน<br>วันนี้</th>
+          <th colspan="3" style="background:#9FE1CB; color:#0F6E56">มาเรียนวันนี้</th>
           <th rowspan="2" style="color:#A32D2D">ขาด</th>
           <th rowspan="2" style="color:#185FA5">ลาป่วย</th>
           <th rowspan="2" style="background:#FCEBEB; color:#A32D2D">รวมขาด/ลา</th>
@@ -513,6 +513,7 @@ function renderReport(){
         </tr>
         <tr>
           <th>ชาย</th><th>หญิง</th><th>รวม</th>
+          <th style="color:#185FA5">ชาย</th><th style="color:#993556">หญิง</th><th style="color:#0F6E56">รวม</th>
         </tr>
       </thead>
       <tbody>${rows}</tbody>
@@ -520,17 +521,14 @@ function renderReport(){
         <tr>
           <td class="class-col">รวมทั้งโรงเรียน</td>
           <td>${tM}</td><td>${tF}</td><td>${tAll}</td>
-          <td>${tMa}</td><td>${tKhad}</td><td>${tLa}</td>
-          <td>${tKhadLa}</td>
+          <td>${tMam}</td><td>${tMaf}</td><td>${tMa}</td>
+          <td>${tKhad}</td><td>${tLa}</td><td>${tKhadLa}</td>
           <td style="font-weight:700; background:#0F6E56; color:#fff">${totalPercent}%</td>
         </tr>
       </tfoot>
     </table>
-    <p style="font-size:11px;color:#888780;margin-top:10px;text-align:right">พิมพ์เมื่อ: ${new Date().toLocaleString('th-TH')}</p>
+    <p style="font-size:11px;color:#888780;margin-top:10px;text-align:right;margin-bottom:30px;">พิมพ์เมื่อ: ${new Date().toLocaleString('th-TH')}</p>
   `;
-
-  // เรียกฟังก์ชันสร้างหรืออัพเดท แผนภูมิแท่งสรุปผล
-  generateChart(subAnuban, subPrathom);
 }
 
 function generateChart(anuban, prathom) {
@@ -780,35 +778,40 @@ function getInitialStudents() {
 </div>
 
 <style>
-/* ซ่อนส่วนลายเซ็นไว้เมื่อดูบนหน้าจอปกติ (มือถือ/คอม) */
+/* ตั้งค่าการแสดงผลลายเซ็นให้เห็นทั้งบนหน้าจอคอมพิวเตอร์และตอนกดพิมพ์กระดาษ */
 .report-signature-container {
-    display: none;
+    display: flex !important;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 50px;
+    padding-top: 20px;
+    clear: both;
 }
 
-/* แสดงผลและจัดทรงเฉพาะเวลาสั่งพิมพ์ (Print Preview / PDF) */
-@media print {
-  /* เพิ่มเติมข้อกำหนดเพื่อให้กราฟไม่หลุดขนาดหน้ากระดาษ */
-  #chart-container {
-    border: none !important;
-    margin-top: 20px !important;
-    page-break-inside: avoid;
-  }
+.signature-col {
+    width: 45%;
+    text-align: center;
+    display: inline-block;
 }
-    
-    /* แบ่งพื้นที่เป็น 2 บล็อก ซ้าย-ขวา */
-    .signature-col {
-        float: left;
-        width: 50%; /* แบ่งคนละครึ่งหน้ากระดาษ */
-        text-align: center; /* จัดข้อความทุกบรรทัดให้อยู่กึ่งกลางของช่อง */
-        margin-bottom: 20px;
+
+.signature-col p {
+    margin: 8px 0;
+    font-size: 15px; 
+    color: #2C2C2A;
+    font-family: "Sarabun", sans-serif;
+    line-height: 1.8;
+}
+
+/* ควบคุมสไตล์เวลาสั่งพิมพ์รายงานผ่านเบราว์เซอร์ */
+@media print {
+    .report-signature-container {
+        display: flex !important;
+        margin-top: 60px;
+        page-break-inside: avoid; /* ป้องกันระบบพิมพ์ฉีกหน้าลายเซ็นแยกจากตาราง */
     }
-    
-    /* ตั้งค่าตัวอักษรให้อ่านง่าย เป็นระเบียบ */
     .signature-col p {
-        margin: 6px 0;
-        font-size: 16px; 
-        font-family: "Sarabun", "TH Sarabun PSK", sans-serif;
-        line-height: 1.8;
+        font-size: 16px;
+        color: #000000;
     }
 }
 </style>
