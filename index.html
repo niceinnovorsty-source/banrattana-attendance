@@ -126,36 +126,6 @@ select{padding:7px 10px;border-radius:8px;border:1px solid #D3D1C7;font-size:13p
 </style>
   
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-  // ใส่ค่าคอนฟิก Firebase ของโรงเรียนบ้านรัตนะที่ได้รับมาเรียบร้อยแล้ว
-  const firebaseConfig = {
-    apiKey: "AIzaSyCR3L7HpslKdRN4MYcfUxyeTXIiGLx6Rho",
-    authDomain: "rattana-658c6.firebaseapp.com",
-    projectId: "rattana-658c6",
-    storageBucket: "rattana-658c6.firebasestorage.app",
-    messagingSenderId: "246780523649",
-    appId: "1:246780523649:web:5f6d6d9e562d5a9caa4980",
-    measurementId: "G-SN49D89H8D"
-  };
-
-  // Initialize Firebase
-  const firebaseApp = initializeApp(firebaseConfig);
-  const db = getFirestore(firebaseApp);
-
-  // ส่งข้อมูลออกไปที่ global scope เพื่อทำงานร่วมกับระบบ HTML ด้านล่าง
-  window.db = db;
-  window.fbDoc = doc;
-  window.fbGetDoc = getDoc;
-  window.fbSetDoc = setDoc;
-  window.fbOnSnapshot = onSnapshot;
-  window.fbCollection = collection;
-  
-  // สั่งเริ่มต้นระบบงานหลัก
-  window.initFirebaseSystem();
-</script>
 </head>
 <body>
 
@@ -1427,5 +1397,33 @@ function openTimeline(sid) {
     }
 }
 </style>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCR3L7HpslKdRN4MYcfUxyeTXIiGLx6Rho",
+    authDomain: "rattana-658c6.firebaseapp.com",
+    projectId: "rattana-658c6",
+    storageBucket: "rattana-658c6.firebasestorage.app",
+    messagingSenderId: "246780523649",
+    appId: "1:246780523649:web:5f6d6d9e562d5a9caa4980",
+    measurementId: "G-SN49D89H8D"
+  };
+
+  const firebaseApp = initializeApp(firebaseConfig);
+  const db = getFirestore(firebaseApp);
+
+  window.db = db;
+  window.fbDoc = doc;
+  window.fbGetDoc = getDoc;
+  window.fbSetDoc = setDoc;
+  window.fbOnSnapshot = onSnapshot;
+  window.fbCollection = collection;
+
+  // ณ จุดนี้ DOM และ inline script ใน body โหลดครบแล้ว (module อยู่ท้าย body)
+  window.initFirebaseSystem();
+</script>
 </body>
 </html>
