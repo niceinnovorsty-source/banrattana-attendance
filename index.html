@@ -52,6 +52,7 @@ select{padding:7px 10px;border-radius:8px;border:1px solid #D3D1C7;font-size:13p
 .att-btn.sel-สาย{background:#FAEEDA;color:#854F0B;border-color:#FAC775;font-weight:600}
 .att-btn.sel-ขาด{background:#FCEBEB;color:#A32D2D;border-color:#F09995;font-weight:600}
 .att-btn.sel-ลาป่วย{background:#E6F1FB;color:#185FA5;border-color:#85B7EB;font-weight:600}
+.att-btn.sel-ลา{background:#E6F1FB;color:#185FA5;border-color:#85B7EB;font-weight:600}
 .gender-badge{font-size:11px;padding:2px 7px;border-radius:99px}
 .m-badge{background:#E6F1FB;color:#185FA5}
 .f-badge{background:#FBEAF0;color:#993556}
@@ -499,7 +500,7 @@ function renderStats() {
     recordedDays.forEach(d => {
       const st = (attendance[d] && attendance[d][s.id]) || '';
       if(st === 'มา') ma++;
-      else if(st === 'ลาป่วย' || st === 'ลา') la++;
+      else if(st === 'ลา') la++;
       else if(st === 'ขาด') khad++;
     });
     const total = ma + la + khad;
@@ -558,7 +559,7 @@ function renderAttendance(){
   const byClass = {};
   CLASSES.forEach(c => { byClass[c] = students.filter(s => s.cls === c); });
 
-  let counts = {มา:0,สาย:0,ขาด:0,ลาป่วย:0};
+  let counts = {มา:0,ขาด:0,ลา:0};
   let total = students.length;
   students.forEach(s => {
     const st = getAtt(date, s.id);
@@ -569,15 +570,15 @@ document.getElementById('att-summary').innerHTML = `
     <div class="sum-card"><div class="sum-label">นักเรียนทั้งหมด</div><div class="sum-val">${total}</div><div class="sum-sub">คน</div></div>
     <div class="sum-card"><div class="sum-label" style="color:#0F6E56">✅ มาเรียน</div><div class="sum-val" style="color:#0F6E56">${counts['มา']}</div><div class="sum-sub">คน</div></div>
     <div class="sum-card"><div class="sum-label" style="color:#A32D2D">❌ ขาดเรียน</div><div class="sum-val" style="color:#A32D2D">${counts['ขาด']}</div><div class="sum-sub">คน</div></div>
-    <div class="sum-card"><div class="sum-label" style="color:#185FA5">🏥 ลาป่วย</div><div class="sum-val" style="color:#185FA5">${counts['ลาป่วย']}</div><div class="sum-sub">คน</div></div>
-    <div class="sum-card"><div class="sum-label" style="color:#888780">ยังไม่เช็ค</div><div class="sum-val" style="color:#888780">${total - counts['มา'] - counts['สาย'] - counts['ขาด'] - counts['ลาป่วย']}</div><div class="sum-sub">คน</div></div>
+    <div class="sum-card"><div class="sum-label" style="color:#185FA5">🏥 ลา</div><div class="sum-val" style="color:#185FA5">${counts['ลา']}</div><div class="sum-sub">คน</div></div>
+    <div class="sum-card"><div class="sum-label" style="color:#888780">ยังไม่เช็ค</div><div class="sum-val" style="color:#888780">${total - counts['มา'] - counts['ขาด'] - counts['ลา']}</div><div class="sum-sub">คน</div></div>
   `;
 
   let html = '';
   CLASSES.forEach(cls => {
     const ss = byClass[cls];
     if(!ss || !ss.length) return;
-    const c2 = {มา:0,สาย:0,ขาด:0,ลาป่วย:0};
+    const c2 = {มา:0,ขาด:0,ลา:0};
     ss.forEach(s => { const st = getAtt(date, s.id); if(c2[st] !== undefined) c2[st]++; });
     const safeId = 'cls-' + cls.replace(/\s/g,'_');
     html += `
@@ -587,9 +588,8 @@ document.getElementById('att-summary').innerHTML = `
         <div style="display:flex;align-items:center;gap:6px">
           <div class="class-stats">
             <span class="stat-badge s-green">มา ${c2['มา']}</span>
-            <span class="stat-badge s-amber">สาย ${c2['สาย']}</span>
             <span class="stat-badge s-red">ขาด ${c2['ขาด']}</span>
-            <span class="stat-badge s-blue">ลา ${c2['ลาป่วย']}</span>
+            <span class="stat-badge s-blue">ลา ${c2['ลา']}</span>
           </div>
           <span class="toggle-btn" id="${safeId}-arrow">▼</span>
         </div>
@@ -740,7 +740,7 @@ function renderReport(){
     
     detailTableHTML = `
       <div class="absent-detail-section" style="margin-top:15px; page-break-inside:avoid;">
-        <p style="font-size:13px; font-weight:600; color:#2C2C2A; margin-bottom:5px; text-align:left;">⚠️ รายชื่อนักเรียนที่ไม่มาเรียนวันนี้</p>
+        <p style="font-size:13px; font-weight:600; color:#2C2C2A; margin-bottom:5px; text-align:left;"> รายชื่อนักเรียนที่ไม่มาเรียนวันนี้</p>
         <table class="report-table" style="width:100%; max-width:600px; margin:0 auto; border-collapse:collapse;">
           <thead>
             <tr style="background:#F2ECE4;">
@@ -756,7 +756,7 @@ function renderReport(){
   } else {
     detailTableHTML = `
       <div style="margin-top:12px; text-align:center; color:#0F6E56; font-weight:600; font-size:13px; padding:8px; background:#E1F5EE; border-radius:6px; page-break-inside:avoid;">
-        🎉 วันนี้ไม่มีนักเรียนขาดหรือลาเรียน
+        วันนี้ไม่มีนักเรียนขาดหรือลาเรียน
       </div>`;
   }
 
