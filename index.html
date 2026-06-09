@@ -45,9 +45,13 @@ select{padding:7px 10px;border-radius:8px;border:1px solid #D3D1C7;font-size:13p
 .student-table td{padding:8px 12px;border-bottom:1px solid #D3D1C7;vertical-align:middle}
 .student-table tr:last-child td{border-bottom:none}
 .student-table tr:hover td{background:#F1EFE8}
-.att-btns{display:flex;gap:4px;flex-wrap:wrap}
-.att-btn{padding:4px 11px;border-radius:99px;border:1px solid #D3D1C7;font-size:12px;cursor:pointer;background:transparent;color:#888780;font-family:'Sarabun',sans-serif;transition:all 0.12s}
+.att-btns{display:flex;gap:6px;flex-wrap:wrap}
+.att-btn{padding:8px 16px;border-radius:99px;border:1px solid #D3D1C7;font-size:14px;cursor:pointer;background:transparent;color:#888780;font-family:'Sarabun',sans-serif;transition:all 0.12s;min-width:60px;text-align:center;font-weight:500}
 .att-btn:hover{background:#F1EFE8}
+@media(max-width:600px){
+  .att-btn{padding:10px 18px;font-size:15px;min-width:72px}
+  .student-table td{padding:10px 8px}
+}
 .att-btn.sel-มา{background:#E1F5EE;color:#0F6E56;border-color:#5DCAA5;font-weight:600}
 .att-btn.sel-สาย{background:#FAEEDA;color:#854F0B;border-color:#FAC775;font-weight:600}
 .att-btn.sel-ขาด{background:#FCEBEB;color:#A32D2D;border-color:#F09995;font-weight:600}
@@ -201,6 +205,7 @@ select{padding:7px 10px;border-radius:8px;border:1px solid #D3D1C7;font-size:13p
       <input type="date" id="rep-date" onchange="renderReport()">
     </div>
     <button class="btn-print" onclick="window.print()">🖨️ พิมพ์รายงาน</button>
+    <button class="btn-print" onclick="exportReportExcel()" style="background:#fff;border-color:#1D9E75;color:#0F6E56">📥 ส่งออก Excel</button>
   </div>
   <div class="report-wrap">
     <div id="report-content"></div>
@@ -262,6 +267,7 @@ select{padding:7px 10px;border-radius:8px;border:1px solid #D3D1C7;font-size:13p
         </select>
       </div>
       <button class="btn-primary" onclick="renderStats()">🔍 ดูสถิติ</button>
+      <button class="btn-print" onclick="exportStatsExcel()" style="background:#fff;border-color:#1D9E75;color:#0F6E56">📥 ส่งออก Excel</button>
     </div>
     <div id="stat-period-label" style="font-size:12px;color:#888780;margin-top:8px"></div>
   </div>
@@ -514,7 +520,7 @@ function renderStats() {
 
     return `<tr>
       <td style="text-align:center;color:#888780">${i+1}</td>
-      <td style="text-align:left">${s.name}</td>
+      <td style="text-align:left"><button onclick="openTimeline('${s.id}')" style="background:none;border:none;cursor:pointer;color:#185FA5;font-family:'Sarabun',sans-serif;font-size:13px;text-decoration:underline;padding:0;text-align:left">${s.name}</button></td>
       <td>${s.cls}</td>
       <td><span class="gender-badge ${s.gender==='ชาย'?'m-badge':'f-badge'}">${s.gender}</span></td>
       <td style="color:#0F6E56;font-weight:600">${ma}</td>
@@ -574,6 +580,23 @@ document.getElementById('att-summary').innerHTML = `
     <div class="sum-card"><div class="sum-label" style="color:#888780">ยังไม่เช็ค</div><div class="sum-val" style="color:#888780">${total - counts['มา'] - counts['ขาด'] - counts['ลา']}</div><div class="sum-sub">คน</div></div>
   `;
 
+  // ปุ่มทุกคนมา (รวมทุกชั้น)
+  const allUnmarked = students.filter(s => !getAtt(date, s.id)).length;
+  const summaryEl2 = document.getElementById('att-summary');
+  let allPresentBar = document.getElementById('all-present-bar');
+  if(!allPresentBar) {
+    allPresentBar = document.createElement('div');
+    allPresentBar.id = 'all-present-bar';
+    allPresentBar.style.cssText = 'margin-bottom:14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center';
+    summaryEl2.insertAdjacentElement('afterend', allPresentBar);
+  }
+  allPresentBar.innerHTML = `
+    <button class="btn-primary" onclick="markAllPresent('${date}', null)" style="font-size:13px;display:flex;align-items:center;gap:6px">
+      ✅ ทุกคนมาทั้งโรงเรียน
+    </button>
+    <span style="font-size:12px;color:#888780">ยังไม่เช็ค ${allUnmarked} คน</span>
+  `;
+
   let html = '';
   CLASSES.forEach(cls => {
     const ss = byClass[cls];
@@ -581,6 +604,7 @@ document.getElementById('att-summary').innerHTML = `
     const c2 = {มา:0,ขาด:0,ลา:0};
     ss.forEach(s => { const st = getAtt(date, s.id); if(c2[st] !== undefined) c2[st]++; });
     const safeId = 'cls-' + cls.replace(/\s/g,'_');
+    const safeCls = cls.replace(/'/g,"\\'");
     html += `
     <div class="class-card">
       <div class="class-header" onclick="toggleCls('${safeId}',this)">
@@ -591,6 +615,7 @@ document.getElementById('att-summary').innerHTML = `
             <span class="stat-badge s-red">ขาด ${c2['ขาด']}</span>
             <span class="stat-badge s-blue">ลา ${c2['ลา']}</span>
           </div>
+          <button onclick="event.stopPropagation();markAllPresent('${date}','${safeCls}')" style="padding:3px 10px;border-radius:99px;border:1px solid #5DCAA5;background:#E1F5EE;color:#0F6E56;font-size:11px;font-family:'Sarabun',sans-serif;cursor:pointer;font-weight:600;white-space:nowrap">✅ ทุกคนมา</button>
           <span class="toggle-btn" id="${safeId}-arrow">▼</span>
         </div>
       </div>
@@ -626,6 +651,19 @@ function toggleCls(id, header){
   const hidden = el.style.display === 'none';
   el.style.display = hidden ? 'block' : 'none';
   if(arrow) arrow.textContent = hidden ? '▼' : '▶';
+}
+
+async function markAllPresent(date, cls) {
+  const targets = cls ? students.filter(s => s.cls === cls) : students;
+  if(!targets.length) return;
+  if(!attendance[date]) attendance[date] = {};
+  targets.forEach(s => { attendance[date][s.id] = 'มา'; });
+  renderAttendance();
+  showSaveNotice();
+  try {
+    await window.fbSetDoc(window.fbDoc(window.db, "school_data", "attendance_records"), { records: attendance });
+    showToast(cls ? `✅ ทำเครื่องหมาย "${cls}" ทุกคนมาแล้ว` : '✅ ทำเครื่องหมายทุกคนมาแล้ว');
+  } catch(err) { console.error(err); }
 }
 
 let myChart = null; // ตัวแปรเก็บสถานะกราฟ ป้องกันกราฟซ้อน
@@ -740,7 +778,7 @@ function renderReport(){
     
     detailTableHTML = `
       <div class="absent-detail-section" style="margin-top:15px; page-break-inside:avoid;">
-        <p style="font-size:13px; font-weight:600; color:#2C2C2A; margin-bottom:5px; text-align:left;"> รายชื่อนักเรียนที่ไม่มาเรียนวันนี้</p>
+        <p style="font-size:13px; font-weight:600; color:#2C2C2A; margin-bottom:5px; text-align:left;">⚠️ รายชื่อนักเรียนที่ไม่มาเรียนวันนี้</p>
         <table class="report-table" style="width:100%; max-width:600px; margin:0 auto; border-collapse:collapse;">
           <thead>
             <tr style="background:#F2ECE4;">
@@ -756,7 +794,7 @@ function renderReport(){
   } else {
     detailTableHTML = `
       <div style="margin-top:12px; text-align:center; color:#0F6E56; font-weight:600; font-size:13px; padding:8px; background:#E1F5EE; border-radius:6px; page-break-inside:avoid;">
-        วันนี้ไม่มีนักเรียนขาดหรือลาเรียน
+        🎉 วันนี้ไม่มีนักเรียนขาดหรือลาเรียน
       </div>`;
   }
 
@@ -884,6 +922,7 @@ function renderStudentList(){
       <td><span class="gender-badge ${s.gender==='ชาย'?'m-badge':'f-badge'}">${s.gender}</span></td>
       <td>${s.cls}</td>
       <td style="display:flex;gap:6px">
+        <button class="btn-edit" onclick="openTimeline('${s.id}')">📅 ประวัติ</button>
         <button class="btn-edit" onclick="openEditModal('${s.id}')">✏️ แก้ไข</button>
         <button class="btn-danger" onclick="deleteStudent('${s.id}')">🗑️</button>
       </td>
@@ -939,11 +978,89 @@ async function saveStudent(){
 async function deleteStudent(id){
   const s = students.find(x => x.id === id);
   if(!s) return;
-  if(!confirm(`ยืนยันการลบ\n"${s.name}"\nออกจากระบบคลาวด์?`)) return;
+
+  // เปิด confirm modal แทน confirm()
+  openDeleteConfirm(s);
+}
+
+function openDeleteConfirm(s) {
+  // สร้าง modal ยืนยันการลบ
+  let existing = document.getElementById('delete-confirm-modal');
+  if(existing) existing.remove();
+
+  const modal = document.createElement('div');
+  modal.id = 'delete-confirm-modal';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:300;display:flex;align-items:center;justify-content:center';
+  modal.innerHTML = `
+    <div style="background:#fff;border-radius:12px;padding:24px;width:340px;max-width:92vw;border:1px solid #D3D1C7">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <div style="width:36px;height:36px;border-radius:50%;background:#FCEBEB;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🗑️</div>
+        <h3 style="font-size:15px;font-weight:600;color:#A32D2D;margin:0">ยืนยันการลบนักเรียน</h3>
+      </div>
+      <div style="background:#FFF5F5;border:1px solid #F09995;border-radius:8px;padding:12px;margin-bottom:14px">
+        <div style="font-size:14px;font-weight:600;color:#2C2C2A;margin-bottom:4px">${s.name}</div>
+        <div style="font-size:12px;color:#5F5E5A">ชั้น ${s.cls} · ${s.gender}</div>
+      </div>
+      <div style="background:#FAEEDA;border:1px solid #FAC775;border-radius:8px;padding:10px 12px;margin-bottom:16px;font-size:12px;color:#854F0B;line-height:1.6">
+        ⚠️ <strong>ข้อมูลที่จะถูกลบถาวร:</strong><br>
+        • ชื่อ-นามสกุล และข้อมูลส่วนตัว<br>
+        • ประวัติการมาเรียนทั้งหมดของนักเรียนคนนี้<br>
+        <strong>ไม่สามารถกู้คืนได้หลังจากยืนยัน</strong>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:flex-end">
+        <button onclick="document.getElementById('delete-confirm-modal').remove()" style="padding:8px 16px;border-radius:8px;border:1px solid #D3D1C7;background:#fff;color:#5F5E5A;font-size:13px;cursor:pointer;font-family:'Sarabun',sans-serif">ยกเลิก</button>
+        <button onclick="confirmDeleteStudent('${s.id}')" style="padding:8px 16px;border-radius:8px;border:none;background:#A32D2D;color:#fff;font-size:13px;cursor:pointer;font-family:'Sarabun',sans-serif;font-weight:600">🗑️ ยืนยันลบออก</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  modal.addEventListener('click', (e) => { if(e.target === modal) modal.remove(); });
+}
+
+async function confirmDeleteStudent(id) {
+  const modal = document.getElementById('delete-confirm-modal');
+  if(modal) modal.remove();
+
+  const s = students.find(x => x.id === id);
+  if(!s) return;
+
+  // บันทึก audit log
+  const logEntry = {
+    action: 'DELETE_STUDENT',
+    studentId: id,
+    studentName: s.name,
+    studentCls: s.cls,
+    deletedAt: new Date().toISOString(),
+    deletedBy: 'ครูผู้ดูแลระบบ'
+  };
+  try {
+    const logRef = window.fbDoc(window.db, "school_data", "audit_log");
+    const logSnap = await window.fbGetDoc(logRef);
+    const logs = logSnap.exists() ? (logSnap.data().logs || []) : [];
+    logs.push(logEntry);
+    await window.fbSetDoc(logRef, { logs });
+  } catch(e) { console.warn("audit log error", e); }
+
   students = students.filter(x => x.id !== id);
   renderStudentList();
-  
   await window.fbSetDoc(window.fbDoc(window.db, "school_data", "students_list"), { list: students });
+
+  // แสดงข้อความยืนยัน
+  showToast(`✅ ลบ "${s.name}" ออกจากระบบแล้ว`);
+}
+
+function showToast(msg) {
+  let t = document.getElementById('toast-msg');
+  if(!t) {
+    t = document.createElement('div');
+    t.id = 'toast-msg';
+    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#2C2C2A;color:#fff;padding:10px 20px;border-radius:99px;font-size:13px;z-index:999;font-family:Sarabun,sans-serif;box-shadow:0 4px 12px rgba(0,0,0,0.25);transition:opacity 0.4s';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.opacity = '1';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => { t.style.opacity = '0'; }, 2500);
 }
 
 function initSelects(){
@@ -953,7 +1070,196 @@ function initSelects(){
   document.getElementById('stat-class').innerHTML = `<option value="">ทุกชั้นเรียน</option>` + opts;
 }
 
-function getInitialStudents() {
+// ============ EXPORT EXCEL ============
+function exportReportExcel() {
+  const date = document.getElementById('rep-date').value || todayStr();
+  const thDate = new Date(date+'T00:00:00').toLocaleDateString('th-TH',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+
+  let csv = `\uFEFFรายงานการมาเรียน โรงเรียนบ้านรัตนะ\nวันที่,${thDate}\n\n`;
+  csv += `ชั้น,ชาย,หญิง,รวม,มา(ชาย),มา(หญิง),มา(รวม),ขาด,ลา,รวมขาด/ลา,มา%\n`;
+
+  CLASSES.forEach(cls => {
+    const ss = students.filter(s => s.cls === cls);
+    const males = ss.filter(s => s.gender==='ชาย').length;
+    const females = ss.filter(s => s.gender==='หญิง').length;
+    let mam=0, maf=0, khad=0, la=0;
+    ss.forEach(s => {
+      const st = getAtt(date, s.id);
+      if(st==='มา'){ if(s.gender==='ชาย') mam++; else maf++; }
+      else if(st==='ขาด') khad++;
+      else if(st==='ลา') la++;
+    });
+    const ma = mam+maf;
+    const pct = ss.length > 0 ? ((ma/ss.length)*100).toFixed(1) : '0.0';
+    csv += `${cls},${males},${females},${ss.length},${mam},${maf},${ma},${khad},${la},${khad+la},${pct}%\n`;
+  });
+
+  // รายชื่อขาด/ลา
+  csv += `\nรายชื่อนักเรียนที่ไม่มาเรียน\nที่,ชั้น,เลขที่,ชื่อ-นามสกุล,สถานะ\n`;
+  let no = 1;
+  CLASSES.forEach(cls => {
+    students.filter(s => s.cls === cls).forEach((s,i) => {
+      const st = getAtt(date, s.id);
+      if(st === 'ขาด' || st === 'ลา') {
+        csv += `${no++},${cls},${i+1},${s.name},${st==='ขาด'?'ขาดเรียน':'ลา'}\n`;
+      }
+    });
+  });
+
+  downloadCSV(csv, `รายงาน_${date}.csv`);
+}
+
+function exportStatsExcel() {
+  const year = document.getElementById('stat-year').value;
+  const term = document.getElementById('stat-term').value;
+  const clsFilter = document.getElementById('stat-class').value;
+
+  let dateKeys = [];
+  if(term === 'month') {
+    const mon = document.getElementById('stat-month').value;
+    const ce = parseInt(year) - 543;
+    const days = new Date(ce, parseInt(mon), 0).getDate();
+    for(let d=1;d<=days;d++) dateKeys.push(`${ce}-${mon}-${String(d).padStart(2,'0')}`);
+  } else {
+    const td = getTermDates(year, term);
+    if(!td) return;
+    let cur = new Date(td.start+'T00:00:00');
+    const end = new Date(td.end+'T00:00:00');
+    while(cur<=end){ dateKeys.push(cur.toISOString().slice(0,10)); cur.setDate(cur.getDate()+1); }
+  }
+  const recorded = dateKeys.filter(d => attendance[d]);
+  const filtered = clsFilter ? students.filter(s => s.cls === clsFilter) : students;
+
+  let csv = `\uFEFFสถิติการมาเรียน โรงเรียนบ้านรัตนะ\nปีการศึกษา,${year}\nวันที่มีข้อมูล,${recorded.length} วัน\n\n`;
+  csv += `ที่,ชื่อ-นามสกุล,ชั้น,เพศ,มา(วัน),ลา(วัน),ขาด(วัน),วันทั้งหมด,มา%\n`;
+
+  filtered.forEach((s,i) => {
+    let ma=0,la=0,khad=0;
+    recorded.forEach(d => {
+      const st = (attendance[d]&&attendance[d][s.id])||'';
+      if(st==='มา') ma++; else if(st==='ลา') la++; else if(st==='ขาด') khad++;
+    });
+    const total = ma+la+khad;
+    const pct = total>0?((ma/total)*100).toFixed(1):'–';
+    csv += `${i+1},${s.name},${s.cls},${s.gender},${ma},${la},${khad},${recorded.length},${pct}${pct!=='–'?'%':''}\n`;
+  });
+
+  downloadCSV(csv, `สถิติ_${year}_${term}.csv`);
+}
+
+function downloadCSV(csv, filename) {
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+  showToast(`📥 ดาวน์โหลด ${filename} แล้ว`);
+}
+
+// ============ TIMELINE ประวัติรายคน ============
+function openTimeline(sid) {
+  const s = students.find(x => x.id === sid);
+  if(!s) return;
+
+  // รวบรวมวันที่ทั้งหมดที่มีข้อมูลของนักเรียนคนนี้
+  const days = Object.keys(attendance)
+    .filter(d => attendance[d] && attendance[d][sid])
+    .sort((a,b) => b.localeCompare(a)); // เรียงล่าสุดก่อน
+
+  let timelineHTML = '';
+  if(days.length === 0) {
+    timelineHTML = '<div style="text-align:center;color:#888780;padding:24px;font-size:13px">ยังไม่มีข้อมูลการเช็คชื่อ</div>';
+  } else {
+    const statusConfig = {
+      'มา': {bg:'#E1F5EE',color:'#0F6E56',dot:'#1D9E75',icon:'✅'},
+      'ขาด': {bg:'#FCEBEB',color:'#A32D2D',dot:'#A32D2D',icon:'❌'},
+      'ลา': {bg:'#E6F1FB',color:'#185FA5',dot:'#185FA5',icon:'📋'},
+      'สาย': {bg:'#FAEEDA',color:'#854F0B',dot:'#854F0B',icon:'⏰'},
+    };
+
+    // สรุปสถิติ
+    let ma=0,la=0,khad=0;
+    days.forEach(d => {
+      const st = attendance[d][sid];
+      if(st==='มา') ma++; else if(st==='ลา') la++; else if(st==='ขาด') khad++;
+    });
+    const total = ma+la+khad;
+    const pct = total>0?((ma/total)*100).toFixed(1):'–';
+
+    // จัดกลุ่มตามเดือน
+    const byMonth = {};
+    days.forEach(d => {
+      const ym = d.slice(0,7);
+      if(!byMonth[ym]) byMonth[ym] = [];
+      byMonth[ym].push(d);
+    });
+
+    const monthNames = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+
+    let tlHTML = '';
+    Object.keys(byMonth).sort((a,b)=>b.localeCompare(a)).forEach(ym => {
+      const [y,m] = ym.split('-');
+      const monthLabel = `${monthNames[parseInt(m)-1]} ${parseInt(y)+543}`;
+      tlHTML += `<div style="font-size:11px;color:#888780;font-weight:600;margin:12px 0 6px;text-transform:uppercase;letter-spacing:.5px">${monthLabel}</div>`;
+      byMonth[ym].forEach(d => {
+        const st = attendance[d][sid];
+        const cfg = statusConfig[st] || {bg:'#F1EFE8',color:'#5F5E5A',dot:'#D3D1C7',icon:'–'};
+        const dateObj = new Date(d+'T00:00:00');
+        const dayName = dateObj.toLocaleDateString('th-TH',{weekday:'short'});
+        const dayNum = dateObj.getDate();
+        tlHTML += `
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;padding:8px 10px;border-radius:8px;background:${cfg.bg}">
+            <div style="width:8px;height:8px;border-radius:50%;background:${cfg.dot};flex-shrink:0"></div>
+            <div style="font-size:13px;color:#5F5E5A;min-width:60px">${dayName} ${dayNum}</div>
+            <div style="font-size:13px;font-weight:600;color:${cfg.color}">${cfg.icon} ${st}</div>
+          </div>`;
+      });
+    });
+
+    timelineHTML = `
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px">
+        <div style="text-align:center;background:#E1F5EE;border-radius:8px;padding:10px 4px">
+          <div style="font-size:20px;font-weight:700;color:#0F6E56">${ma}</div>
+          <div style="font-size:11px;color:#0F6E56">มา</div>
+        </div>
+        <div style="text-align:center;background:#FCEBEB;border-radius:8px;padding:10px 4px">
+          <div style="font-size:20px;font-weight:700;color:#A32D2D">${khad}</div>
+          <div style="font-size:11px;color:#A32D2D">ขาด</div>
+        </div>
+        <div style="text-align:center;background:#E6F1FB;border-radius:8px;padding:10px 4px">
+          <div style="font-size:20px;font-weight:700;color:#185FA5">${la}</div>
+          <div style="font-size:11px;color:#185FA5">ลา</div>
+        </div>
+        <div style="text-align:center;background:#F1EFE8;border-radius:8px;padding:10px 4px">
+          <div style="font-size:20px;font-weight:700;color:#0F6E56">${pct}${pct!=='–'?'%':''}</div>
+          <div style="font-size:11px;color:#888780">มา%</div>
+        </div>
+      </div>
+      <div style="max-height:360px;overflow-y:auto;padding-right:4px">${tlHTML}</div>`;
+  }
+
+  let existing = document.getElementById('timeline-modal');
+  if(existing) existing.remove();
+
+  const modal = document.createElement('div');
+  modal.id = 'timeline-modal';
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:300;display:flex;align-items:center;justify-content:center;padding:16px';
+  modal.innerHTML = `
+    <div style="background:#fff;border-radius:12px;padding:20px;width:400px;max-width:96vw;max-height:88vh;display:flex;flex-direction:column;border:1px solid #D3D1C7">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-shrink:0">
+        <div>
+          <div style="font-size:15px;font-weight:600;color:#2C2C2A">📅 ประวัติการมาเรียน</div>
+          <div style="font-size:12px;color:#5F5E5A;margin-top:2px">${s.name} · ${s.cls}</div>
+        </div>
+        <button onclick="document.getElementById('timeline-modal').remove()" style="width:30px;height:30px;border-radius:50%;border:1px solid #D3D1C7;background:#F1EFE8;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0">✕</button>
+      </div>
+      <div style="overflow-y:auto;flex:1">${timelineHTML}</div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  modal.addEventListener('click', (e) => { if(e.target === modal) modal.remove(); });
+}
+// ============ END TIMELINE ============
   return [
     {id:'s001',name:'เด็กชาย ณัฐพล สุขใจ',gender:'ชาย',cls:'อนุบาล 1'},
     {id:'s002',name:'เด็กชาย ภานุพงศ์ ทองดี',gender:'ชาย',cls:'อนุบาล 1'},
