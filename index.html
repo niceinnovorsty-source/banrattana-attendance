@@ -220,39 +220,36 @@ function showSaveNotice() {
   }
 }
 
-function switchTab(tab) {
-  document.querySelectorAll('.section, .tab-content').forEach(el => {
-    el.style.display = 'none';
-    el.classList.remove('active');
-  });
-  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+function switchTab(t, btn){
+  // 1. เคลียร์สถานะการเปิดหน้าจอทั้งหมด
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
   
-  if (tab === 'checkin' || tab === 'attendance') {
-    const target = document.getElementById('tab-attendance');
-    if(target) { target.style.display = 'block'; target.classList.add('active'); }
-    renderAttendance();
-  }
-  if (tab === 'report') { 
-    const target = document.getElementById('tab-report');
-    if(target) { target.style.display = 'block'; target.classList.add('active'); }
-    renderReport(); 
-  }
-  if (tab === 'students') { 
-    const target = document.getElementById('tab-students');
-    if(target) { target.style.display = 'block'; target.classList.add('active'); }
-    renderStudentList(); 
-  }
-  if (tab === 'stats') {
-    const target = document.getElementById('tab-stats');
-    if(target) { target.style.display = 'block'; target.classList.add('active'); }
-    renderStatsTable();
+  // จัดการหน้าสถิติสะสมให้รองรับคลาสเดิมของคุณครู
+  const statsTab = document.getElementById('tab-stats');
+  if(statsTab) statsTab.classList.remove('active');
+
+  // 2. สั่งเปิดหน้าจอที่คลิกเลือก
+  if(t === 'checkin') {
+    document.getElementById('tab-attendance').classList.add('active');
+  } else {
+    const target = document.getElementById('tab-' + t);
+    if(target) target.classList.add('active');
   }
   
-  const btnIdx = ['checkin', 'report', 'students', 'stats'].indexOf(tab);
-  if(btnIdx !== -1) {
-    const allButtons = document.querySelectorAll('.tab-btn');
-    if(allButtons[btnIdx]) allButtons[btnIdx].classList.add('active');
+  // 3. ไฮไลต์ปุ่มสีเขียว
+  if(btn) {
+    btn.classList.add('active');
+  } else {
+    // หาปุ่มที่กดจากค่า t
+    const btnIdx = ['checkin', 'report', 'students', 'stats'].indexOf(t);
+    if(btnIdx !== -1) document.querySelectorAll('.tab-btn')[btnIdx].classList.add('active');
   }
+
+  // 4. สั่งดึงข้อมูลออนไลน์มาแสดงผลทันที
+  if(t === 'report') renderReport();
+  if(t === 'students') renderStudentList();
+  if(t === 'stats') renderStatsTable();
 }
 
 function renderAttendance(){
@@ -639,10 +636,10 @@ function getInitialStudents() {
 </div>
 
 <div class="tabs no-print">
-  <button class="tab-btn active" onclick="switchTab('checkin')">📋 เช็คชื่อ</button>
-  <button class="tab-btn" onclick="switchTab('report')">📊 รายงานประจำวัน</button>
-  <button class="tab-btn" onclick="switchTab('students')">👥 จัดการนักเรียน</button>
-  <button class="tab-btn" onclick="switchTab('stats')">📈 สถิติสะสม</button>
+  <button class="tab-btn active" onclick="switchTab('checkin', this)">📋 เช็คชื่อ</button>
+  <button class="tab-btn" onclick="switchTab('report', this)">📊 รายงานประจำวัน</button>
+  <button class="tab-btn" onclick="switchTab('students', this)">👥 จัดการนักเรียน</button>
+  <button class="tab-btn" onclick="switchTab('stats', this)">📈 สถิติสะสม</button>
 </div>
 
 <div id="tab-attendance" class="section active">
