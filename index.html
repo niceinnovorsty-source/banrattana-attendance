@@ -16,7 +16,7 @@ body{font-family:'Sarabun',sans-serif;font-size:15px;background:#f5f4f0;color:#2
 .header-left{display:flex;align-items:center}
 .today-display{font-size:13px;color:#5F5E5A;background:#F1EFE8;padding:5px 12px;border-radius:99px}
 .tabs{display:flex;background:#fff;border-bottom:1px solid #D3D1C7;padding:0 16px}
-.tab{padding:12px 18px;border-bottom:2.5px solid transparent;font-size:14px;cursor:pointer;color:#888780;font-weight:500;transition:all 0.15s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Sarabun',sans-serif}
+.tab {padding:12px 18px;border-bottom:2.5px solid transparent;font-size:14px;cursor:pointer;color:#888780;font-weight:500;transition:all 0.15s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Sarabun',sans-serif}
 .tab:hover{color:#2C2C2A}
 .tab.active{color:#0F6E56;border-bottom-color:#1D9E75}
 .content{padding:18px 16px}
@@ -25,7 +25,7 @@ body{font-family:'Sarabun',sans-serif;font-size:15px;background:#f5f4f0;color:#2
 input[type=date]{padding:7px 10px;border-radius:8px;border:1px solid #D3D1C7;font-size:13px;font-family:'Sarabun',sans-serif;background:#fff;color:#2C2C2A}
 input[type=text]{padding:7px 10px;border-radius:8px;border:1px solid #D3D1C7;font-size:13px;font-family:'Sarabun',sans-serif;background:#fff;color:#2C2C2A;width:100%}
 select{padding:7px 10px;border-radius:8px;border:1px solid #D3D1C7;font-size:13px;font-family:'Sarabun',sans-serif;background:#fff;color:#2C2C2A}
-.summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:18px}
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:18px}
 .sum-card{background:#fff;border-radius:10px;padding:13px 14px;border:1px solid #D3D1C7}
 .sum-label{font-size:11px;color:#888780;margin-bottom:4px;font-weight:500}
 .sum-val{font-size:24px;font-weight:600}
@@ -37,7 +37,6 @@ select{padding:7px 10px;border-radius:8px;border:1px solid #D3D1C7;font-size:13p
 .class-stats{display:flex;gap:6px;flex-wrap:wrap}
 .stat-badge{padding:2px 9px;border-radius:99px;font-size:12px;font-weight:500}
 .s-green{background:#E1F5EE;color:#0F6E56}
-.s-amber{background:#FAEEDA;color:#854F0B}
 .s-red{background:#FCEBEB;color:#A32D2D}
 .s-blue{background:#E6F1FB;color:#185FA5}
 .student-table{width:100%;border-collapse:collapse;font-size:13px}
@@ -46,10 +45,9 @@ select{padding:7px 10px;border-radius:8px;border:1px solid #D3D1C7;font-size:13p
 .student-table tr:last-child td{border-bottom:none}
 .student-table tr:hover td{background:#F1EFE8}
 .att-btns{display:flex;gap:4px;flex-wrap:wrap}
-.att-btn{padding:4px 11px;border-radius:99px;border:1px solid #D3D1C7;font-size:12px;cursor:pointer;background:transparent;color:#888780;font-family:'Sarabun',sans-serif;transition:all 0.12s}
+.att-btn{padding:4px 14px;border-radius:99px;border:1px solid #D3D1C7;font-size:12px;cursor:pointer;background:transparent;color:#888780;font-family:'Sarabun',sans-serif;transition:all 0.12s}
 .att-btn:hover{background:#F1EFE8}
 .att-btn.sel-มา{background:#E1F5EE;color:#0F6E56;border-color:#5DCAA5;font-weight:600}
-.att-btn.sel-สาย{background:#FAEEDA;color:#854F0B;border-color:#FAC775;font-weight:600}
 .att-btn.sel-ขาด{background:#FCEBEB;color:#A32D2D;border-color:#F09995;font-weight:600}
 .att-btn.sel-ลาป่วย{background:#E6F1FB;color:#185FA5;border-color:#85B7EB;font-weight:600}
 .gender-badge{font-size:11px;padding:2px 7px;border-radius:99px}
@@ -67,13 +65,31 @@ select{padding:7px 10px;border-radius:8px;border:1px solid #D3D1C7;font-size:13p
 .section{display:none}
 .section.active{display:block}
 
-/* Report table */
+/* Report table & Subtotals */
 .report-table{width:100%;border-collapse:collapse;font-size:13px;background:#fff}
 .report-table th,.report-table td{border:1px solid #D3D1C7;padding:8px 10px;text-align:center}
 .report-table th{background:#F1EFE8;font-weight:500;color:#5F5E5A;font-size:12px}
 .report-table .class-col{text-align:left;font-weight:500;color:#2C2C2A}
+.report-table .subtotal-row td{font-weight:600;background:#f2f2f2;color:#333}
 .report-table tfoot td{font-weight:600;background:#E1F5EE;color:#0F6E56}
 .report-wrap{background:#fff;border:1px solid #D3D1C7;border-radius:10px;padding:16px;overflow-x:auto}
+
+/* Chart Styles */
+.chart-container {margin-top: 25px;background: #fff;border: 1px solid #D3D1C7;border-radius: 10px;padding: 20px;}
+.chart-title {font-size: 14px;font-weight: 600;margin-bottom: 15px;color: #2C2C2A;text-align: center;}
+.chart-wrapper {display: flex;flex-direction: column;gap: 10px;}
+.chart-row {display: flex;align-items: center;font-size: 12px;}
+.chart-label {width: 90px;font-weight: 500;color: #2C2C2A;text-align: left;}
+.chart-bar-bg {flex-grow: 1;background: #f0f0f0;height: 20px;border-radius: 4px;overflow: hidden;position: relative;}
+.chart-bar-fill {background: #1D9E75;height: 100%;border-radius: 4px;transition: width 0.4s ease;}
+.chart-bar-fill.subtotal-bar {background: #666666;}
+.chart-bar-fill.total-bar {background: #0F6E56;}
+.chart-value {width: 55px;text-align: right;font-weight: 600;color: #2C2C2A;margin-left: 10px;}
+
+/* Signature layout */
+.report-signature-container {margin-top: 40px;width: 100%;display: flex;justify-content: space-between;}
+.signature-col {width: 48%;text-align: center;}
+.signature-col p {margin: 6px 0;font-size: 14px;color: #2C2C2A;line-height: 1.8;}
 
 /* Modal */
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;align-items:center;justify-content:center}
@@ -95,13 +111,22 @@ select{padding:7px 10px;border-radius:8px;border:1px solid #D3D1C7;font-size:13p
   .header{position:static;box-shadow:none}
   .app{max-width:100%;padding:0}
   body{background:#fff}
-  .report-wrap{border:none;padding:0}
+  .report-wrap{border:none;padding:0;overflow:visible}
   .print-header{display:block!important}
   .section{display:block!important}
   #tab-attendance,#tab-students{display:none!important}
   #tab-report{display:block!important}
   .tabs{display:none}
   .action-bar{display:none}
+  .report-table th {background:#F1EFE8!important;color:#000!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .report-table .subtotal-row td {background:#f2f2f2!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .report-table tfoot td {background:#E1F5EE!important;color:#0F6E56!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .chart-container {border: 1px solid #cccccc;page-break-inside: avoid;}
+  .chart-bar-bg {background: #f0f0f0!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .chart-bar-fill {background: #1D9E75!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .chart-bar-fill.subtotal-bar {background: #666666!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .chart-bar-fill.total-bar {background: #0F6E56!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .report-signature-container {display:flex!important;page-break-inside:avoid;}
 }
 .print-header{display:none;text-align:center;margin-bottom:16px}
 .print-header h2{font-size:16px;font-weight:600}
@@ -124,7 +149,6 @@ select{padding:7px 10px;border-radius:8px;border:1px solid #D3D1C7;font-size:13p
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
   import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-  // ใส่ค่าคอนฟิก Firebase ของโรงเรียนบ้านรัตนะที่ได้รับมาเรียบร้อยแล้ว
   const firebaseConfig = {
     apiKey: "AIzaSyCR3L7HpslKdRN4MYcfUxyeTXIiGLx6Rho",
     authDomain: "rattana-658c6.firebaseapp.com",
@@ -135,11 +159,9 @@ select{padding:7px 10px;border-radius:8px;border:1px solid #D3D1C7;font-size:13p
     measurementId: "G-SN49D89H8D"
   };
 
-  // Initialize Firebase
   const firebaseApp = initializeApp(firebaseConfig);
   const db = getFirestore(firebaseApp);
 
-  // ส่งข้อมูลออกไปที่ global scope เพื่อทำงานร่วมกับระบบ HTML ด้านล่าง
   window.db = db;
   window.fbDoc = doc;
   window.fbGetDoc = getDoc;
@@ -147,7 +169,6 @@ select{padding:7px 10px;border-radius:8px;border:1px solid #D3D1C7;font-size:13p
   window.fbOnSnapshot = onSnapshot;
   window.fbCollection = collection;
   
-  // สั่งเริ่มต้นระบบงานหลัก
   window.initFirebaseSystem();
 </script>
 </head>
@@ -201,6 +222,20 @@ select{padding:7px 10px;border-radius:8px;border:1px solid #D3D1C7;font-size:13p
   </div>
   <div class="report-wrap">
     <div id="report-content"></div>
+    <div id="chart-content"></div>
+    
+    <div class="report-signature-container">
+        <div class="signature-col">
+            <p>ลงชื่อ..........................................................ครูเวร</p>
+            <p>(..........................................................)</p>
+            <p>ครูเวรประจำวัน</p>
+        </div>
+        <div class="signature-col">
+            <p>ลงชื่อ..........................................................ผู้ตรวจสอบ</p>
+            <p>( นายวิชชชาติ ยิ่งยงยุทธ )</p>
+            <p>ตำแหน่ง ผู้อำนวยการโรงเรียนบ้านรัตนะ</p>
+        </div>
+    </div>
   </div>
 </div>
 </div>
@@ -208,7 +243,7 @@ select{padding:7px 10px;border-radius:8px;border:1px solid #D3D1C7;font-size:13p
 <div id="tab-students" class="section">
 <div class="content">
   <div class="notice">
-    <strong>✨ ระบบออนไลน์พร้อมใช้งาน:</strong> ข้อมูลนักเรียนและการเช็คชื่อทั้งหมดถูกบันทึกบน Firebase Firestore แล้ว คุณครูและผู้บริหารสามารถเปิดใช้งานไฟล์นี้จากมือถือหรือคอมพิวเตอร์พร้อมๆ กันได้ทันที ข้อมูลจะอัพเดทตรงกันแบบ Real-time ครับ
+    <strong>✨ ระบบออนไลน์พร้อมใช้งาน:</strong> ข้อมูลนักเรียนและการเช็คชื่อทั้งหมดถูกบันทึกบน Firebase Firestore แล้ว ข้อมูลจะอัพเดทตรงกันแบบ Real-time ครับ
   </div>
   <div class="action-bar">
     <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
@@ -221,7 +256,9 @@ select{padding:7px 10px;border-radius:8px;border:1px solid #D3D1C7;font-size:13p
 </div>
 </div>
 
-</div><div class="modal-bg" id="student-modal">
+</div>
+
+<div class="modal-bg" id="student-modal">
   <div class="modal">
     <h3 id="modal-title">เพิ่มนักเรียนใหม่</h3>
     <div class="form-row">
@@ -248,7 +285,7 @@ select{padding:7px 10px;border-radius:8px;border:1px solid #D3D1C7;font-size:13p
 
 <script>
 const CLASSES = ['อนุบาล 1','อนุบาล 2','อนุบาล 3','ป.1','ป.2','ป.3','ป.4','ป.5','ป.6'];
-const STATUS = ['มา','สาย','ขาด','ลาป่วย'];
+const STATUS = ['มา','ขาด','ลาป่วย'];
 
 let students = [];
 let attendance = {}; 
@@ -264,7 +301,6 @@ window.initFirebaseSystem = function() {
   document.getElementById('today-display').textContent =
     new Date().toLocaleDateString('th-TH',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
 
-  // ซิงค์รายชื่อนักเรียนจากคลาวด์สม่ำเสมอ
   unsubStudents = window.fbOnSnapshot(window.fbDoc(window.db, "school_data", "students_list"), (docSnap) => {
     if (docSnap.exists()) {
       students = docSnap.data().list || [];
@@ -277,7 +313,6 @@ window.initFirebaseSystem = function() {
     renderStudentList();
   });
 
-  // ซิงค์ประวัติการมาเรียนตามเวลาจริง
   unsubAttendance = window.fbOnSnapshot(window.fbDoc(window.db, "school_data", "attendance_records"), (docSnap) => {
     if (docSnap.exists()) {
       attendance = docSnap.data().records || {};
@@ -332,7 +367,7 @@ function renderAttendance(){
   const byClass = {};
   CLASSES.forEach(c => { byClass[c] = students.filter(s => s.cls === c); });
 
-  let counts = {มา:0,สาย:0,ขาด:0,ลาป่วย:0};
+  let counts = {มา:0,ขาด:0,ลาป่วย:0};
   let total = students.length;
   students.forEach(s => {
     const st = getAtt(date, s.id);
@@ -342,17 +377,16 @@ function renderAttendance(){
   document.getElementById('att-summary').innerHTML = `
     <div class="sum-card"><div class="sum-label">นักเรียนทั้งหมด</div><div class="sum-val">${total}</div><div class="sum-sub">คน</div></div>
     <div class="sum-card"><div class="sum-label" style="color:#0F6E56">✅ มาเรียน</div><div class="sum-val" style="color:#0F6E56">${counts['มา']}</div><div class="sum-sub">คน</div></div>
-    <div class="sum-card"><div class="sum-label" style="color:#854F0B">⏰ มาสาย</div><div class="sum-val" style="color:#854F0B">${counts['สาย']}</div><div class="sum-sub">คน</div></div>
     <div class="sum-card"><div class="sum-label" style="color:#A32D2D">❌ ขาดเรียน</div><div class="sum-val" style="color:#A32D2D">${counts['ขาด']}</div><div class="sum-sub">คน</div></div>
     <div class="sum-card"><div class="sum-label" style="color:#185FA5">🏥 ลาป่วย</div><div class="sum-val" style="color:#185FA5">${counts['ลาป่วย']}</div><div class="sum-sub">คน</div></div>
-    <div class="sum-card"><div class="sum-label" style="color:#888780">ยังไม่เช็ค</div><div class="sum-val" style="color:#888780">${total - counts['มา'] - counts['สาย'] - counts['ขาด'] - counts['ลาป่วย']}</div><div class="sum-sub">คน</div></div>
+    <div class="sum-card"><div class="sum-label" style="color:#888780">ยังไม่เช็ค</div><div class="sum-val" style="color:#888780">${total - counts['มา'] - counts['ขาด'] - counts['ลาป่วย']}</div><div class="sum-sub">คน</div></div>
   `;
 
   let html = '';
   CLASSES.forEach(cls => {
     const ss = byClass[cls];
     if(!ss || !ss.length) return;
-    const c2 = {มา:0,สาย:0,ขาด:0,ลาป่วย:0};
+    const c2 = {มา:0,ขาด:0,ลาป่วย:0};
     ss.forEach(s => { const st = getAtt(date, s.id); if(c2[st] !== undefined) c2[st]++; });
     const safeId = 'cls-' + cls.replace(/\s/g,'_');
     html += `
@@ -362,7 +396,6 @@ function renderAttendance(){
         <div style="display:flex;align-items:center;gap:6px">
           <div class="class-stats">
             <span class="stat-badge s-green">มา ${c2['มา']}</span>
-            <span class="stat-badge s-amber">สาย ${c2['สาย']}</span>
             <span class="stat-badge s-red">ขาด ${c2['ขาด']}</span>
             <span class="stat-badge s-blue">ลา ${c2['ลาป่วย']}</span>
           </div>
@@ -381,7 +414,7 @@ function renderAttendance(){
                 <td><span class="gender-badge ${s.gender==='ชาย'?'m-badge':'f-badge'}">${s.gender}</span></td>
                 <td>
                   <div class="att-btns">
-                    ${STATUS.map(st => `<button class="att-btn ${cur===st?'sel-'+st:''}" onclick="markAtt(event,'${date}','${s.id}','${st}')">${st}</button>`).join('')}
+                    ${STATUS.map(st => <button class="att-btn ${cur===st?'sel-'+st:''}" onclick="markAtt(event,'${date}','${s.id}','${st}')">${st}</button>).join('')}
                   </div>
                 </td>
               </tr>`;
@@ -409,37 +442,100 @@ function renderReport(){
   const thDate = new Date(date+'T00:00:00').toLocaleDateString('th-TH',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
   document.getElementById('print-date-label').textContent = 'รายงานการมาเรียนประจำวัน ' + thDate;
 
-  let rows = '';
-  let tM=0,tF=0,tAll=0,tMam=0,tMaf=0,tMa=0,tSai=0,tKhad=0,tLa=0;
+  let tableRows = '';
+  let chartData = [];
+  
+  // ตัวแปรสะสม ยอดรวมทั้งโรงเรียน
+  let gSum = {males:0, females:0, total:0, ma_m:0, ma_f:0, ma_total:0, khad:0, la:0, total_kl:0};
+  
+  // ตัวแปรสะสม ระดับอนุบาล
+  let kSum = {males:0, females:0, total:0, ma_m:0, ma_f:0, ma_total:0, khad:0, la:0, total_kl:0};
+  
+  // ตัวแปรสะสม ระดับประถม
+  let pSum = {males:0, females:0, total:0, ma_m:0, ma_f:0, ma_total:0, khad:0, la:0, total_kl:0};
 
-  CLASSES.forEach(cls => {
+  CLASSES.forEach((cls, index) => {
     const ss = students.filter(s => s.cls === cls);
-    if(!ss.length) return;
-    const males = ss.filter(s => s.gender==='ชาย');
-    const females = ss.filter(s => s.gender==='หญิง');
-    let ma_m=0,ma_f=0,sai=0,khad=0,la=0;
+    const mCount = ss.filter(s => s.gender==='ชาย').length;
+    const fCount = ss.filter(s => s.gender==='หญิง').length;
+    
+    let ma_m=0, ma_f=0, khad=0, la=0;
     ss.forEach(s => {
       const st = getAtt(date, s.id);
       if(st==='มา'){ if(s.gender==='ชาย') ma_m++; else ma_f++; }
-      else if(st==='สาย') sai++;
       else if(st==='ขาด') khad++;
       else if(st==='ลาป่วย') la++;
     });
-    const ma = ma_m + ma_f;
-    tM+=males.length; tF+=females.length; tAll+=ss.length;
-    tMam+=ma_m; tMaf+=ma_f; tMa+=ma; tSai+=sai; tKhad+=khad; tLa+=la;
-    rows += `<tr>
+    
+    let ma_total = ma_m + ma_f;
+    let total_kl = khad + la; // รวมขาดและลา
+    let pct = ss.length > 0 ? ((ma_total / ss.length) * 100).toFixed(2) : "0.00";
+
+    // แยกสะสมข้อมูลลงช่วงชั้น
+    if(cls.includes("อนุบาล")) {
+      kSum.males += mCount; kSum.females += fCount; kSum.total += ss.length;
+      kSum.ma_m += ma_m; kSum.ma_f += ma_f; kSum.ma_total += ma_total;
+      kSum.khad += khad; kSum.la += la; kSum.total_kl += total_kl;
+    } else {
+      pSum.males += mCount; pSum.females += fCount; pSum.total += ss.length;
+      pSum.ma_m += ma_m; pSum.ma_f += ma_f; pSum.ma_total += ma_total;
+      pSum.khad += khad; pSum.la += la; pSum.total_kl += total_kl;
+    }
+
+    // เพิ่มข้อมูลของชั้นเรียนลงตาราง
+    tableRows += `<tr>
       <td class="class-col">${cls}</td>
-      <td>${males.length}</td><td>${females.length}</td><td><strong>${ss.length}</strong></td>
-      <td style="color:#0F6E56">${ma_m}</td>
-      <td style="color:#993556">${ma_f}</td>
-      <td style="color:#0F6E56"><strong>${ma}</strong></td>
-      <td style="color:#854F0B">${sai}</td>
+      <td>${mCount}</td><td>${fCount}</td><td><strong>${ss.length}</strong></td>
+      <td style="color:#0F6E56">${ma_m}</td><td style="color:#993556">${ma_f}</td><td style="color:#0F6E56"><strong>${ma_total}</strong></td>
       <td style="color:#A32D2D">${khad}</td>
       <td style="color:#185FA5">${la}</td>
+      <td style="color:#666; font-weight:600">${total_kl}</td>
+      <td style="color:#0F6E56; font-weight:700">${pct}%</td>
     </tr>`;
+
+    chartData.push({ label: cls, value: pct, type: 'normal' });
+
+    // แทรกแถวรวมอนุบาล คั่นเมื่อลูปถึง อ.3
+    if(cls === "อนุบาล 3") {
+      let kPct = kSum.total > 0 ? ((kSum.ma_total / kSum.total) * 100).toFixed(2) : "0.00";
+      tableRows += `<tr class="subtotal-row">
+        <td class="class-col">รวมอนุบาล (อ.1-อ.3)</td>
+        <td>${kSum.males}</td><td>${kSum.females}</td><td>${kSum.total}</td>
+        <td>${kSum.ma_m}</td><td>${kSum.ma_f}</td><td>${kSum.ma_total}</td>
+        <td>${kSum.khad}</td><td>${kSum.la}</td><td>${kSum.total_kl}</td>
+        <td style="color:#0F6E56">${kPct}%</td>
+      </tr>`;
+      chartData.push({ label: "รวมอนุบาล", value: kPct, type: 'subtotal' });
+    }
+
+    // แทรกแถวรวมประถม คั่นเมื่อลูปถึง ป.6
+    if(cls === "ป.6") {
+      let pPct = pSum.total > 0 ? ((pSum.ma_total / pSum.total) * 100).toFixed(2) : "0.00";
+      tableRows += `<tr class="subtotal-row">
+        <td class="class-col">รวมประถม (ป.1-ป.6)</td>
+        <td>${pSum.males}</td><td>${pSum.females}</td><td>${pSum.total}</td>
+        <td>${pSum.ma_m}</td><td>${pSum.ma_f}</td><td>${pSum.ma_total}</td>
+        <td>${pSum.khad}</td><td>${pSum.la}</td><td>${pSum.total_kl}</td>
+        <td style="color:#0F6E56">${pPct}%</td>
+      </tr>`;
+      chartData.push({ label: "รวมประถม", value: pPct, type: 'subtotal' });
+    }
   });
 
+  // ยอดรวมสะสมใหญ่ทั้งโรงเรียน
+  gSum.males = kSum.males + pSum.males;
+  gSum.females = kSum.females + pSum.females;
+  gSum.total = kSum.total + pSum.total;
+  gSum.ma_m = kSum.ma_m + pSum.ma_m;
+  gSum.ma_f = kSum.ma_f + pSum.ma_f;
+  gSum.ma_total = kSum.ma_total + pSum.ma_total;
+  gSum.khad = kSum.khad + pSum.khad;
+  gSum.la = kSum.la + pSum.la;
+  gSum.total_kl = kSum.total_kl + pSum.total_kl;
+  let gPct = gSum.total > 0 ? ((gSum.ma_total / gSum.total) * 100).toFixed(2) : "0.00";
+  chartData.push({ label: "รวมทั้งโรงเรียน", value: gPct, type: 'total' });
+
+  // แสดงผลตารางรายงาน
   document.getElementById('report-content').innerHTML = `
     <p style="font-size:13px;color:#5F5E5A;margin-bottom:12px;font-weight:500">วันที่ ${thDate}</p>
     <table class="report-table">
@@ -448,33 +544,64 @@ function renderReport(){
           <th rowspan="2" class="class-col" style="text-align:left;min-width:90px">ชั้น</th>
           <th colspan="3" style="background:#D3D1C7">จำนวนนักเรียนทั้งหมด</th>
           <th colspan="3" style="background:#9FE1CB;color:#0F6E56">มาเรียนวันนี้</th>
-          <th rowspan="2" style="color:#854F0B">มาสาย</th>
           <th rowspan="2" style="color:#A32D2D">ขาด</th>
           <th rowspan="2" style="color:#185FA5">ลาป่วย</th>
+          <th rowspan="2" style="color:#333; background:#e2e2e2">รวมขาด-ลา</th>
+          <th rowspan="2" style="color:#0F6E56; background:#E1F5EE; font-size:12px">มาเรียนร้อยละ</th>
         </tr>
         <tr>
           <th>ชาย</th><th>หญิง</th><th>รวม</th>
           <th style="color:#185FA5">ชาย</th><th style="color:#993556">หญิง</th><th style="color:#0F6E56">รวม</th>
         </tr>
       </thead>
-      <tbody>${rows}</tbody>
+      <tbody>${tableRows}</tbody>
       <tfoot>
         <tr>
           <td class="class-col">รวมทั้งโรงเรียน</td>
-          <td>${tM}</td><td>${tF}</td><td>${tAll}</td>
-          <td>${tMam}</td><td>${tMaf}</td><td>${tMa}</td>
-          <td>${tSai}</td><td>${tKhad}</td><td>${tLa}</td>
+          <td>${gSum.males}</td><td>${gSum.females}</td><td>${gSum.total}</td>
+          <td>${gSum.ma_m}</td><td>${gSum.ma_f}</td><td>${gSum.ma_total}</td>
+          <td>${gSum.khad}</td><td>${gSum.la}</td><td>${gSum.total_kl}</td>
+          <td>${gPct}%</td>
         </tr>
       </tfoot>
     </table>
-    <p style="font-size:11px;color:#888780;margin-top:10px;text-align:right">พิมพ์เมื่อ: ${new Date().toLocaleString('th-TH')}</p>
   `;
+
+  // สร้างแผนภูมิแท่ง (Bar Chart) ต่อท้ายตารางสรุปข้อมูล
+  let chartHtml = `
+    <div class="chart-container">
+      <div class="chart-title">📊 แผนภูมิสรุปร้อยละการมาเรียนแยกตามช่วงชั้นและชั้นเรียน</div>
+      <div class="chart-wrapper">
+  `;
+  
+  chartData.forEach(item => {
+    let barClass = '';
+    if(item.type === 'subtotal') barClass = 'subtotal-bar';
+    if(item.type === 'total') barClass = 'total-bar';
+    
+    chartHtml += `
+      <div class="chart-row">
+        <div class="chart-label" style="${item.type !== 'normal' ? 'font-weight:bold;' : ''}">${item.label}</div>
+        <div class="chart-bar-bg">
+          <div class="chart-bar-fill ${barClass}" style="width: ${item.value}%;"></div>
+        </div>
+        <div class="chart-value">${item.value}%</div>
+      </div>
+    `;
+  });
+  
+  chartHtml += `
+      </div>
+      <p style="font-size:11px;color:#888780;margin-top:15px;text-align:right">พิมพ์เมื่อ: ${new Date().toLocaleString('th-TH')}</p>
+    </div>
+  `;
+  document.getElementById('chart-content').innerHTML = chartHtml;
 }
 
 function renderStudentList(){
   const filter = document.getElementById('class-filter').value;
   const sel = filter ? students.filter(s => s.cls === filter) : students;
-  document.getElementById('stu-count').textContent = `(${sel.length} คน)`;
+  document.getElementById('stu-count').textContent = (${sel.length} คน);
   let html = `<table class="stu-list-table">
     <thead><tr><th>#</th><th>ชื่อ-นามสกุล</th><th>เพศ</th><th>ชั้น</th><th>จัดการ</th></tr></thead>
     <tbody>
@@ -539,7 +666,7 @@ async function saveStudent(){
 async function deleteStudent(id){
   const s = students.find(x => x.id === id);
   if(!s) return;
-  if(!confirm(`ยืนยันการลบ\n"${s.name}"\nออกจากระบบคลาวด์?`)) return;
+  if(!confirm(ยืนยันการลบ\n"${s.name}"\nออกจากระบบคลาวด์?)) return;
   students = students.filter(x => x.id !== id);
   renderStudentList();
   
@@ -547,9 +674,9 @@ async function deleteStudent(id){
 }
 
 function initSelects(){
-  const opts = CLASSES.map(c => `<option value="${c}">${c}</option>`).join('');
+  const opts = CLASSES.map(c => <option value="${c}">${c}</option>).join('');
   document.getElementById('s-class').innerHTML = opts;
-  document.getElementById('class-filter').innerHTML = `<option value="">ทุกชั้นเรียน</option>` + opts;
+  document.getElementById('class-filter').innerHTML = <option value="">ทุกชั้นเรียน</option> + opts;
 }
 
 function getInitialStudents() {
@@ -633,7 +760,7 @@ function getInitialStudents() {
     {id:'s077',name:'เด็กหญิง ชุติกาญจน์ สง่างาม',gender:'หญิง',cls:'ป.5'},
     {id:'s078',name:'เด็กหญิง นิลุบล เจริญสุข',gender:'หญิง',cls:'ป.5'},
     {id:'s079',name:'เด็กหญิง พิชามญชุ์ วิทยาดี',gender:'หญิง',cls:'ป.5'},
-    {id:'s080',name:'เด็กหญิง วิชุดา ผ่องแผ้ว',gender:'หญิง',cls:'ป.5'},
+    {id(--_idx):'s080',name:'เด็กหญิง วิชุดา ผ่องแผ้ว',gender:'หญิง',cls:'ป.5'},
     {id:'s081',name:'เด็กชาย กานต์ดนัย พลทวี',gender:'ชาย',cls:'ป.6'},
     {id:'s082',name:'เด็กชาย จักรกฤษณ์ เสนงาม',gender:'ชาย',cls:'ป.6'},
     {id:'s083',name:'เด็กชาย ทัศน์พล กลั่นดี',gender:'ชาย',cls:'ป.6'},
@@ -647,52 +774,5 @@ function getInitialStudents() {
   ];
 }
 </script>
-  <div class="report-signature-container">
-    <div class="signature-col">
-        <p>ลงชื่อ..........................................................ครูเวร</p>
-        <p>(..........................................................)</p>
-        <p>ครูเวรประจำวัน</p>
-    </div>
-
-    <div class="signature-col">
-        <p>ลงชื่อ..........................................................ผู้ตรวจสอบ</p>
-        <p>( นายวิชชชาติ ยิ่งยงยุทธ )</p>
-        <p>ตำแหน่ง ผู้อำนวยการโรงเรียนบ้านรัตนะ</p>
-    </div>
-</div>
-
-<style>
-/* ซ่อนส่วนลายเซ็นไว้เมื่อดูบนหน้าจอปกติ (มือถือ/คอม) */
-.report-signature-container {
-    display: none;
-}
-
-/* แสดงผลและจัดทรงเฉพาะเวลาสั่งพิมพ์ (Print Preview / PDF) */
-@media print {
-    .report-signature-container {
-        display: block !important;
-        margin-top: 60px; /* ระยะห่างจากตารางรายงานด้านบน */
-        width: 100%;
-        clear: both;
-        page-break-inside: avoid; /* ป้องกันลายเซ็นโดนฉีกขาดแบ่งคนละหน้า */
-    }
-    
-    /* แบ่งพื้นที่เป็น 2 บล็อก ซ้าย-ขวา */
-    .signature-col {
-        float: left;
-        width: 50%; /* แบ่งคนละครึ่งหน้ากระดาษ */
-        text-align: center; /* จัดข้อความทุกบรรทัดให้อยู่กึ่งกลางของช่อง */
-        margin-bottom: 20px;
-    }
-    
-    /* ตั้งค่าตัวอักษรให้อ่านง่าย เป็นระเบียบ */
-    .signature-col p {
-        margin: 6px 0;
-        font-size: 16px; 
-        font-family: "Sarabun", "TH Sarabun PSK", sans-serif;
-        line-height: 1.8;
-    }
-}
-</style>
 </body>
 </html>
