@@ -590,13 +590,10 @@ function renderReport(){
   `;
 
   // เรียกฟังก์ชันวาดกราฟแท่งสรุป (สำหรับหน้ารายงานเว็บ)
+// เรียกฟังก์ชันวาดกราฟแท่งสรุป (สำหรับหน้ารายงานเว็บ)
   if(typeof generateChart === 'function') {
      generateChart(subAnuban, subPrathom);
   }
-}
-
-  // เรียกฟังก์ชันวาดกราฟแท่งสรุป
-  generateChart(subAnuban, subPrathom);
 }
 
 function generateChart(anuban, prathom) {
@@ -614,14 +611,14 @@ function generateChart(anuban, prathom) {
       datasets: [
         {
           label: 'มาเรียน (คน)',
-          data: [anuban.ma, prathom.ma],
+          data: [anuban.ma_total, prathom.ma_total],
           backgroundColor: '#1D9E75',
           borderColor: '#0F6E56',
           borderWidth: 1
         },
         {
           label: 'รวมขาด/ลา (คน)',
-          data: [anuban.khadLa, prathom.khadLa],
+          data: [anuban.khad_la, prathom.khad_la],
           backgroundColor: '#F09995',
           borderColor: '#A32D2D',
           borderWidth: 1
