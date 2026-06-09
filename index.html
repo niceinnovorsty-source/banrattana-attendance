@@ -422,6 +422,10 @@ function renderReport(){
   let tMam=0, tMaf=0, tMa=0;
   let tKhad=0, tLa=0, tKhadLa=0;
 
+  // อาเรย์สำหรับเก็บข้อมูลรายชื่อนักเรียนที่ขาดและลาในวันนี้
+  let absentList = [];
+
+  // ตัวแปรสะสมยอดสรุปแยกตามช่วงชั้น
   let subAnuban = { m:0, f:0, total:0, ma_m:0, ma_f:0, ma_total:0, khad:0, la:0, khad_la:0 };
   let subPrathom = { m:0, f:0, total:0, ma_m:0, ma_f:0, ma_total:0, khad:0, la:0, khad_la:0 };
 
@@ -431,14 +435,17 @@ function renderReport(){
     const females = ss.filter(s => s.gender==='หญิง');
     let ma_m=0, ma_f=0, khad=0, la=0;
     
-    ss.forEach(s => {
+    // วนลูปเช็คชื่อนักเรียนทีละคนในห้อง
+    ss.forEach((s, idx) => {
       const st = getAtt(date, s.id);
       if(st==='มา'){ 
         if(s.gender==='ชาย') ma_m++; else ma_f++; 
       } else if(st==='ขาด') {
         khad++;
+        absentList.push({ cls: cls, no: (idx + 1), name: s.name, status: 'ขาดเรียน' });
       } else if(st==='ลาป่วย' || st==='ลา') {
         la++;
+        absentList.push({ cls: cls, no: (idx + 1), name: s.name, status: 'ลา' });
       }
     });
     
@@ -498,8 +505,45 @@ function renderReport(){
 
   const totalPercent = tAll > 0 ? ((tMa / tAll) * 100).toFixed(1) : '0.0';
 
+  // สร้าง HTML สำหรับตารางรายชื่อผู้ขาด/ลา
+  let detailTableHTML = '';
+  if(absentList.length > 0) {
+    let detailRows = '';
+    absentList.forEach((item, i) => {
+      const badgeColor = item.status === 'ขาดเรียน' ? '#A32D2D' : '#185FA5';
+      detailRows += `<tr>
+        <td style="text-align:center; padding:3px 5px;">${i+1}</td>
+        <td style="text-align:center; padding:3px 5px;">${item.cls}</td>
+        <td style="padding:3px 8px; text-align:left;">เลขที่ ${item.no} ${item.name}</td>
+        <td style="text-align:center; padding:3px 5px; color:${badgeColor}; font-weight:600;">${item.status}</td>
+      </tr>`;
+    });
+    
+    detailTableHTML = `
+      <div class="absent-detail-section" style="margin-top:15px; page-break-inside:avoid;">
+        <p style="font-size:13px; font-weight:600; color:#2C2C2A; margin-bottom:5px; text-align:left;">⚠️ รายชื่อนักเรียนที่ไม่มาเรียนวันนี้</p>
+        <table class="report-table" style="width:100%; max-width:600px; margin:0 auto; border-collapse:collapse;">
+          <thead>
+            <tr style="background:#F2ECE4;">
+              <th style="width:50px; padding:4px;">ที่</th>
+              <th style="width:100px; padding:4px;">ชั้น</th>
+              <th style="padding:4px; text-align:left; padding-left:8px;">เลขที่ - ชื่อ-นามสกุล</th>
+              <th style="width:90px; padding:4px;">สถานะ</th>
+            </tr>
+          </thead>
+          <tbody>${detailRows}</tbody>
+        </table>
+      </div>`;
+  } else {
+    detailTableHTML = `
+      <div style="margin-top:12px; text-align:center; color:#0F6E56; font-weight:600; font-size:13px; padding:8px; background:#E1F5EE; border-radius:6px; page-break-inside:avoid;">
+        🎉 วันนี้ไม่มีนักเรียนขาดหรือลาเรียน
+      </div>`;
+  }
+
+  // รวมเนื้อหาแสดงผลทั้งหมด
   document.getElementById('report-content').innerHTML = `
-    <p style="font-size:13px;color:#5F5E5A;margin-bottom:8px;font-weight:500">วันที่ ${thDate}</p>
+    <p style="font-size:13px;color:#5F5E5A;margin-bottom:6px;font-weight:500">วันที่ ${thDate}</p>
     <table class="report-table">
       <thead>
         <tr>
@@ -526,6 +570,9 @@ function renderReport(){
         </tr>
       </tfoot>
     </table>
+    
+    ${detailTableHTML}
+
     <p style="font-size:11px;color:#888780;margin-top:6px;text-align:right">พิมพ์เมื่อ: ${new Date().toLocaleString('th-TH')}</p>
 
     <div class="report-signature-container">
@@ -541,6 +588,12 @@ function renderReport(){
         </div>
     </div>
   `;
+
+  // เรียกฟังก์ชันวาดกราฟแท่งสรุป (สำหรับหน้ารายงานเว็บ)
+  if(typeof generateChart === 'function') {
+     generateChart(subAnuban, subPrathom);
+  }
+}
 
   // เรียกฟังก์ชันวาดกราฟแท่งสรุป
   generateChart(subAnuban, subPrathom);
@@ -779,13 +832,13 @@ function getInitialStudents() {
 }
 </script>
   <style>
-/* 1. สไตล์ลายเซ็น: ซ่อนไว้เป็นค่าเริ่มต้นเมื่ออยู่บนหน้าจอมือถือหรือคอมพิวเตอร์ */
+/* 1. สไตล์ลายเซ็น: ซ่อนไว้เป็นค่าเริ่มต้นเมื่ออยู่บนหน้าจอปกติ */
 .report-signature-container {
     display: none !important; 
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    margin-top: 30px;
+    margin-top: 20px;
     clear: both;
 }
 
@@ -803,18 +856,24 @@ function getInitialStudents() {
     line-height: 1.6;
 }
 
-/* 2. สไตล์ควบคุมพิเศษเมื่อสั่งพิมพ์ผ่านเบราว์เซอร์ (Print / PDF) */
+/* 2. สไตล์ควบคุมพิเศษเมื่อสั่งพิมพ์ผ่านเบราว์เซอร์ (Print Preview / Save PDF) */
 @media print {
-    /* ซ่อนแผนภูมิแท่ง และปุ่มกดจัดการต่างๆ ไม่ให้โผล่บนกระดาษ */
+    /* ตั้งค่าหน้ากระดาษโดยรวมให้มีระยะขอบเหมาะสม */
+    @page {
+        size: A4 portrait;
+        margin: 10mm 10mm 10mm 10mm;
+    }
+
+    /* ซ่อนแผนภูมิแท่ง และปุ่มควบคุม ไม่ให้โผล่บนกระดาษ */
     .no-print, #chart-container, #attendanceChart {
         display: none !important;
     }
 
     /* บังคับให้ส่วนลายเซ็นโผล่ขึ้นมาเฉพาะในกระดาษพิมพ์เท่านั้น */
     .report-signature-container {
-        display: flex !important; /* เปิดการแสดงผลเฉพาะตอนปริ้น */
-        margin-top: 35px !important;
-        page-break-inside: avoid !important; /* ป้องกันลายเซ็นฉีกขาดแบ่งหน้า */
+        display: flex !important; 
+        margin-top: 20px !important;
+        page-break-inside: avoid !important; /* ป้องกันกล่องลายเซ็นฉีกแบ่งหน้า */
     }
 
     body {
@@ -826,14 +885,21 @@ function getInitialStudents() {
     }
     .report-table {
         width: 100% !important;
-        margin-bottom: 8px !important;
+        margin-bottom: 6px !important;
     }
+    
+    /* บีบความสูงของตารางทุกตัวเมื่อสั่งพิมพ์ เพื่อลดการใช้พื้นที่ ป้องกันการหลุดหน้า 2 */
     .report-table th, .report-table td {
-        padding: 4px 5px !important; 
-        font-size: 13px !important;
+        padding: 3px 4px !important; 
+        font-size: 12px !important;
     }
+    
+    .absent-detail-section {
+        margin-top: 10px !important;
+    }
+    
     .signature-col p {
-        font-size: 14px !important;
+        font-size: 13.5px !important;
         color: #000 !important;
     }
 }
