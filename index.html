@@ -119,7 +119,8 @@ select{padding:7px 10px;border-radius:8px;border:1px solid #D3D1C7;font-size:13p
 .save-notice.show{opacity:1}
 .loading-overlay{position:fixed;inset:0;background:rgba(255,255,255,0.7);display:flex;align-items:center;justify-content:center;z-index:9999;font-weight:600;color:#0F6E56}
 </style>
-
+  
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
   import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -201,6 +202,10 @@ select{padding:7px 10px;border-radius:8px;border:1px solid #D3D1C7;font-size:13p
   </div>
   <div class="report-wrap">
     <div id="report-content"></div>
+    
+    <div id="chart-container" style="max-width: 100%; margin: 30px auto 0 auto; background: #fff; padding: 15px; border: 1px solid #D3D1C7; border-radius: 10px;">
+      <canvas id="attendanceChart" style="max-height: 320px; width: 100%;"></style></canvas>
+    </div>
   </div>
 </div>
 </div>
@@ -339,10 +344,9 @@ function renderAttendance(){
     if(counts[st] !== undefined) counts[st]++;
   });
 
-  document.getElementById('att-summary').innerHTML = `
+document.getElementById('att-summary').innerHTML = `
     <div class="sum-card"><div class="sum-label">นักเรียนทั้งหมด</div><div class="sum-val">${total}</div><div class="sum-sub">คน</div></div>
     <div class="sum-card"><div class="sum-label" style="color:#0F6E56">✅ มาเรียน</div><div class="sum-val" style="color:#0F6E56">${counts['มา']}</div><div class="sum-sub">คน</div></div>
-    <div class="sum-card"><div class="sum-label" style="color:#854F0B">⏰ มาสาย</div><div class="sum-val" style="color:#854F0B">${counts['สาย']}</div><div class="sum-sub">คน</div></div>
     <div class="sum-card"><div class="sum-label" style="color:#A32D2D">❌ ขาดเรียน</div><div class="sum-val" style="color:#A32D2D">${counts['ขาด']}</div><div class="sum-sub">คน</div></div>
     <div class="sum-card"><div class="sum-label" style="color:#185FA5">🏥 ลาป่วย</div><div class="sum-val" style="color:#185FA5">${counts['ลาป่วย']}</div><div class="sum-sub">คน</div></div>
     <div class="sum-card"><div class="sum-label" style="color:#888780">ยังไม่เช็ค</div><div class="sum-val" style="color:#888780">${total - counts['มา'] - counts['สาย'] - counts['ขาด'] - counts['ลาป่วย']}</div><div class="sum-sub">คน</div></div>
@@ -403,6 +407,8 @@ function toggleCls(id, header){
   if(arrow) arrow.textContent = hidden ? '▼' : '▶';
 }
 
+let myChart = null; // ตัวแปรเก็บสถานะกราฟ ป้องกันกราฟซ้อน
+
 function renderReport(){
   const date = document.getElementById('rep-date').value || todayStr();
   document.getElementById('rep-date').value = date;
@@ -410,51 +416,103 @@ function renderReport(){
   document.getElementById('print-date-label').textContent = 'รายงานการมาเรียนประจำวัน ' + thDate;
 
   let rows = '';
-  let tM=0,tF=0,tAll=0,tMam=0,tMaf=0,tMa=0,tSai=0,tKhad=0,tLa=0;
+  
+  // ตัวแปรรวมทั้งโรงเรียน
+  let tM=0, tF=0, tAll=0, tMa=0, tKhad=0, tLa=0, tKhadLa=0;
+  
+  // ตัวแปรรวมสะสมแยกตามช่วงชั้น
+  let subAnuban = { m:0, f:0, total:0, ma:0, khad:0, la:0, khadLa:0 };
+  let subPrathom = { m:0, f:0, total:0, ma:0, khad:0, la:0, khadLa:0 };
 
-  CLASSES.forEach(cls => {
+  CLASSES.forEach((cls, index) => {
     const ss = students.filter(s => s.cls === cls);
     if(!ss.length) return;
+    
     const males = ss.filter(s => s.gender==='ชาย');
     const females = ss.filter(s => s.gender==='หญิง');
-    let ma_m=0,ma_f=0,sai=0,khad=0,la=0;
+    let ma_m=0, ma_f=0, khad=0, la=0;
+    
     ss.forEach(s => {
       const st = getAtt(date, s.id);
       if(st==='มา'){ if(s.gender==='ชาย') ma_m++; else ma_f++; }
-      else if(st==='สาย') sai++;
       else if(st==='ขาด') khad++;
       else if(st==='ลาป่วย') la++;
     });
+    
     const ma = ma_m + ma_f;
+    const khadLa = khad + la;
+    const percent = ss.length > 0 ? ((ma / ss.length) * 100).toFixed(1) : '0.0';
+    
+    // สะสมยอดลงช่วงชั้นที่ถูกต้อง
+    if(cls.includes('อนุบาล')) {
+      subAnuban.m += males.length; subAnuban.f += females.length; subAnuban.total += ss.length;
+      subAnuban.ma += ma; subAnuban.khad += khad; subAnuban.la += la; subAnuban.khadLa += khadLa;
+    } else {
+      subPrathom.m += males.length; subPrathom.f += females.length; subPrathom.total += ss.length;
+      subPrathom.ma += ma; subPrathom.khad += khad; subPrathom.la += la; subPrathom.khadLa += khadLa;
+    }
+    
+    // ยอดรวมสะสมทั้งโรงเรียน
     tM+=males.length; tF+=females.length; tAll+=ss.length;
-    tMam+=ma_m; tMaf+=ma_f; tMa+=ma; tSai+=sai; tKhad+=khad; tLa+=la;
+    tMa+=ma; tKhad+=khad; tLa+=la; tKhadLa+=khadLa;
+    
+    // เพิ่มแถวข้อมูลชั้นเรียนปกติ
     rows += `<tr>
       <td class="class-col">${cls}</td>
       <td>${males.length}</td><td>${females.length}</td><td><strong>${ss.length}</strong></td>
-      <td style="color:#0F6E56">${ma_m}</td>
-      <td style="color:#993556">${ma_f}</td>
       <td style="color:#0F6E56"><strong>${ma}</strong></td>
-      <td style="color:#854F0B">${sai}</td>
       <td style="color:#A32D2D">${khad}</td>
       <td style="color:#185FA5">${la}</td>
+      <td style="color:#854F0B; font-weight:600">${khadLa}</td>
+      <td style="color:#0F6E56; font-weight:700; background:#F8FDFB">${percent}%</td>
     </tr>`;
+    
+    // แทรกแถวสรุปผล "รวมช่วงชั้นอนุบาล" หลังจบบล็อก อนุบาล 3
+    if(cls === 'อนุบาล 3' && subAnuban.total > 0) {
+      const subPct = ((subAnuban.ma / subAnuban.total) * 100).toFixed(1);
+      rows += `<tr style="background:#FAF8F2; font-weight:600; border-bottom:2px solid #D3D1C7">
+        <td class="class-col" style="color:#854F0B; padding-left:15px;">↳ รวมช่วงชั้นอนุบาล</td>
+        <td>${subAnuban.m}</td><td>${subAnuban.f}</td><td>${subAnuban.total}</td>
+        <td style="color:#0F6E56">${subAnuban.ma}</td>
+        <td style="color:#A32D2D">${subAnuban.khad}</td>
+        <td style="color:#185FA5">${subAnuban.la}</td>
+        <td style="color:#854F0B">${subAnuban.khadLa}</td>
+        <td style="color:#0F6E56; font-weight:700">${subPct}%</td>
+      </tr>`;
+    }
+    
+    // แทรกแถวสรุปผล "รวมช่วงชั้นประถมศึกษา" หลังจบบล็อก ป.6
+    if(cls === 'ป.6' && subPrathom.total > 0) {
+      const subPct = ((subPrathom.ma / subPrathom.total) * 100).toFixed(1);
+      rows += `<tr style="background:#FAF8F2; font-weight:600; border-bottom:2px solid #D3D1C7">
+        <td class="class-col" style="color:#854F0B; padding-left:15px;">↳ รวมช่วงชั้นประถมฯ</td>
+        <td>${subPrathom.m}</td><td>${subPrathom.f}</td><td>${subPrathom.total}</td>
+        <td style="color:#0F6E56">${subPrathom.ma}</td>
+        <td style="color:#A32D2D">${subPrathom.khad}</td>
+        <td style="color:#185FA5">${subPrathom.la}</td>
+        <td style="color:#854F0B">${subPrathom.khadLa}</td>
+        <td style="color:#0F6E56; font-weight:700">${subPct}%</td>
+      </tr>`;
+    }
   });
+
+  const totalPercent = tAll > 0 ? ((tMa / tAll) * 100).toFixed(1) : '0.0';
 
   document.getElementById('report-content').innerHTML = `
     <p style="font-size:13px;color:#5F5E5A;margin-bottom:12px;font-weight:500">วันที่ ${thDate}</p>
     <table class="report-table">
       <thead>
         <tr>
-          <th rowspan="2" class="class-col" style="text-align:left;min-width:90px">ชั้น</th>
+          <th rowspan="2" class="class-col" style="text-align:left;min-width:110px">ชั้น</th>
           <th colspan="3" style="background:#D3D1C7">จำนวนนักเรียนทั้งหมด</th>
-          <th colspan="3" style="background:#9FE1CB;color:#0F6E56">มาเรียนวันนี้</th>
-          <th rowspan="2" style="color:#854F0B">มาสาย</th>
+          <th rowspan="2" style="background:#9FE1CB; color:#0F6E56">มาเรียน<br>วันนี้</th>
           <th rowspan="2" style="color:#A32D2D">ขาด</th>
           <th rowspan="2" style="color:#185FA5">ลาป่วย</th>
+          <th rowspan="2" style="background:#FCEBEB; color:#A32D2D">รวมขาด/ลา</th>
+          <th rowspan="2" style="background:#E1F5EE; color:#0F6E56; min-width:80px">มาเรียน<br>ร้อยละ</th>
         </tr>
         <tr>
           <th>ชาย</th><th>หญิง</th><th>รวม</th>
-          <th style="color:#185FA5">ชาย</th><th style="color:#993556">หญิง</th><th style="color:#0F6E56">รวม</th>
         </tr>
       </thead>
       <tbody>${rows}</tbody>
@@ -462,15 +520,75 @@ function renderReport(){
         <tr>
           <td class="class-col">รวมทั้งโรงเรียน</td>
           <td>${tM}</td><td>${tF}</td><td>${tAll}</td>
-          <td>${tMam}</td><td>${tMaf}</td><td>${tMa}</td>
-          <td>${tSai}</td><td>${tKhad}</td><td>${tLa}</td>
+          <td>${tMa}</td><td>${tKhad}</td><td>${tLa}</td>
+          <td>${tKhadLa}</td>
+          <td style="font-weight:700; background:#0F6E56; color:#fff">${totalPercent}%</td>
         </tr>
       </tfoot>
     </table>
     <p style="font-size:11px;color:#888780;margin-top:10px;text-align:right">พิมพ์เมื่อ: ${new Date().toLocaleString('th-TH')}</p>
   `;
+
+  // เรียกฟังก์ชันสร้างหรืออัพเดท แผนภูมิแท่งสรุปผล
+  generateChart(subAnuban, subPrathom);
 }
 
+function generateChart(anuban, prathom) {
+  const ctx = document.getElementById('attendanceChart').getContext('2d');
+  
+  // ล้างอินสแตนซ์กราฟเดิมก่อนหน้าเพื่อป้องกันการแสดงซ้อนทับกันเมื่อเปลี่ยนวันที่
+  if (myChart) {
+    myChart.destroy();
+  }
+  
+  myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['ช่วงชั้นอนุบาล (อ.1 - อ.3)', 'ช่วงชั้นประถมศึกษา (ป.1 - ป.6)'],
+      datasets: [
+        {
+          label: 'มาเรียน (คน)',
+          data: [anuban.ma, prathom.ma],
+          backgroundColor: '#1D9E75',
+          borderColor: '#0F6E56',
+          borderWidth: 1
+        },
+        {
+          label: 'รวมขาด/ลา (คน)',
+          data: [anuban.khadLa, prathom.khadLa],
+          backgroundColor: '#F09995',
+          borderColor: '#A32D2D',
+          borderWidth: 1
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: { font: { family: 'Sarabun', size: 13 } }
+        },
+        title: {
+          display: true,
+          text: 'แผนภูมิสรุปยอดการมาเรียนแยกตามช่วงชั้น',
+          font: { family: 'Sarabun', size: 14, weight: 'bold' }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { font: { family: 'Sarabun' }, stepSize: 5 }
+        },
+        x: {
+          ticks: { font: { family: 'Sarabun', weight: 'bold' } }
+        }
+      }
+    }
+  });
+}
+  
 function renderStudentList(){
   const filter = document.getElementById('class-filter').value;
   const sel = filter ? students.filter(s => s.cls === filter) : students;
@@ -669,13 +787,13 @@ function getInitialStudents() {
 
 /* แสดงผลและจัดทรงเฉพาะเวลาสั่งพิมพ์ (Print Preview / PDF) */
 @media print {
-    .report-signature-container {
-        display: block !important;
-        margin-top: 60px; /* ระยะห่างจากตารางรายงานด้านบน */
-        width: 100%;
-        clear: both;
-        page-break-inside: avoid; /* ป้องกันลายเซ็นโดนฉีกขาดแบ่งคนละหน้า */
-    }
+  /* เพิ่มเติมข้อกำหนดเพื่อให้กราฟไม่หลุดขนาดหน้ากระดาษ */
+  #chart-container {
+    border: none !important;
+    margin-top: 20px !important;
+    page-break-inside: avoid;
+  }
+}
     
     /* แบ่งพื้นที่เป็น 2 บล็อก ซ้าย-ขวา */
     .signature-col {
