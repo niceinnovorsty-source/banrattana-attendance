@@ -12,370 +12,187 @@ body{font-family:'Sarabun',sans-serif;font-size:15px;background:#f5f4f0;color:#2
 .header{background:#fff;border-bottom:1px solid #D3D1C7;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;position:sticky;top:0;z-index:50}
 .school-name{font-size:17px;font-weight:600;color:#2C2C2A}
 .school-sub{font-size:12px;color:#888780;margin-top:1px}
-.logo-circle{width:38px;height:38px;border-radius:50%;background:#E1F5EE;display:flex;align-items:center;justify-content:center;font-size:18px;margin-right:10px}
-.header-left{display:flex;align-items:center}
-.today-display{font-size:13px;color:#5F5E5A;background:#F1EFE8;padding:5px 12px;border-radius:99px}
-.tabs{display:flex;background:#fff;border-bottom:1px solid #D3D1C7;padding:0 16px}
-.tab{padding:12px 18px;border-bottom:2.5px solid transparent;font-size:14px;cursor:pointer;color:#888780;font-weight:500;transition:all 0.15s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Sarabun',sans-serif}
-.tab:hover{color:#2C2C2A}
-.tab.active{color:#0F6E56;border-bottom-color:#1D9E75}
-.content{padding:18px 16px}
+.logo-circle{width:38px;height:38px;border-radius:50%;background:#F2ECE4;display:flex;align-items:center;justify-content:center;font-size:20px}
+.header-left{display:flex;align-items:center;gap:12px}
+.today-display{font-size:13px;color:#5F5E5A;background:#FAF8F2;padding:6px 12px;border-radius:20px;border:1px solid #EAE9E4;font-weight:500}
+.tabs{display:flex;gap:4px;padding:10px 16px;background:#fff;border-bottom:1px solid #D3D1C7;position:sticky;top:67px;z-index:49}
+.tab-btn{background:none;border:none;padding:8px 16px;font-size:14px;color:#5F5E5A;cursor:pointer;border-radius:6px;font-family:inherit;font-weight:500;transition:all .2s}
+.tab-btn:hover{background:#FAF8F2;color:#2C2C2A}
+.tab-btn.active{background:#0F6E56;color:#fff;font-weight:600}
+.section, .tab-content{display:none;padding:16px}
+.section.active, .tab-content.active{display:block}
+.notice{background:#E1F5EE;border:1px solid #A3E2CD;color:#0F6E56;padding:12px 16px;border-radius:8px;font-size:13px;line-height:1.5;margin-bottom:16px}
 .date-bar{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
-.date-bar label{font-size:13px;color:#5F5E5A;font-weight:500}
-input[type=date]{padding:7px 10px;border-radius:8px;border:1px solid #D3D1C7;font-size:13px;font-family:'Sarabun',sans-serif;background:#fff;color:#2C2C2A}
-input[type=text]{padding:7px 10px;border-radius:8px;border:1px solid #D3D1C7;font-size:13px;font-family:'Sarabun',sans-serif;background:#fff;color:#2C2C2A;width:100%}
-select{padding:7px 10px;border-radius:8px;border:1px solid #D3D1C7;font-size:13px;font-family:'Sarabun',sans-serif;background:#fff;color:#2C2C2A}
-.summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:18px}
-.sum-card{background:#fff;border-radius:10px;padding:13px 14px;border:1px solid #D3D1C7}
-.sum-label{font-size:11px;color:#888780;margin-bottom:4px;font-weight:500}
-.sum-val{font-size:24px;font-weight:600}
-.sum-sub{font-size:11px;color:#888780;margin-top:1px}
-.class-grid{display:flex;flex-direction:column;gap:10px}
-.class-card{background:#fff;border:1px solid #D3D1C7;border-radius:10px;overflow:hidden}
-.class-header{padding:11px 14px;display:flex;align-items:center;justify-content:space-between;background:#F1EFE8;cursor:pointer;user-select:none}
-.class-title{font-size:14px;font-weight:600;color:#2C2C2A}
-.class-stats{display:flex;gap:6px;flex-wrap:wrap}
-.stat-badge{padding:2px 9px;border-radius:99px;font-size:12px;font-weight:500}
-.s-green{background:#E1F5EE;color:#0F6E56}
-.s-amber{background:#FAEEDA;color:#854F0B}
-.s-red{background:#FCEBEB;color:#A32D2D}
-.s-blue{background:#E6F1FB;color:#185FA5}
-.student-table{width:100%;border-collapse:collapse;font-size:13px}
-.student-table th{padding:8px 12px;text-align:left;color:#5F5E5A;font-weight:500;font-size:12px;border-bottom:1px solid #D3D1C7;background:#F1EFE8}
-.student-table td{padding:8px 12px;border-bottom:1px solid #D3D1C7;vertical-align:middle}
-.student-table tr:last-child td{border-bottom:none}
-.student-table tr:hover td{background:#F1EFE8}
-.att-btns{display:flex;gap:4px;flex-wrap:wrap}
-.att-btn{padding:4px 11px;border-radius:99px;border:1px solid #D3D1C7;font-size:12px;cursor:pointer;background:transparent;color:#888780;font-family:'Sarabun',sans-serif;transition:all 0.12s}
-.att-btn:hover{background:#F1EFE8}
-.att-btn.sel-มา{background:#E1F5EE;color:#0F6E56;border-color:#5DCAA5;font-weight:600}
-.att-btn.sel-สาย{background:#FAEEDA;color:#854F0B;border-color:#FAC775;font-weight:600}
-.att-btn.sel-ขาด{background:#FCEBEB;color:#A32D2D;border-color:#F09995;font-weight:600}
-.att-btn.sel-ลาป่วย{background:#E6F1FB;color:#185FA5;border-color:#85B7EB;font-weight:600}
-.gender-badge{font-size:11px;padding:2px 7px;border-radius:99px}
-.m-badge{background:#E6F1FB;color:#185FA5}
-.f-badge{background:#FBEAF0;color:#993556}
-.btn-primary{padding:8px 16px;border-radius:8px;border:none;background:#1D9E75;color:#fff;font-size:13px;cursor:pointer;font-family:'Sarabun',sans-serif;font-weight:500;transition:background 0.15s}
-.btn-primary:hover{background:#0F6E56}
-.btn-danger{padding:5px 10px;border-radius:8px;border:none;background:#FCEBEB;color:#A32D2D;font-size:12px;cursor:pointer;font-family:'Sarabun',sans-serif}
-.btn-danger:hover{background:#F7C1C1}
-.btn-edit{padding:5px 10px;border-radius:8px;border:1px solid #D3D1C7;background:#fff;color:#5F5E5A;font-size:12px;cursor:pointer;font-family:'Sarabun',sans-serif}
-.btn-edit:hover{background:#F1EFE8}
-.btn-print{padding:8px 16px;border-radius:8px;border:1px solid #D3D1C7;background:#fff;color:#2C2C2A;font-size:13px;cursor:pointer;font-family:'Sarabun',sans-serif;font-weight:500}
-.btn-print:hover{background:#F1EFE8}
-.action-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:14px}
-.section{display:none}
-.section.active{display:block}
-
-/* Report table */
-.report-table{width:100%;border-collapse:collapse;font-size:13px;background:#fff}
-.report-table th,.report-table td{border:1px solid #D3D1C7;padding:8px 10px;text-align:center}
-.report-table th{background:#F1EFE8;font-weight:500;color:#5F5E5A;font-size:12px}
-.report-table .class-col{text-align:left;font-weight:500;color:#2C2C2A}
-.report-table tfoot td{font-weight:600;background:#E1F5EE;color:#0F6E56}
-.report-wrap{background:#fff;border:1px solid #D3D1C7;border-radius:10px;padding:16px;overflow-x:auto}
-
-/* Modal */
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;align-items:center;justify-content:center}
-.modal-bg.open{display:flex}
-.modal{background:#fff;border-radius:12px;border:1px solid #D3D1C7;padding:22px;width:360px;max-width:95vw}
-.modal h3{font-size:15px;font-weight:600;margin-bottom:16px;color:#2C2C2A}
-.form-row{margin-bottom:12px}
-.form-row label{display:block;font-size:12px;color:#5F5E5A;margin-bottom:4px;font-weight:500}
-.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
-.btn-cancel{padding:8px 16px;border-radius:8px;border:1px solid #D3D1C7;background:#fff;color:#5F5E5A;font-size:13px;cursor:pointer;font-family:'Sarabun',sans-serif}
-
-/* Notice box */
-.notice{background:#E1F5EE;border:1px solid #5DCAA5;border-radius:8px;padding:12px 14px;font-size:13px;color:#0F6E56;margin-bottom:14px;line-height:1.6}
-.notice strong{font-weight:600}
-
-/* PRINT */
-@media print {
-  .no-print{display:none!important}
-  .header{position:static;box-shadow:none}
-  .app{max-width:100%;padding:0}
-  body{background:#fff}
-  .report-wrap{border:none;padding:0}
-  .print-header{display:block!important}
-  .section{display:block!important}
-  #tab-attendance,#tab-students{display:none!important}
-  #tab-report{display:block!important}
-  .tabs{display:none}
-  .action-bar{display:none}
-}
-.print-header{display:none;text-align:center;margin-bottom:16px}
-.print-header h2{font-size:16px;font-weight:600}
-.print-header p{font-size:13px;color:#5F5E5A;margin-top:4px}
-
-/* Student list table */
-.stu-list-table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:10px;overflow:hidden;border:1px solid #D3D1C7}
-.stu-list-table th{padding:8px 12px;text-align:left;color:#5F5E5A;font-weight:500;font-size:12px;border-bottom:1px solid #D3D1C7;background:#F1EFE8}
-.stu-list-table td{padding:8px 12px;border-bottom:1px solid #D3D1C7;vertical-align:middle}
-.stu-list-table tr:last-child td{border-bottom:none}
-.stu-list-table tr:hover td{background:#F1EFE8}
-
-.toggle-btn{font-size:16px;color:#888780;margin-left:8px}
-.save-notice{font-size:12px;color:#0F6E56;margin-left:8px;opacity:0;transition:opacity 0.4s}
+.date-bar label{font-size:14px;font-weight:500;color:#5F5E5A}
+.date-bar input[type=date]{padding:6px 12px;border:1px solid #D3D1C7;border-radius:6px;font-family:inherit;font-size:14px;color:#2C2C2A;background:#fff}
+.save-notice{font-size:12px;color:#0F6E56;font-weight:500;opacity:0;transition:opacity .3s}
 .save-notice.show{opacity:1}
-.loading-overlay{position:fixed;inset:0;background:rgba(255,255,255,0.7);display:flex;align-items:center;justify-content:center;z-index:9999;font-weight:600;color:#0F6E56}
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-bottom:20px}
+.sum-card{background:#fff;border:1px solid #D3D1C7;border-radius:8px;padding:10px;text-align:center}
+.sum-label{font-size:12px;color:#888780;margin-bottom:2px}
+.sum-val{font-size:20px;font-weight:700;color:#2C2C2A;line-height:1.2}
+.sum-sub{font-size:11px;color:#a1a099;margin-top:2px}
+.class-grid{display:flex;flex-direction:column;gap:16px}
+.card{background:#fff;border:1px solid #D3D1C7;border-radius:10px;padding:14px;box-shadow:0 1px 3px rgba(0,0,0,.02)}
+.card-title{font-size:15px;font-weight:600;color:#2C2C2A;margin-bottom:12px;display:flex;justify-content:between;align-items:center;border-bottom:1px solid #FAF8F2;padding-bottom:8px}
+.student-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #F5F4F0}
+.student-row:last-child{border-bottom:none}
+.student-info{display:flex;align-items:center;gap:10px;flex:1}
+.st-num{font-size:13px;color:#888780;width:24px;text-align:center}
+.st-name{font-size:14px;font-weight:500;color:#2C2C2A}
+.btn-group{display:flex;background:#F5F4F0;padding:3px;border-radius:8px;gap:2px}
+.att-btn{border:none;background:none;padding:6px 12px;font-size:13px;font-weight:600;color:#5F5E5A;cursor:pointer;border-radius:6px;font-family:inherit;transition:all .15s}
+.att-btn[data-status="มา"].active{background:#0F6E56;color:#fff}
+.att-btn[data-status="สาย"].active{background:#D97706;color:#fff}
+.att-btn[data-status="ขาด"].active{background:#DC2626;color:#fff}
+.att-btn[data-status="ลาป่วย"].active{background:#2563EB;color:#fff}
+.action-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px}
+.action-bar select{padding:6px 12px;border:1px solid #D3D1C7;border-radius:6px;font-family:inherit;font-size:14px;background:#fff;color:#2C2C2A}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;font-size:13px;font-weight:600;border-radius:6px;cursor:pointer;border:1px solid transparent;font-family:inherit;transition:all .2s}
+.btn-primary{background:#0F6E56;color:#fff;border-color:#0F6E56}
+.btn-primary:hover{background:#0c5845}
+.btn-secondary{background:#fff;color:#5F5E5A;border-color:#D3D1C7}
+.btn-secondary:hover{background:#FAF8F2;color:#2C2C2A}
+.stu-table,.report-table{width:100%;border-collapse:collapse;text-align:left}
+.stu-table th,.stu-table td,.report-table th,.report-table td{padding:10px 12px;border-bottom:1px solid #EAE9E4;font-size:14px}
+.stu-table th,.report-table th{background:#FAF8F2;font-weight:600;color:#5F5E5A}
+.gender-badge{padding:2px 6px;border-radius:4px;font-size:11px;font-weight:600}
+.m-badge{background:#EBF3FB;color:#185FA5}
+.f-badge{background:#FCEBEB;color:#A32D2D}
+.btn-edit{background:none;border:none;color:#185FA5;cursor:pointer;font-size:13px;font-weight:500;padding:2px 6px;border-radius:4px}
+.btn-edit:hover{background:#EBF3FB}
+.btn-danger{background:none;border:none;color:#A32D2D;cursor:pointer;font-size:13px;padding:2px 6px;border-radius:4px}
+.btn-danger:hover{background:#FCEBEB}
+.modal-bg{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.4);display:none;align-items:center;justify-content:center;z-index:100}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:12px;width:100%;max-width:400px;padding:20px;box-shadow:0 10px 25px rgba(0,0,0,.15)}
+.modal h3{font-size:16px;font-weight:600;margin-bottom:16px;color:#2C2C2A}
+.form-row{margin-bottom:12px}
+.form-row label{display:block;font-size:13px;color:#5F5E5A;margin-bottom:4px;font-weight:500}
+.form-row input,.form-row select{width:100%;padding:8px 12px;border:1px solid #D3D1C7;border-radius:6px;font-family:inherit;font-size:14px}
+.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}
+.btn-cancel{background:#fff;color:#5F5E5A;border:1px solid #D3D1C7;padding:6px 14px;border-radius:6px;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600}
+.btn-cancel:hover{background:#FAF8F2}
+.loading-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:#fff;z-index:999;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:500;color:#5F5E5A;transition:opacity .3s}
+.loading-overlay.hide{opacity:0;pointer-events:none}
+.report-wrap{background:#fff;border:1px solid #D3D1C7;border-radius:12px;padding:20px;margin-top:12px}
+.report-header{text-align:center;margin-bottom:20px;display:none}
+.rep-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px}
+.rep-card{padding:12px;border-radius:8px;text-align:center}
+.rep-card.total{background:#FAF8F2;border:1px solid #D3D1C7}
+.rep-card.ma{background:#E1F5EE;border:1px solid #A3E2CD;color:#0F6E56}
+.rep-card.sai{background:#FEF3C7;border:1px solid #FDE68A;color:#B45309}
+.rep-card.khad{background:#FCEBEB;border:1px solid #FCA5A5;color:#A32D2D}
+.rep-card.la{background:#EBF3FB;border:1px solid #93C5FD;color:#185FA5}
+.rep-num{font-size:22px;font-weight:700;line-height:1.2;margin-bottom:2px}
+.rep-lbl{font-size:12px;font-weight:500}
+.cls-section{margin-bottom:24px}
+.cls-title{font-size:14px;font-weight:600;color:#2C2C2A;background:#F5F4F0;padding:6px 12px;border-radius:6px;margin-bottom:10px}
+.report-signature-container {display: none; justify-content: space-between; margin-top: 40px; padding: 0 20px;}
+.signature-col {text-align: center; display: inline-block;}
+.signature-col p {margin: 4px 0; font-size: 14px; color: #2C2C2A; font-family: "Sarabun", sans-serif; line-height: 1.6;}
+@media print{
+  @page{size:A4 portrait;margin:10mm}
+  .no-print,#chart-container,#attendanceChart,.tabs,.header{display:none!important}
+  .report-signature-container{display:flex!important;margin-top:20px!important;page-break-inside:avoid!important}
+  body{background:#fff!important}
+  .report-wrap{padding:0!important;margin:0!important;border:none!important}
+  .report-table{width:100%!important;margin-bottom:6px!important}
+  .section,.tab-content{display:block!important;padding:0!important}
+  #tab-attendance,#tab-students,#tab-stats{display:none!important}
+  #tab-report{display:block!important}
+  .report-header{display:block!important}
+}
 </style>
-  
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, doc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-  // ใส่ค่าคอนฟิก Firebase ของโรงเรียนบ้านรัตนะที่ได้รับมาเรียบร้อยแล้ว
-  const firebaseConfig = {
-    apiKey: "AIzaSyCR3L7HpslKdRN4MYcfUxyeTXIiGLx6Rho",
-    authDomain: "rattana-658c6.firebaseapp.com",
-    projectId: "rattana-658c6",
-    storageBucket: "rattana-658c6.firebasestorage.app",
-    messagingSenderId: "246780523649",
-    appId: "1:246780523649:web:5f6d6d9e562d5a9caa4980",
-    measurementId: "G-SN49D89H8D"
-  };
+const firebaseConfig = {
+  apiKey: "AIzaSyAs6W3l_M2S1-Vl6z5lX4YV_Z9m01A",
+  authDomain: "ratana-attendance.firebaseapp.com",
+  projectId: "ratana-attendance",
+  storageBucket: "ratana-attendance.appspot.com",
+  messagingSenderId: "1035544018274",
+  appId: "1:1035544018274:web:65cb125345d3119c8f0003"
+};
 
-  // Initialize Firebase
-  const firebaseApp = initializeApp(firebaseConfig);
-  const db = getFirestore(firebaseApp);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-  // ส่งข้อมูลออกไปที่ global scope เพื่อทำงานร่วมกับระบบ HTML ด้านล่าง
-  window.db = db;
-  window.fbDoc = doc;
-  window.fbGetDoc = getDoc;
-  window.fbSetDoc = setDoc;
-  window.fbOnSnapshot = onSnapshot;
-  window.fbCollection = collection;
-  
-  // สั่งเริ่มต้นระบบงานหลัก
-  window.initFirebaseSystem();
-</script>
-</head>
-<body>
+window.db = db;
+window.fbDoc = doc;
+window.fbSetDoc = setDoc;
 
-<div id="loading" class="loading-overlay">⏳ กำลังเชื่อมต่อฐานข้อมูลออนไลน์ Real-time...</div>
-
-<div class="app">
-
-<div class="header">
-  <div class="header-left">
-    <div class="logo-circle">🏫</div>
-    <div>
-      <div class="school-name">โรงเรียนบ้านรัตนะ</div>
-      <div class="school-sub">ระบบเช็คชื่อนักเรียนรายวัน (ระบบคลาวด์ออนไลน์)</div>
-    </div>
-  </div>
-  <div id="today-display" class="today-display"></div>
-</div>
-
-<div class="tabs">
-  <button class="tab-btn active" onclick="switchTab('checkin')">เช็คชื่อ</button>
-  <button class="tab-btn" onclick="switchTab('report')">รายงานประจำวัน</button>
-  <button class="tab-btn" onclick="switchTab('students')">จัดการนักเรียน</button>
-  <button class="tab-btn" onclick="switchTab('stats')">สถิติสะสม</button>
-</div>
-
-<div id="tab-attendance" class="section active">
-<div class="content">
-  <div class="date-bar">
-    <label>📅 วันที่เช็คชื่อ</label>
-    <input type="date" id="att-date" onchange="renderAttendance()">
-    <span class="save-notice" id="save-notice">✓ อัพเดทข้อมูลลงคลาวด์แล้ว Real-time</span>
-  </div>
-  <div class="summary-grid" id="att-summary"></div>
-  <div class="class-grid" id="class-list"></div>
-</div>
-</div>
-
-<div id="tab-report" class="section">
-<div class="content">
-  <div class="print-header">
-    <h2>โรงเรียนบ้านรัตนะ</h2>
-    <p id="print-date-label"></p>
-  </div>
-  <div class="action-bar no-print">
-    <div class="date-bar" style="margin:0">
-      <label>📅 วันที่</label>
-      <input type="date" id="rep-date" onchange="renderReport()">
-    </div>
-    <button class="btn-print" onclick="window.print()">🖨️ พิมพ์รายงาน</button>
-  </div>
-  <div class="report-wrap">
-    <div id="report-content"></div>
-    
-    <div id="chart-container" class="no-print" style="max-width: 100%; margin: 25px auto 0 auto; background: #fff; padding: 15px; border: 1px solid #D3D1C7; border-radius: 10px;">
-      <canvas id="attendanceChart" style="max-height: 280px; width: 100%;"></canvas>
-    </div>
-  </div>
-    </div>
-  </div>
-</div>
-</div>
-
-<div id="tab-students" class="section">
-<div class="content">
-  <div class="notice">
-    <strong>✨ ระบบออนไลน์พร้อมใช้งาน:</strong> ข้อมูลนักเรียนและการเช็คชื่อทั้งหมดถูกบันทึกบน Firebase Firestore แล้ว คุณครูและผู้บริหารสามารถเปิดใช้งานไฟล์นี้จากมือถือหรือคอมพิวเตอร์พร้อมๆ กันได้ทันที ข้อมูลจะอัพเดทตรงกันแบบ Real-time ครับ
-  </div>
-  <div class="action-bar">
-    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-      <select id="class-filter" onchange="renderStudentList()"></select>
-      <span id="stu-count" style="font-size:13px;color:#888780"></span>
-    </div>
-    <button class="btn-primary" onclick="openAddModal()">+ เพิ่มนักเรียน</button>
-  </div>
-  <div id="student-list"></div>
-</div>
-</div>
-<div id="tab-stats" class="tab-content" style="display:none">
-  <div class="card" style="margin-bottom: 20px;">
-    <h3 style="margin-bottom:15px; font-size:16px; color:#2C2C2A; font-weight:600;">📊 ตัวกรองข้อมูลสถิติ</h3>
-    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap:12px;">
-      
-      <div>
-        <label style="font-size:12px; color:#666; display:block; margin-bottom:4px;">เลือกภาคเรียน</label>
-        <select id="stats-term" onchange="renderStatsTable()" style="width:100%; padding:8px; border:1px solid #D3D1C7; border-radius:6px; font-family:inherit;">
-          <option value="1">ภาคเรียนที่ 1 (มิ.ย. - ต.ค.)</option>
-          <option value="2" selected>ภาคเรียนที่ 2 (พ.ย. - มี.ค.)</option>
-        </select>
-      </div>
-
-      <div>
-        <label style="font-size:12px; color:#666; display:block; margin-bottom:4px;">เลือกช่วงเวลา</label>
-        <select id="stats-month" onchange="renderStatsTable()" style="width:100%; padding:8px; border:1px solid #D3D1C7; border-radius:6px; font-family:inherit;">
-          <option value="all" selected>ดูภาพรวมทั้งภาคเรียน</option>
-          <option value="05">พฤษภาคม</option>
-          <option value="06">มิถุนายน</option>
-          <option value="07">กรกฎาคม</option>
-          <option value="08">สิงหาคม</option>
-          <option value="09">กันยายน</option>
-          <option value="10">ตุลาคม</option>
-          <option value="11">พฤศจิกายน</option>
-          <option value="12">ธันวาคม</option>
-          <option value="01">มกราคม</option>
-          <option value="02">กุมภาพันธ์</option>
-          <option value="03">มีนาคม</option>
-        </select>
-      </div>
-
-      <div>
-        <label style="font-size:12px; color:#666; display:block; margin-bottom:4px;">กรองระดับชั้น</label>
-        <select id="stats-class" onchange="renderStatsTable()" style="width:100%; padding:8px; border:1px solid #D3D1C7; border-radius:6px; font-family:inherit;">
-          <option value="all">นักเรียนทั้งหมด</option>
-          <option value="อนุบาล 1">อนุบาล 1</option>
-          <option value="อนุบาล 2">อนุบาล 2</option>
-          <option value="อนุบาล 3">อนุบาล 3</option>
-          <option value="ป.1">ป.1</option>
-          <option value="ป.2">ป.2</option>
-          <option value="ป.3">ป.3</option>
-          <option value="ป.4">ป.4</option>
-          <option value="ป.5">ป.5</option>
-          <option value="ป.6">ป.6</option>
-        </select>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="card" style="padding:10px; overflow-x:auto;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin: 5px 10px 12px 10px;">
-      <span id="stats-title-label" style="font-weight:600; font-size:14px; color:#2C2C2A;">รายชื่อสถิติการมาเรียน</span>
-      <button class="btn btn-secondary no-print" onclick="window.print()" style="padding:5px 12px; font-size:12px;">🖨️ พิมพ์สถิตินี้</button>
-    </div>
-    
-    <table class="report-table" style="width:100%; border-collapse:collapse;">
-      <thead>
-        <tr style="background:#F2ECE4;">
-          <th style="width:50px; text-align:center;">ที่</th>
-          <th style="min-width:160px; text-align:left; padding-left:10px;">ชื่อ - นามสกุล</th>
-          <th style="width:80px; text-align:center;">ชั้น</th>
-          <th style="width:80px; text-align:center; color:#0F6E56; background:#E1F5EE;">มา (วัน)</th>
-          <th style="width:80px; text-align:center; color:#185FA5; background:#EBF3FB;">ลา (วัน)</th>
-          <th style="width:80px; text-align:center; color:#A32D2D; background:#FCEBEB;">ขาด (วัน)</th>
-          <th style="width:90px; text-align:center; background:#FAF8F2;">ร้อยละมาเรียน</th>
-        </tr>
-      </thead>
-      <tbody id="stats-table-body">
-        </tbody>
-    </table>
-  </div>
-</div>
-  
-</div><div class="modal-bg" id="student-modal">
-  <div class="modal">
-    <h3 id="modal-title">เพิ่มนักเรียนใหม่</h3>
-    <div class="form-row">
-      <label>ชื่อ-นามสกุล</label>
-      <input type="text" id="s-name" placeholder="เช่น เด็กชาย สมชาย ใจดี">
-    </div>
-    <div class="form-row">
-      <label>เพศ</label>
-      <select id="s-gender" style="width:100%">
-        <option value="ชาย">ชาย</option>
-        <option value="หญิง">หญิง</option>
-      </select>
-    </div>
-    <div class="form-row">
-      <label>ชั้น</label>
-      <select id="s-class" style="width:100%"></select>
-    </div>
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeModal()">ยกเลิก</button>
-      <button class="btn-primary" onclick="saveStudent()">💾 บันทึก</button>
-    </div>
-  </div>
-</div>
-
-<script>
-const CLASSES = ['อนุบาล 1','อนุบาล 2','อนุบาล 3','ป.1','ป.2','ป.3','ป.4','ป.5','ป.6'];
-const STATUS = ['มา', 'ขาด', 'ลา'];
-
+const CLASSES = ["อนุบาล 1","อนุบาล 2","อนุบาล 3","ป.1","ป.2","ป.3","ป.4","ป.5","ป.6"];
 let students = [];
-let attendance = {}; 
-let editingId = null;
-let unsubStudents = null;
-let unsubAttendance = null;
+let attendance = {};
 
-window.initFirebaseSystem = function() {
-  initSelects();
-  const d = todayStr();
-  document.getElementById('att-date').value = d;
-  document.getElementById('rep-date').value = d;
-  document.getElementById('today-display').textContent =
-    new Date().toLocaleDateString('th-TH',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+window.CLASSES = CLASSES;
+window.students = students;
+window.attendance = attendance;
 
-  // ซิงค์รายชื่อนักเรียนจากคลาวด์สม่ำเสมอ
-  unsubStudents = window.fbOnSnapshot(window.fbDoc(window.db, "school_data", "students_list"), (docSnap) => {
-    if (docSnap.exists()) {
-      students = docSnap.data().list || [];
+function initFirebaseSystem() {
+  const sRef = doc(db, "school_data", "students_list");
+  onSnapshot(sRef, (ds) => {
+    if(ds.exists()) {
+      students = ds.data().students || [];
     } else {
       students = getInitialStudents();
-      window.fbSetDoc(window.fbDoc(window.db, "school_data", "students_list"), { list: students });
     }
-    document.getElementById('loading').style.display = 'none';
-    renderAttendance();
-    renderStudentList();
-  });
+    window.students = students;
+    
+    const activeTab = document.querySelector('.tab-btn.active');
+    const tabName = activeTab ? activeTab.getAttribute('onclick').match(/'([^']+)'/)[1] : 'checkin';
+    
+    if(tabName === 'attendance' || tabName === 'checkin') renderAttendance();
+    if(tabName === 'students') renderStudentList();
+    if(tabName === 'stats') renderStatsTable();
+    initSelects();
+    hideLoading();
+  }, (err) => { console.error("Students load error:", err); hideLoading(); });
 
-  // ซิงค์ประวัติการมาเรียนตามเวลาจริง
-  unsubAttendance = window.fbOnSnapshot(window.fbDoc(window.db, "school_data", "attendance_records"), (docSnap) => {
-    if (docSnap.exists()) {
-      attendance = docSnap.data().records || {};
+  const aRef = doc(db, "school_data", "attendance_records");
+  onSnapshot(aRef, (ds) => {
+    if(ds.exists()) {
+      attendance = ds.data().records || {};
     } else {
       attendance = {};
     }
-    renderAttendance();
-    if(document.getElementById('tab-report').classList.contains('active')) renderReport();
-  });
+    window.attendance = attendance;
+    
+    const activeTab = document.querySelector('.tab-btn.active');
+    const tabName = activeTab ? activeTab.getAttribute('onclick').match(/'([^']+)'/)[1] : 'checkin';
+    
+    if(tabName === 'attendance' || tabName === 'checkin') renderAttendance();
+    if(tabName === 'report') renderReport();
+    if(tabName === 'stats') renderStatsTable();
+  }, (err) => { console.error("Attendance load error:", err); });
 }
 
+function hideLoading() {
+  const l = document.getElementById('loading');
+  if(l) l.classList.add('hide');
+}
+
+window.initFirebaseSystem = initFirebaseSystem;
+initFirebaseSystem();
+</script>
+
+<script>
+let editingId = null;
+
 function todayStr(){
-  return new Date().toISOString().slice(0,10);
+  const d = new Date();
+  let m = ''+(d.getMonth()+1), day = ''+d.getDate();
+  if(m.length<2) m='0'+m; if(day.length<2) day='0'+day;
+  return [d.getFullYear(),m,day].join('-');
 }
 
 function getAtt(date, sid){
-  return (attendance[date] && attendance[date][sid]) || '';
+  if(attendance[date] && attendance[date][sid]) return attendance[date][sid];
+  return "มา";
 }
 
 async function markAtt(e, date, sid, status){
@@ -393,46 +210,44 @@ async function markAtt(e, date, sid, status){
   if(document.getElementById('tab-stats') && document.getElementById('tab-stats').style.display !== 'none') {
     renderStatsTable();
   }
-} 
+}
 
 function showSaveNotice() {
   const n = document.getElementById('save-notice');
-  n.classList.add('show');
-  setTimeout(() => n.classList.remove('show'), 1500);
+  if(n) {
+    n.classList.add('show');
+    setTimeout(() => n.classList.remove('show'), 1500);
+  }
 }
 
-//  วางฟังก์ชันสลับหน้าแท็บเดียวที่ถูกต้องและรองรับคลาวด์ทั้งหมด
 function switchTab(tab) {
-  // 1. ซ่อนทุกหน้าจอและเคลียร์สถานะปุ่มกดทั้งหมด
   document.querySelectorAll('.section, .tab-content').forEach(el => {
     el.style.display = 'none';
     el.classList.remove('active');
   });
   document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
   
-  // 2. แสดงผลหน้าจอตามแท็บที่กดเลือกให้ถูกต้องตามโครงสร้าง ID
   if (tab === 'checkin' || tab === 'attendance') {
     const target = document.getElementById('tab-attendance');
     if(target) { target.style.display = 'block'; target.classList.add('active'); }
-    if(typeof renderAttendance === 'function') renderAttendance();
+    renderAttendance();
   }
   if (tab === 'report') { 
     const target = document.getElementById('tab-report');
     if(target) { target.style.display = 'block'; target.classList.add('active'); }
-    if(typeof renderReport === 'function') renderReport(); 
+    renderReport(); 
   }
   if (tab === 'students') { 
     const target = document.getElementById('tab-students');
     if(target) { target.style.display = 'block'; target.classList.add('active'); }
-    if(typeof renderStudentList === 'function') renderStudentList(); 
+    renderStudentList(); 
   }
   if (tab === 'stats') {
     const target = document.getElementById('tab-stats');
     if(target) { target.style.display = 'block'; target.classList.add('active'); }
-    if(typeof renderStatsTable === 'function') renderStatsTable();
+    renderStatsTable();
   }
   
-  // 3. ทำไฮไลต์ปุ่มสีเขียวที่ถูกกดใช้งาน
   const btnIdx = ['checkin', 'report', 'students', 'stats'].indexOf(tab);
   if(btnIdx !== -1) {
     const allButtons = document.querySelectorAll('.tab-btn');
@@ -454,451 +269,200 @@ function renderAttendance(){
     if(counts[st] !== undefined) counts[st]++;
   });
 
-document.getElementById('att-summary').innerHTML = `
+  document.getElementById('att-summary').innerHTML = `
     <div class="sum-card"><div class="sum-label">นักเรียนทั้งหมด</div><div class="sum-val">${total}</div><div class="sum-sub">คน</div></div>
-    <div class="sum-card"><div class="sum-label" style="color:#0F6E56">✅ มาเรียน</div><div class="sum-val" style="color:#0F6E56">${counts['มา']}</div><div class="sum-sub">คน</div></div>
-    <div class="sum-card"><div class="sum-label" style="color:#A32D2D">❌ ขาดเรียน</div><div class="sum-val" style="color:#A32D2D">${counts['ขาด']}</div><div class="sum-sub">คน</div></div>
-    <div class="sum-card"><div class="sum-label" style="color:#185FA5">🏥 ลาป่วย</div><div class="sum-val" style="color:#185FA5">${counts['ลาป่วย']}</div><div class="sum-sub">คน</div></div>
-    <div class="sum-card"><div class="sum-label" style="color:#888780">ยังไม่เช็ค</div><div class="sum-val" style="color:#888780">${total - counts['มา'] - counts['สาย'] - counts['ขาด'] - counts['ลาป่วย']}</div><div class="sum-sub">คน</div></div>
+    <div class="sum-card" style="border-color:#A3E2CD;background:#F4FBF9"><div class="sum-label" style="color:#0F6E56">มาเรียน</div><div class="sum-val" style="color:#0F6E56">${counts.มา}</div><div class="sum-sub">คน</div></div>
+    <div class="sum-card" style="border-color:#FDE68A;background:#FFFDF5"><div class="sum-label" style="color:#B45309">มาสาย</div><div class="sum-val" style="color:#B45309">${counts.สาย}</div><div class="sum-sub">คน</div></div>
+    <div class="sum-card" style="border-color:#FCA5A5;background:#FFF5F5"><div class="sum-label" style="color:#DC2626">ขาดเรียน</div><div class="sum-val" style="color:#DC2626">${counts.ขาด}</div><div class="sum-sub">คน</div></div>
+    <div class="sum-card" style="border-color:#93C5FD;background:#F4F8FC"><div class="sum-label" style="color:#2563EB">ลา</div><div class="sum-val" style="color:#2563EB">${counts.ลาป่วย}</div><div class="sum-sub">คน</div></div>
   `;
 
   let html = '';
-  CLASSES.forEach(cls => {
-    const ss = byClass[cls];
-    if(!ss || !ss.length) return;
-    const c2 = {มา:0,สาย:0,ขาด:0,ลาป่วย:0};
-    ss.forEach(s => { const st = getAtt(date, s.id); if(c2[st] !== undefined) c2[st]++; });
-    const safeId = 'cls-' + cls.replace(/\s/g,'_');
-    html += `
-    <div class="class-card">
-      <div class="class-header" onclick="toggleCls('${safeId}',this)">
-        <span class="class-title">${cls} <span style="font-weight:400;color:#888780;font-size:12px">(${ss.length} คน)</span></span>
-        <div style="display:flex;align-items:center;gap:6px">
-          <div class="class-stats">
-            <span class="stat-badge s-green">มา ${c2['มา']}</span>
-            <span class="stat-badge s-amber">สาย ${c2['สาย']}</span>
-            <span class="stat-badge s-red">ขาด ${c2['ขาด']}</span>
-            <span class="stat-badge s-blue">ลา ${c2['ลาป่วย']}</span>
+  CLASSES.forEach(c => {
+    const list = byClass[c] || [];
+    if(list.length === 0) return;
+    
+    html += `<div class="card">
+      <div class="card-title">ชั้น${c} <span style="font-size:12px;color:#888780;font-weight:normal">(${list.length} คน)</span></div>
+      <div class="card-body">`;
+      
+    list.forEach((s, idx) => {
+      const cur = getAtt(date, s.id);
+      html += `
+        <div class="student-row">
+          <div class="student-info">
+            <span class="st-num">${idx+1}</span>
+            <span class="st-name">${s.name}</span>
           </div>
-          <span class="toggle-btn" id="${safeId}-arrow">▼</span>
+          <div class="btn-group">
+            <button class="att-btn ${cur==='มา'?'active':''}" data-status="มา" onclick="markAtt(this,'${date}','${sid=s.id}','มา')">มา</button>
+            <button class="att-btn ${cur==='สาย'?'active':''}" data-status="สาย" onclick="markAtt(this,'${date}','${sid=s.id}','สาย')">สาย</button>
+            <button class="att-btn ${cur==='ขาด'?'active':''}" data-status="ขาด" onclick="markAtt(this,'${date}','${sid=s.id}','ขาด')">ขาด</button>
+            <button class="att-btn ${cur==='ลาป่วย'?'active':''}" data-status="ลาป่วย" onclick="markAtt(this,'${date}','${sid=s.id}','ลาป่วย')">ลา</button>
+          </div>
         </div>
-      </div>
-      <div id="${safeId}">
-        <table class="student-table">
-          <thead><tr><th style="width:36px">#</th><th>ชื่อ-นามสกุล</th><th style="width:60px">เพศ</th><th>สถานะ</th></tr></thead>
-          <tbody>
-            ${ss.map((s,i) => {
-              const cur = getAtt(date, s.id);
-              return `<tr>
-                <td style="color:#888780;text-align:center">${i+1}</td>
-                <td>${s.name}</td>
-                <td><span class="gender-badge ${s.gender==='ชาย'?'m-badge':'f-badge'}">${s.gender}</span></td>
-                <td>
-                  <div class="att-btns">
-                    ${STATUS.map(st => `<button class="att-btn ${cur===st?'sel-'+st:''}" onclick="markAtt(event,'${date}','${s.id}','${st}')">${st}</button>`).join('')}
-                  </div>
-                </td>
-              </tr>`;
-            }).join('')}
-          </tbody>
-        </table>
-      </div>
-    </div>`;
+      `;
+    });
+    html += `</div></div>`;
   });
   document.getElementById('class-list').innerHTML = html;
+  
+  document.querySelectorAll('.att-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const parent = this.parentElement;
+      parent.querySelectorAll('.att-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
 }
 
-function toggleCls(id, header){
-  const el = document.getElementById(id);
-  const arrow = document.getElementById(id+'-arrow');
-  if(!el) return;
-  const hidden = el.style.display === 'none';
-  el.style.display = hidden ? 'block' : 'none';
-  if(arrow) arrow.textContent = hidden ? '▼' : '▶';
+function toggleCls(el, cls) {
+  const target = el.parentElement.nextElementSibling;
+  if(target.style.display === 'none') {
+    target.style.display = 'block';
+    el.textContent = '🔼';
+  } else {
+    target.style.display = 'none';
+    el.textContent = '🔽';
+  }
 }
 
-let myChart = null; // ตัวแปรเก็บสถานะกราฟ ป้องกันกราฟซ้อน
+let reportChart = null;
 
 function renderReport(){
   const date = document.getElementById('rep-date').value || todayStr();
   document.getElementById('rep-date').value = date;
-  const thDate = new Date(date+'T00:00:00').toLocaleDateString('th-TH',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-  document.getElementById('print-date-label').textContent = 'รายงานการมาเรียนประจำวัน ' + thDate;
+  document.getElementById('print-date-label').textContent = 'ประจำวันที่ ' + date;
 
-  let rows = '';
-  let tM=0, tF=0, tAll=0;
-  let tMam=0, tMaf=0, tMa=0;
-  let tKhad=0, tLa=0, tKhadLa=0;
+  let gCounts = {มา:0,สาย:0,ขาด:0,ลาป่วย:0};
+  const byClass = {};
+  CLASSES.forEach(c => {
+    byClass[c] = { มา:0, สาย:0, ขาด:0, ลาป่วย:0, list:[] };
+  });
 
-  // อาเรย์สำหรับเก็บข้อมูลรายชื่อนักเรียนที่ขาดและลาในวันนี้
-  let absentList = [];
-
-  // ตัวแปรสะสมยอดสรุปแยกตามช่วงชั้น
-  let subAnuban = { m:0, f:0, total:0, ma_m:0, ma_f:0, ma_total:0, khad:0, la:0, khad_la:0 };
-  let subPrathom = { m:0, f:0, total:0, ma_m:0, ma_f:0, ma_total:0, khad:0, la:0, khad_la:0 };
-
-  CLASSES.forEach(cls => {
-    const ss = students.filter(s => s.cls === cls);
-    const males = ss.filter(s => s.gender==='ชาย');
-    const females = ss.filter(s => s.gender==='หญิง');
-    let ma_m=0, ma_f=0, khad=0, la=0;
-    
-    // วนลูปเช็คชื่อนักเรียนทีละคนในห้อง
-    ss.forEach((s, idx) => {
-      const st = getAtt(date, s.id);
-      if(st==='มา'){ 
-        if(s.gender==='ชาย') ma_m++; else ma_f++; 
-      } else if(st==='ขาด') {
-        khad++;
-        absentList.push({ cls: cls, no: (idx + 1), name: s.name, status: 'ขาดเรียน' });
-      } else if(st==='ลาป่วย' || st==='ลา') {
-        la++;
-        absentList.push({ cls: cls, no: (idx + 1), name: s.name, status: 'ลา' });
-      }
-    });
-    
-    const ma = ma_m + ma_f;
-    const khad_la = khad + la;
-    const percent = ss.length > 0 ? ((ma / ss.length) * 100).toFixed(1) : '0.0';
-    
-    if(cls.includes('อนุบาล')) {
-      subAnuban.m += males.length; subAnuban.f += females.length; subAnuban.total += ss.length;
-      subAnuban.ma_m += ma_m; subAnuban.ma_f += ma_f; subAnuban.ma_total += ma;
-      subAnuban.khad += khad; subAnuban.la += la; subAnuban.khad_la += khad_la;
-    } else {
-      subPrathom.m += males.length; subPrathom.f += females.length; subPrathom.total += ss.length;
-      subPrathom.ma_m += ma_m; subPrathom.ma_f += ma_f; subPrathom.ma_total += ma;
-      subPrathom.khad += khad; subPrathom.la += la; subPrathom.khad_la += khad_la;
-    }
-    
-    tM+=males.length; tF+=females.length; tAll+=ss.length;
-    tMam+=ma_m; tMaf+=ma_f; tMa+=ma; tKhad+=khad; tLa+=la; tKhadLa+=khad_la;
-    
-    rows += `<tr>
-      <td class="class-col">${cls}</td>
-      <td>${males.length}</td><td>${females.length}</td><td><strong>${ss.length}</strong></td>
-      <td style="color:#185FA5">${ma_m}</td><td style="color:#993556">${ma_f}</td><td style="color:#0F6E56"><strong>${ma}</strong></td>
-      <td style="color:#A32D2D">${khad}</td>
-      <td style="color:#185FA5">${la}</td>
-      <td style="color:#D32F2F; font-weight:600; background:#FFF5F5">${khad_la}</td>
-      <td style="color:#0F6E56; font-weight:700; background:#F8FDFB">${percent}%</td>
-    </tr>`;
-    
-    if(cls === 'อนุบาล 3' && subAnuban.total > 0) {
-      const subPct = ((subAnuban.ma_total / subAnuban.total) * 100).toFixed(1);
-      rows += `<tr style="background:#FAF8F2; font-weight:600; border-bottom:2px solid #D3D1C7">
-        <td class="class-col" style="color:#854F0B; padding-left:15px;">↳ รวมช่วงชั้นอนุบาล</td>
-        <td>${subAnuban.m}</td><td>${subAnuban.f}</td><td>${subAnuban.total}</td>
-        <td style="color:#185FA5">${subAnuban.ma_m}</td><td style="color:#993556">${subAnuban.ma_f}</td><td style="color:#0F6E56">${subAnuban.ma_total}</td>
-        <td style="color:#A32D2D">${subAnuban.khad}</td>
-        <td style="color:#185FA5">${subAnuban.la}</td>
-        <td style="color:#D32F2F">${subAnuban.khad_la}</td>
-        <td style="color:#0F6E56; font-weight:700">${subPct}%</td>
-      </tr>`;
-    }
-    
-    if(cls === 'ป.6' && subPrathom.total > 0) {
-      const subPct = ((subPrathom.ma_total / subPrathom.total) * 100).toFixed(1);
-      rows += `<tr style="background:#FAF8F2; font-weight:600; border-bottom:2px solid #D3D1C7">
-        <td class="class-col" style="color:#854F0B; padding-left:15px;">↳ รวมช่วงชั้นประถมฯ</td>
-        <td>${subPrathom.m}</td><td>${subPrathom.f}</td><td>${subPrathom.total}</td>
-        <td style="color:#185FA5">${subPrathom.ma_m}</td><td style="color:#993556">${subPrathom.ma_f}</td><td style="color:#0F6E56">${subPrathom.ma_total}</td>
-        <td style="color:#A32D2D">${subPrathom.khad}</td>
-        <td style="color:#185FA5">${subPrathom.la}</td>
-        <td style="color:#D32F2F">${subPrathom.khad_la}</td>
-        <td style="color:#0F6E56; font-weight:700">${subPct}%</td>
-      </tr>`;
+  students.forEach(s => {
+    const st = getAtt(date, s.id);
+    if(gCounts[st] !== undefined) gCounts[st]++;
+    if(byClass[s.cls]) {
+      byClass[s.cls][st]++;
+      byClass[s.cls].list.push({ name: s.name, status: st });
     }
   });
 
-  const totalPercent = tAll > 0 ? ((tMa / tAll) * 100).toFixed(1) : '0.0';
-
-  // สร้าง HTML สำหรับตารางรายชื่อผู้ขาด/ลา
-  let detailTableHTML = '';
-  if(absentList.length > 0) {
-    let detailRows = '';
-    absentList.forEach((item, i) => {
-      const badgeColor = item.status === 'ขาดเรียน' ? '#A32D2D' : '#185FA5';
-      detailRows += `<tr>
-        <td style="text-align:center; padding:3px 5px;">${i+1}</td>
-        <td style="text-align:center; padding:3px 5px;">${item.cls}</td>
-        <td style="padding:3px 8px; text-align:left;">เลขที่ ${item.no} ${item.name}</td>
-        <td style="text-align:center; padding:3px 5px; color:${badgeColor}; font-weight:600;">${item.status}</td>
-      </tr>`;
-    });
-    
-    detailTableHTML = `
-      <div class="absent-detail-section" style="margin-top:15px; page-break-inside:avoid;">
-        <p style="font-size:13px; font-weight:600; color:#2C2C2A; margin-bottom:5px; text-align:left;">⚠️ รายชื่อนักเรียนที่ไม่มาเรียนวันนี้</p>
-        <table class="report-table" style="width:100%; max-width:600px; margin:0 auto; border-collapse:collapse;">
-          <thead>
-            <tr style="background:#F2ECE4;">
-              <th style="width:50px; padding:4px;">ที่</th>
-              <th style="width:100px; padding:4px;">ชั้น</th>
-              <th style="padding:4px; text-align:left; padding-left:8px;">เลขที่ - ชื่อ-นามสกุล</th>
-              <th style="width:90px; padding:4px;">สถานะ</th>
-            </tr>
-          </thead>
-          <tbody>${detailRows}</tbody>
-        </table>
-      </div>`;
-  } else {
-    detailTableHTML = `
-      <div style="margin-top:12px; text-align:center; color:#0F6E56; font-weight:600; font-size:13px; padding:8px; background:#E1F5EE; border-radius:6px; page-break-inside:avoid;">
-        🎉 วันนี้ไม่มีนักเรียนขาดหรือลาเรียน
-      </div>`;
-  }
-
-  // รวมเนื้อหาแสดงผลทั้งหมด
+  let total = students.length;
   document.getElementById('report-content').innerHTML = `
-    <p style="font-size:13px;color:#5F5E5A;margin-bottom:6px;font-weight:500">วันที่ ${thDate}</p>
-    <table class="report-table">
-      <thead>
-        <tr>
-          <th rowspan="2" class="class-col" style="text-align:left;min-width:110px">ชั้น / ช่วงชั้น</th>
-          <th colspan="3" style="background:#D3D1C7">จำนวนนักเรียนทั้งหมด</th>
-          <th colspan="3" style="background:#9FE1CB; color:#0F6E56">มาเรียนวันนี้</th>
-          <th colspan="3" style="background:#FCEBEB; color:#A32D2D">การขาด / ลา</th>
-          <th rowspan="2" style="background:#E1F5EE; color:#0F6E56; min-width:70px">มาเรียน<br>ร้อยละ</th>
-        </tr>
-        <tr>
-          <th>ชาย</th><th>หญิง</th><th>รวม</th>
-          <th style="color:#185FA5; background:#E1F5EE">ชาย</th><th style="color:#993556; background:#E1F5EE">หญิง</th><th style="color:#0F6E56; background:#9FE1CB">รวม</th>
-          <th style="color:#A32D2D; background:#FCEBEB">ขาด</th><th style="color:#185FA5; background:#FCEBEB">ลา</th><th style="color:#C62828; background:#F9D5D5">รวม</th>
-        </tr>
-      </thead>
-      <tbody>${rows}</tbody>
-      <tfoot>
-        <tr>
-          <td class="class-col">รวมทั้งโรงเรียน</td>
-          <td>${tM}</td><td>${tF}</td><td>${tAll}</td>
-          <td>${tMam}</td><td>${tMaf}</td><td>${tMa}</td>
-          <td>${tKhad}</td><td>${tLa}</td><td>${tKhadLa}</td>
-          <td style="font-weight:700; background:#0F6E56; color:#fff">${totalPercent}%</td>
-        </tr>
-      </tfoot>
-    </table>
+    <div class="rep-summary">
+      <div class="rep-card total"><div class="rep-num">${total}</div><div class="rep-lbl">นักเรียนทั้งหมด</div></div>
+      <div class="rep-card ma"><div class="rep-num">${gCounts.มา}</div><div class="rep-lbl">มาเรียน</div></div>
+      <div class="rep-card sai"><div class="rep-num">${gCounts.สาย}</div><div class="rep-lbl">มาสาย</div></div>
+      <div class="rep-card khad"><div class="rep-num">${gCounts.ขาด}</div><div class="rep-lbl">ขาดเรียน</div></div>
+      <div class="rep-card la"><div class="rep-num">${gCounts.ลาป่วย}</div><div class="rep-lbl">ลาป่วย/ลากิจ</div></div>
+    </div>
     
-    ${detailTableHTML}
-
-    <p style="font-size:11px;color:#888780;margin-top:6px;text-align:right">พิมพ์เมื่อ: ${new Date().toLocaleString('th-TH')}</p>
-
-    <div class="report-signature-container">
-        <div class="signature-col">
-            <p>ลงชื่อ..........................................................ครูเวร</p>
-            <p>(..........................................................)</p>
-            <p>ครูเวรประจำวัน</p>
-        </div>
-        <div class="signature-col">
-            <p>ลงชื่อ..........................................................ผู้ตรวจสอบ</p>
-            <p>( นายวิชชชาติ ยิ่งยงยุทธ )</p>
-            <p>ตำแหน่ง ผู้อำนวยการโรงเรียนบ้านรัตนะ</p>
-        </div>
+    <div class="class-reports-list">
+      ${CLASSES.map(c => {
+        const data = byClass[c];
+        if(!data || data.list.length === 0) return '';
+        return `
+          <div class="cls-section">
+            <div class="cls-title" style="display:flex; justify-content:space-between; align-items:center;">
+              <span>ชั้น${c} (ทั้งหมด ${data.list.length} คน)</span>
+              <span class="no-print" style="cursor:pointer;" onclick="toggleCls(this, '${c}')">🔼</span>
+            </div>
+            <div class="cls-body-wrap">
+              <table class="report-table">
+                <thead>
+                  <tr>
+                    <th>มาเรียน</th>
+                    <th>มาสาย</th>
+                    <th>ขาดเรียน</th>
+                    <th>ลาป่วย/ลากิจ</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="color:#0F6E56;font-weight:600">${data.มา} คน</td>
+                    <td style="color:#B45309;font-weight:600">${data.สาย} คน</td>
+                    <td style="color:#A32D2D;font-weight:600">${data.ขาด} คน</td>
+                    <td style="color:#185FA5;font-weight:600">${data.ลาป่วย} คน</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div style="margin-top:8px; font-size:13px; color:#5F5E5A; padding: 0 4px;" class="no-print">
+                <strong>รายละเอียดชั้น${c}:</strong> 
+                ${data.list.map(s => `${s.name} (<span style="color:${s.status==='มา'?'#0F6E56':s.status==='สาย'?'#B45309':s.status==='ขาด'?'#A32D2D':'#185FA5'}">${s.status}</span>)`).join(', ')}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('')}
     </div>
   `;
-
-  // เรียกฟังก์ชันวาดกราฟแท่งสรุป (สำหรับหน้ารายงานเว็บ)
-// เรียกฟังก์ชันวาดกราฟแท่งสรุป (สำหรับหน้ารายงานเว็บ)
-  if(typeof generateChart === 'function') {
-     generateChart(subAnuban, subPrathom);
-  }
+  
+  generateChart(gCounts);
 }
 
-function generateChart(anuban, prathom) {
-  const ctx = document.getElementById('attendanceChart').getContext('2d');
+function generateChart(counts) {
+  const ctx = document.getElementById('attendanceChart');
+  if(!ctx) return;
   
-  // ล้างอินสแตนซ์กราฟเดิมก่อนหน้าเพื่อป้องกันการแสดงซ้อนทับกันเมื่อเปลี่ยนวันที่
-  if (myChart) {
-    myChart.destroy();
-  }
+  if(reportChart) { reportChart.destroy(); }
   
-  myChart = new Chart(ctx, {
+  reportChart = new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: ['ช่วงชั้นอนุบาล (อ.1 - อ.3)', 'ช่วงชั้นประถมศึกษา (ป.1 - ป.6)'],
-      datasets: [
-        {
-          label: 'มาเรียน (คน)',
-          data: [anuban.ma_total, prathom.ma_total],
-          backgroundColor: '#1D9E75',
-          borderColor: '#0F6E56',
-          borderWidth: 1
-        },
-        {
-          label: 'รวมขาด/ลา (คน)',
-          data: [anuban.khad_la, prathom.khad_la],
-          backgroundColor: '#F09995',
-          borderColor: '#A32D2D',
-          borderWidth: 1
-        }
-      ]
+      labels: ['มาเรียน', 'มาสาย', 'ขาดเรียน', 'ลาป่วย/ลากิจ'],
+      datasets: [{
+        label: 'จำนวนนักเรียน (คน)',
+        data: [counts.มา, counts.สาย, counts.ขาด, counts.ลาป่วย],
+        backgroundColor: ['#0F6E56', '#D97706', '#DC2626', '#2563EB'],
+        borderRadius: 6
+      }]
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          position: 'top',
-          labels: { font: { family: 'Sarabun', size: 13 } }
-        },
-        title: {
-          display: true,
-          text: 'แผนภูมิสรุปยอดการมาเรียนแยกตามช่วงชั้น',
-          font: { family: 'Sarabun', size: 14, weight: 'bold' }
-        }
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: { font: { family: 'Sarabun' }, stepSize: 5 }
-        },
-        x: {
-          ticks: { font: { family: 'Sarabun', weight: 'bold' } }
-        }
-      }
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
     }
   });
 }
+
+function renderStudentList() {
+  const fCls = document.getElementById('class-filter').value || 'all';
+  const sel = fCls === 'all' ? students : students.filter(s => s.cls === fCls);
   
-function renderStudentList(){
-  const filter = document.getElementById('class-filter').value;
-  const sel = filter ? students.filter(s => s.cls === filter) : students;
-  document.getElementById('stu-count').textContent = `(${sel.length} คน)`;
-  let html = `<table class="stu-list-table">
-    <thead><tr><th>#</th><th>ชื่อ-นามสกุล</th><th>เพศ</th><th>ชั้น</th><th>จัดการ</th></tr></thead>
-    <tbody>
-    ${sel.map((s,i) => `<tr>
-      <td style="color:#888780;text-align:center;width:36px">${i+1}</td>
-      <td>${s.name}</td>
+  document.getElementById('stu-count').textContent = `ทั้งหมด ${sel.length} คน`;
+  
+  let html = `<table class="stu-table">
+    <thead>
+      <tr>
+        <th style="text-align:center;width:50px">ที่</th>
+        <th>ชื่อ-นามสกุล</th>
+        <th>เพศ</th>
+        <th>ชั้น</th>
+        <th style="width:120px" class="no-print">จัดการ</th>
+      </tr>
+    </thead>
+    <tbody>`;
+  
+  if(sel.length === 0) {
+    html += `<tr><td colspan="5" style="text-align:center;color:#888">ไม่พบข้อมูลนักเรียน</td></tr>`;
+  } else {
+    html += sel.map((s,i) => `<tr>
+      <td style="color:#888780;text-align:center;">${i+1}</td>
+      <td style="font-weight:500">${s.name}</td>
       <td><span class="gender-badge ${s.gender==='ชาย'?'m-badge':'f-badge'}">${s.gender}</span></td>
       <td>${s.cls}</td>
-      <td style="display:flex;gap:6px">
+      <td style="display:flex;gap:6px" class="no-print">
         <button class="btn-edit" onclick="openEditModal('${s.id}')">✏️ แก้ไข</button>
         <button class="btn-danger" onclick="deleteStudent('${s.id}')">🗑️</button>
       </td>
-    </tr>`).join('')}
-    </tbody>
-  </table>`;
+    </tr>`).join('');
+  }
+  
+  html += `</tbody></table>`;
   document.getElementById('student-list').innerHTML = html;
-}
-  // ฟังก์ชันสลับหน้าแท็บ (รองรับเมนูสถิติเพิ่มเข้ามา)
-function switchTab(tab) {
-  document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
-  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-  
-  if (tab === 'checkin') document.getElementById('tab-checkin').style.display = 'block';
-  if (tab === 'report') { 
-    document.getElementById('tab-report').style.display = 'block'; 
-    renderReport(); 
-  }
-  if (tab === 'students') { 
-    document.getElementById('tab-students').style.display = 'block'; 
-    renderStudentList(); 
-  }
-  if (tab === 'stats') {
-    document.getElementById('tab-stats').style.display = 'block';
-    renderStatsTable();
-  }
-  
-  // ไฮไลต์ปุ่มที่เลือก
-  const btnIdx = ['checkin', 'report', 'students', 'stats'].indexOf(tab);
-  if(btnIdx !== -1) document.querySelectorAll('.tab-btn')[btnIdx].classList.add('active');
-}
-
-// ฟังก์ชันหลักในการคำนวณและแสดงตารางสถิติสะสมนักเรียนทั้งหมด
-function renderStatsTable() {
-  const selectedTerm = document.getElementById('stats-term').value;
-  const selectedMonth = document.getElementById('stats-month').value;
-  const selectedClass = document.getElementById('stats-class').value;
-  const tbody = document.getElementById('stats-table-body');
-  
-  // อัปเดตหัวข้อตารางให้สอดคล้องกับตัวกรอง
-const termText = `ภาคเรียนที่ ${selectedTerm}`;
-  const monthText = selectedMonth === 'all' ? 'ตลอดทั้งภาคเรียน' : 'ประจำเดือน ' + document.getElementById('stats-month').options[document.getElementById('stats-month').selectedIndex].text;
-  document.getElementById('stats-title-label').textContent = `📊 ตารางสถิติสะสม (${termText} : ${monthText})`;
-
-  // 1. ดึงข้อมูลจากตัวแปรคลาวด์ออนไลน์ (ใส่เงื่อนไขดักไว้เผื่อกรณีระบบคลาวด์ยังโหลดไม่เสร็จ)
-  let savedData = (typeof attendance !== 'undefined' && attendance) ? attendance : {};
-
-  // 2. คัดกรองเฉพาะวันที่ที่ตรงกับเงื่อนไข เทอม และ เดือน ที่เลือก
-  const activeDates = Object.keys(savedData).filter(dateStr => {
-    if (!dateStr) return false;
-    
-    // แยกปี เดือน วัน ออกมา เช่น "2026-06-09"
-    const parts = dateStr.split('-');
-    if(parts.length !== 3) return false;
-    
-    const year = parseInt(parts[0]);
-    const month = parts[1]; // เก็บรหัสเดือนแบบ string เช่น "06"
-    
-    // 1. ตรวจสอบเงื่อนไขเดือนรายเดือน
-    if(selectedMonth !== 'all' && month !== selectedMonth) {
-      return false; 
-    }
-    
-    // 2. ตรวจสอบเงื่อนไขช่วงเวลาของภาคเรียน (เทอม 1: มิถุนายน - ตุลาคม | เทอม 2: พฤศจิกายน - มีนาคม)
-    // หมายเหตุ: เดือน พฤษภาคม ถือเป็นช่วงเปิดเทอม 1 หรือเตรียมการ สามารถยืดหยุ่นได้
-    if(selectedTerm === '1') {
-      // เทอม 1 ประกอบด้วยเดือน 05, 06, 07, 08, 09, 10
-      if(!['05', '06', '07', '08', '09', '10'].includes(month)) return false;
-    } else if(selectedTerm === '2') {
-      // เทอม 2 ประกอบด้วยเดือน 11, 12, 01, 02, 03
-      if(!['11', '12', '01', '02', '03'].includes(month)) return false;
-    }
-    
-    return true;
-  });
-
-  // กรองรายชื่อนักเรียนตามระดับชั้นที่เลือก
-  const filteredStudents = selectedClass === 'all' ? students : students.filter(s => s.cls === selectedClass);
-
-  if(filteredStudents.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#888; padding:20px;">ไม่พบข้อมูลรายชื่อนักเรียนในระดับชั้นนี้</td></tr>`;
-    return;
-  }
-
-  let htmlRows = '';
-  
-  // วนลูปคำนวณยอดสะสมของนักเรียนทุกคนทีละรายคน
-  filteredStudents.forEach((student, index) => {
-    let countMa = 0;
-    let countLa = 0;
-    let countKhad = 0;
-    
-    activeDates.forEach(dateStr => {
-      // ดึงสถานะของนักเรียนในวันที่นั้นๆ
-      const dayRecords = savedData[dateStr] || {};
-      const status = dayRecords[student.id];
-      
-      if(status === 'มา' || status === 'สาย') {
-        countMa++;
-      } else if(status === 'ลา' || status === 'ลาป่วย') {
-        countLa++;
-      } else if(status === 'ขาด') {
-        countKhad++;
-      }
-    });
-
-    const totalDays = countMa + countLa + countKhad;
-    const attendancePercentage = totalDays > 0 ? ((countMa / totalDays) * 100).toFixed(1) : '0.0';
-    
-    // ตั้งค่าสีเตือนเปอร์เซ็นต์มาเรียนต่ำกว่าเกณฑ์ (80%)
-    const pctColor = parseFloat(attendancePercentage) >= 80 ? '#0F6E56' : '#D32F2F';
-
-    htmlRows += `
-      <tr style="border-bottom: 1px solid #EAE9E4;">
-        <td style="text-align:center; padding:6px 4px; font-size:13px;">${index + 1}</td>
-        <td style="text-align:left; padding:6px 10px; font-size:13px; font-weight:500;">${student.name}</td>
-        <td style="text-align:center; padding:6px 4px; font-size:13px; color:#5F5E5A;">${student.cls}</td>
-        <td style="text-align:center; padding:6px 4px; font-size:13px; font-weight:600; color:#0F6E56; background:#F4FBF9;">${countMa}</td>
-        <td style="text-align:center; padding:6px 4px; font-size:13px; font-weight:600; color:#185FA5; background:#F4F8FC;">${countLa}</td>
-        <td style="text-align:center; padding:6px 4px; font-size:13px; font-weight:600; color:#A32D2D; background:#FFF5F5;">${countKhad}</td>
-        <td style="text-align:center; padding:6px 4px; font-size:13px; font-weight:700; color:${pctColor}; background:#FAF8F2;">${attendancePercentage}%</td>
-      </tr>
-    `;
-  });
-
-  tbody.innerHTML = htmlRows;
 }
 
 function openAddModal(){
@@ -929,204 +493,327 @@ async function saveStudent(){
   const name = document.getElementById('s-name').value.trim();
   const gender = document.getElementById('s-gender').value;
   const cls = document.getElementById('s-class').value;
-  if(!name){ alert('กรุณากรอกชื่อนักเรียน'); return; }
   
-  if(editingId){
-    const idx = students.findIndex(s => s.id === editingId);
-    if(idx >= 0) students[idx] = {...students[idx], name, gender, cls};
+  if(!name) { alert('กรุณากรอกชื่อ-นามสกุล'); return; }
+  
+  if(editingId) {
+    const idx = students.findIndex(x => x.id === editingId);
+    if(idx !== -1) students[idx] = { id: editingId, name, gender, cls };
   } else {
-    students.push({ id:'s'+Date.now(), name, gender, cls });
+    const newId = 'std_' + Date.now();
+    students.push({ id: newId, name, gender, cls });
   }
   
-  closeModal();
-  renderStudentList();
-  
-  await window.fbSetDoc(window.fbDoc(window.db, "school_data", "students_list"), { list: students });
+  try {
+    await window.fbSetDoc(window.fbDoc(window.db, "school_data", "students_list"), { students: students });
+    closeModal();
+  } catch(err) {
+    console.error("Error saving student to Firebase:", err);
+    alert("เกิดข้อผิดพลาดในการบันทึกข้อมูลออนไลน์");
+  }
 }
 
-async function deleteStudent(id){
-  const s = students.find(x => x.id === id);
-  if(!s) return;
-  if(!confirm(`ยืนยันการลบ\n"${s.name}"\nออกจากระบบคลาวด์?`)) return;
+async function deleteStudent(id) {
+  if(!confirm('คุณครูแน่ใจใช่ไหมที่จะลบรายชื่อนักเรียนคนนี้? ข้อมูลการเช็คชื่อของนักเรียนจะยังอยู่แต่จะไม่แสดงในตาราง')) return;
   students = students.filter(x => x.id !== id);
-  renderStudentList();
-  
-  await window.fbSetDoc(window.fbDoc(window.db, "school_data", "students_list"), { list: students });
+  try {
+    await window.fbSetDoc(window.fbDoc(window.db, "school_data", "students_list"), { students: students });
+  } catch(err) {
+    console.error("Error deleting student from Firebase:", err);
+  }
 }
 
 function initSelects(){
-  const opts = CLASSES.map(c => `<option value="${c}">${c}</option>`).join('');
-  document.getElementById('s-class').innerHTML = opts;
-  document.getElementById('class-filter').innerHTML = `<option value="">ทุกชั้นเรียน</option>` + opts;
+  const filter = document.getElementById('class-filter');
+  const sClass = document.getElementById('s-class');
+  
+  if(filter && filter.children.length === 0) {
+    let h = '<option value="all">แสดงทุกระดับชั้น</option>';
+    CLASSES.forEach(c => { h += `<option value="${c}">${c}</option>`; });
+    filter.innerHTML = h;
+  }
+  if(sClass && sClass.children.length === 0) {
+    let h = '';
+    CLASSES.forEach(c => { h += `<option value="${c}">${c}</option>`; });
+    sClass.innerHTML = h;
+  }
+}
+
+function renderStatsTable() {
+  const selectedTerm = document.getElementById('stats-term').value;
+  const selectedMonth = document.getElementById('stats-month').value;
+  const selectedClass = document.getElementById('stats-class').value;
+  const tbody = document.getElementById('stats-table-body');
+  
+  if(!tbody) return;
+  
+  const termText = `ภาคเรียนที่ ${selectedTerm}`;
+  const monthText = selectedMonth === 'all' ? 'ตลอดทั้งภาคเรียน' : 'ประจำเดือน ' + document.getElementById('stats-month').options[document.getElementById('stats-month').selectedIndex].text;
+  document.getElementById('stats-title-label').textContent = `📊 ตารางสถิติสะสม (${termText} : ${monthText})`;
+
+  let savedData = (typeof attendance !== 'undefined' && attendance) ? attendance : {};
+
+  const activeDates = Object.keys(savedData).filter(dateStr => {
+    if(!dateStr) return false;
+    const parts = dateStr.split('-');
+    if(parts.length !== 3) return false;
+    
+    const month = parts[1];
+    
+    if(selectedMonth !== 'all' && month !== selectedMonth) return false;
+    
+    if(selectedTerm === '1') {
+      if(!['05', '06', '07', '08', '09', '10'].includes(month)) return false;
+    } else if(selectedTerm === '2') {
+      if(!['11', '12', '01', '02', '03'].includes(month)) return false;
+    }
+    return true;
+  });
+
+  const filteredStudents = selectedClass === 'all' ? students : students.filter(s => s.cls === selectedClass);
+
+  if(filteredStudents.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#888; padding:20px;">ไม่พบข้อมูลรายชื่อนักเรียนในระดับชั้นนี้</td></tr>`;
+    return;
+  }
+
+  let htmlRows = '';
+  filteredStudents.forEach((student, index) => {
+    let countMa = 0;
+    let countLa = 0;
+    let countKhad = 0;
+    
+    activeDates.forEach(dateStr => {
+      const dayRecords = savedData[dateStr] || {};
+      const status = dayRecords[student.id];
+      
+      if(status === 'มา' || status === 'สาย') {
+        countMa++;
+      } else if(status === 'ลา' || status === 'ลาป่วย') {
+        countLa++;
+      } else if(status === 'ขาด') {
+        countKhad++;
+      }
+    });
+
+    const totalDays = countMa + countLa + countKhad;
+    const attendancePercentage = totalDays > 0 ? ((countMa / totalDays) * 100).toFixed(1) : '0.0';
+    const pctColor = parseFloat(attendancePercentage) >= 80 ? '#0F6E56' : '#D32F2F';
+
+    htmlRows += `
+      <tr style="border-bottom: 1px solid #EAE9E4;">
+        <td style="text-align:center; padding:6px 4px; font-size:13px;">${index + 1}</td>
+        <td style="text-align:left; padding:6px 10px; font-size:13px; font-weight:500;">${student.name}</td>
+        <td style="text-align:center; padding:6px 4px; font-size:13px; color:#5F5E5A;">${student.cls}</td>
+        <td style="text-align:center; padding:6px 4px; font-size:13px; font-weight:600; color:#0F6E56; background:#F4FBF9;">${countMa}</td>
+        <td style="text-align:center; padding:6px 4px; font-size:13px; font-weight:600; color:#185FA5; background:#F4F8FC;">${countLa}</td>
+        <td style="text-align:center; padding:6px 4px; font-size:13px; font-weight:600; color:#A32D2D; background:#FFF5F5;">${countKhad}</td>
+        <td style="text-align:center; padding:6px 4px; font-size:13px; font-weight:700; color:${pctColor}; background:#FAF8F2;">${attendancePercentage}%</td>
+      </tr>
+    `;
+  });
+
+  tbody.innerHTML = htmlRows;
 }
 
 function getInitialStudents() {
-  return [
-    {id:'s001',name:'เด็กชาย ณัฐพล สุขใจ',gender:'ชาย',cls:'อนุบาล 1'},
-    {id:'s002',name:'เด็กชาย ภานุพงศ์ ทองดี',gender:'ชาย',cls:'อนุบาล 1'},
-    {id:'s003',name:'เด็กชาย วรินทร์ มีสุข',gender:'ชาย',cls:'อนุบาล 1'},
-    {id:'s004',name:'เด็กชาย อภิสิทธิ์ แก้วใส',gender:'ชาย',cls:'อนุบาล 1'},
-    {id:'s005',name:'เด็กชาย ปิยะ ศรีสวัสดิ์',gender:'ชาย',cls:'อนุบาล 1'},
-    {id:'s006',name:'เด็กหญิง สุมิตรา พลอยงาม',gender:'หญิง',cls:'อนุบาล 1'},
-    {id:'s007',name:'เด็กหญิง ปณิตา วงศ์สว่าง',gender:'หญิง',cls:'อนุบาล 1'},
-    {id:'s008',name:'เด็กหญิง กัญญารัตน์ บุญมาก',gender:'หญิง',cls:'อนุบาล 1'},
-    {id:'s009',name:'เด็กหญิง ณัฐธิดา รักษาดี',gender:'หญิง',cls:'อนุบาล 1'},
-    {id:'s010',name:'เด็กหญิง วรรณิสา จันทร์เพ็ญ',gender:'หญิง',cls:'อนุบาล 1'},
-    {id:'s011',name:'เด็กชาย ชยพล รุ่งเรือง',gender:'ชาย',cls:'อนุบาล 2'},
-    {id:'s012',name:'เด็กชาย ธีรภัทร นาคประดิษฐ์',gender:'ชาย',cls:'อนุบาล 2'},
-    {id:'s013',name:'เด็กชาย ปัณณวิชญ์ สมศรี',gender:'ชาย',cls:'อนุบาล 2'},
-    {id:'s014',name:'เด็กชาย รัฐกร เมืองแก้ว',gender:'ชาย',cls:'อนุบาล 2'},
-    {id:'s015',name:'เด็กชาย สิทธิชัย ภูมิดี',gender:'ชาย',cls:'อนุบาล 2'},
-    {id:'s016',name:'เด็กหญิง อรนุช ชาติเจริญ',gender:'หญิง',cls:'อนุบาล 2'},
-    {id:'s017',name:'เด็กหญิง ทิพวรรณ ปัญญาดี',gender:'หญิง',cls:'อนุบาล 2'},
-    {id:'s018',name:'เด็กหญิง มนัสนันท์ สุขสำราญ',gender:'หญิง',cls:'อนุบาล 2'},
-    {id:'s019',name:'เด็กหญิง ลลิตา บุปผาชาติ',gender:'หญิง',cls:'อนุบาล 2'},
-    {id:'s020',name:'เด็กหญิง สิริวิมล แสงทอง',gender:'หญิง',cls:'อนุบาล 2'},
-    {id:'s021',name:'เด็กชาย กรวิชญ์ ดอกไม้งาม',gender:'ชาย',cls:'อนุบาล 3'},
-    {id:'s022',name:'เด็กชาย จิรายุ ลือชัย',gender:'ชาย',cls:'อนุบาล 3'},
-    {id:'s023',name:'เด็กชาย นันทกร ศรีเมือง',gender:'ชาย',cls:'อนุบาล 3'},
-    {id:'s024',name:'เด็กชาย พีรพัฒน์ ใจดี',gender:'ชาย',cls:'อนุบาล 3'},
-    {id:'s025',name:'เด็กชาย วัชระ มั่นคง',gender:'ชาย',cls:'อนุบาล 3'},
-    {id:'s026',name:'เด็กหญิง กนกวรรณ พรหมดี',gender:'หญิง',cls:'อนุบาล 3'},
-    {id:'s027',name:'เด็กหญิง จุฑามาศ เพชรงาม',gender:'หญิง',cls:'อนุบาล 3'},
-    {id:'s028',name:'เด็กหญิง นภสร ฟ้าใส',gender:'หญิง',cls:'อนุบาล 3'},
-    {id:'s029',name:'เด็กหญิง พิมพ์ชนก วิชัย',gender:'หญิง',cls:'อนุบาล 3'},
-    {id:'s030',name:'เด็กหญิง ศิริพร บุญประเสริฐ',gender:'หญิง',cls:'อนุบาล 3'},
-    {id:'s031',name:'เด็กชาย กษิดิ์เดช บุญส่ง',gender:'ชาย',cls:'ป.1'},
-    {id:'s032',name:'เด็กชาย ชนาธิป สว่างศรี',gender:'ชาย',cls:'ป.1'},
-    {id:'s033',name:'เด็กชาย ธนกร ดีงาม',gender:'ชาย',cls:'ป.1'},
-    {id:'s034',name:'เด็กชาย ปวริศ หาญกล้า',gender:'ชาย',cls:'ป.1'},
-    {id:'s035',name:'เด็กชาย ภูมิพัฒน์ สุขสม',gender:'ชาย',cls:'ป.1'},
-    {id:'s036',name:'เด็กหญิง กุลนิษฐ์ จงดี',gender:'หญิง',cls:'ป.1'},
-    {id:'s037',name:'เด็กหญิง ชนิกานต์ รัตนมณี',gender:'หญิง',cls:'ป.1'},
-    {id:'s038',name:'เด็กหญิง ธัญญลักษณ์ บำรุงรักษ์',gender:'หญิง',cls:'ป.1'},
-    {id:'s039',name:'เด็กหญิง ปาริชาติ ผลดี',gender:'หญิง',cls:'ป.1'},
-    {id:'s040',name:'เด็กหญิง ภาวิณี ตั้งใจ',gender:'หญิง',cls:'ป.1'},
-    {id:'s041',name:'เด็กชาย กันต์ธีร์ พูลสุข',gender:'ชาย',cls:'ป.2'},
-    {id:'s042',name:'เด็กชาย จักรพรรดิ ดีมาก',gender:'ชาย',cls:'ป.2'},
-    {id:'s043',name:'เด็กชาย ณัฐวัฒน์ เจริญพร',gender:'ชาย',cls:'ป.2'},
-    {id:'s044',name:'เด็กชาย ภัทรพล คงมั่น',gender:'ชาย',cls:'ป.2'},
-    {id:'s045',name:'เด็กชาย อานุภาพ ทรงชัย',gender:'ชาย',cls:'ป.2'},
-    {id:'s046',name:'เด็กหญิง กมลชนก อุ่นใจ',gender:'หญิง',cls:'ป.2'},
-    {id:'s047',name:'เด็กหญิง ณัฏฐณิชา สมหวัง',gender:'หญิง',cls:'ป.2'},
-    {id:'s048',name:'เด็กหญิง นวรัตน์ แสนดี',gender:'หญิง',cls:'ป.2'},
-    {id:'s049',name:'เด็กหญิง พัชราภรณ์ สุขสวัสดิ์',gender:'หญิง',cls:'ป.2'},
-    {id:'s050',name:'เด็กหญิง รุจิรา งามดี',gender:'หญิง',cls:'ป.2'},
-    {id:'s051',name:'เด็กชาย กิตติภูมิ มีทรัพย์',gender:'ชาย',cls:'ป.3'},
-    {id:'s052',name:'เด็กชาย ชัยวัฒน์ บุญมี',gender:'ชาย',cls:'ป.3'},
-    {id:'s053',name:'เด็กชาย ธัชพล เสถียร',gender:'ชาย',cls:'ป.3'},
-    {id:'s054',name:'เด็กชาย นันทวัฒน์ วงศ์งาม',gender:'ชาย',cls:'ป.3'},
-    {id:'s055',name:'เด็กชาย รุ่งโรจน์ ขยันดี',gender:'ชาย',cls:'ป.3'},
-    {id:'s056',name:'เด็กหญิง กัลยกร สมใจ',gender:'หญิง',cls:'ป.3'},
-    {id:'s057',name:'เด็กหญิง จิรนันท์ ยิ้มงาม',gender:'หญิง',cls:'ป.3'},
-    {id:'s058',name:'เด็กหญิง ณิชาภัทร เพียรดี',gender:'หญิง',cls:'ป.3'},
-    {id:'s059',name:'เด็กหญิง ปิยะฉัตร รักเรียน',gender:'หญิง',cls:'ป.3'},
-    {id:'s060',name:'เด็กหญิง สิรามล โชคดี',gender:'หญิง',cls:'ป.3'},
-    {id:'s061',name:'เด็กชาย กฤษณะ พันธ์งาม',gender:'ชาย',cls:'ป.4'},
-    {id:'s062',name:'เด็กชาย ชาญวิทย์ สุขประเสริฐ',gender:'ชาย',cls:'ป.4'},
-    {id:'s063',name:'เด็กชาย ทักษิณ ดำรงชัย',gender:'ชาย',cls:'ป.4'},
-    {id:'s064',name:'เด็กชาย ปฏิพัทธ์ ชัยมงคล',gender:'ชาย',cls:'ป.4'},
-    {id:'s065',name:'เด็กชาย วิทวัส เกษตรดี',gender:'ชาย',cls:'ป.4'},
-    {id:'s066',name:'เด็กหญิง กัญชพร อรุณงาม',gender:'หญิง',cls:'ป.4'},
-    {id:'s067',name:'เด็กหญิง จุฑาทิพย์ ฝึกฝน',gender:'หญิง',cls:'ป.4'},
-    {id:'s068',name:'เด็กหญิง ณัชชา บุญเรือง',gender:'หญิง',cls:'ป.4'},
-    {id:'s069',name:'เด็กหญิง ปวีณา สมบูรณ์ดี',gender:'หญิง',cls:'ป.4'},
-    {id:'s070',name:'เด็กหญิง สุภาพร ใจงาม',gender:'หญิง',cls:'ป.4'},
-    {id:'s071',name:'เด็กชาย กิตติ์ธเนศ แสงวิไล',gender:'ชาย',cls:'ป.5'},
-    {id:'s072',name:'เด็กชาย จิรพงศ์ สุดดี',gender:'ชาย',cls:'ป.5'},
-    {id:'s073',name:'เด็กชาย ณัฐภัทร วานิช',gender:'ชาย',cls:'ป.5'},
-    {id:'s074',name:'เด็กชาย ปัณณทัต บุญเลิศ',gender:'ชาย',cls:'ป.5'},
-    {id:'s075',name:'เด็กชาย ยุทธนา ศรีทอง',gender:'ชาย',cls:'ป.5'},
-    {id:'s076',name:'เด็กหญิง กนกพร มั่งมี',gender:'หญิง',cls:'ป.5'},
-    {id:'s077',name:'เด็กหญิง ชุติกาญจน์ สง่างาม',gender:'หญิง',cls:'ป.5'},
-    {id:'s078',name:'เด็กหญิง นิลุบล เจริญสุข',gender:'หญิง',cls:'ป.5'},
-    {id:'s079',name:'เด็กหญิง พิชามญชุ์ วิทยาดี',gender:'หญิง',cls:'ป.5'},
-    {id:'s080',name:'เด็กหญิง วิชุดา ผ่องแผ้ว',gender:'หญิง',cls:'ป.5'},
-    {id:'s081',name:'เด็กชาย กานต์ดนัย พลทวี',gender:'ชาย',cls:'ป.6'},
-    {id:'s082',name:'เด็กชาย จักรกฤษณ์ เสนงาม',gender:'ชาย',cls:'ป.6'},
-    {id:'s083',name:'เด็กชาย ทัศน์พล กลั่นดี',gender:'ชาย',cls:'ป.6'},
-    {id:'s084',name:'เด็กชาย ธีรวัฒน์ นิลดำ',gender:'ชาย',cls:'ป.6'},
-    {id:'s085',name:'เด็กชาย ภาสกร พานิช',gender:'ชาย',cls:'ป.6'},
-    {id:'s086',name:'เด็กหญิง กมลพรรณ เอี่ยมสะอาด',gender:'หญิง',cls:'ป.6'},
-    {id:'s087',name:'เด็กหญิง ชนัญธิดา สุขสม',gender:'หญิง',cls:'ป.6'},
-    {id:'s088',name:'เด็กหญิง ธนิดา ประเสริฐ',gender:'หญิง',cls:'ป.6'},
-    {id:'s089',name:'เด็กหญิง มัญชุสา สว่างจิต',gender:'หญิง',cls:'ป.6'},
-    {id:'s090',name:'เด็กหญิง ศุภสุตา บุญเจริญ',gender:'หญิง',cls:'ป.6'}
-  ];
+  return [];
 }
 </script>
-  <style>
-/* 1. สไตล์ลายเซ็น: ซ่อนไว้เป็นค่าเริ่มต้นเมื่ออยู่บนหน้าจอปกติ */
-.report-signature-container {
-    display: none !important; 
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    margin-top: 20px;
-    clear: both;
-}
+</head>
+<body>
 
-.signature-col {
-    width: 48%;
-    text-align: center;
-    display: inline-block;
-}
+<div id="loading" class="loading-overlay">⏳ กำลังเชื่อมต่อฐานข้อมูลออนไลน์ Real-time...</div>
 
-.signature-col p {
-    margin: 4px 0;
-    font-size: 14px; 
-    color: #2C2C2A;
-    font-family: "Sarabun", sans-serif;
-    line-height: 1.6;
-}
+<div class="app">
 
-/* 2. สไตล์ควบคุมพิเศษเมื่อสั่งพิมพ์ผ่านเบราว์เซอร์ (Print Preview / Save PDF) */
-@media print {
-    /* ตั้งค่าหน้ากระดาษโดยรวมให้มีระยะขอบเหมาะสม */
-    @page {
-        size: A4 portrait;
-        margin: 10mm 10mm 10mm 10mm;
-    }
+<div class="header">
+  <div class="header-left">
+    <div class="logo-circle">🏫</div>
+    <div>
+      <div class="school-name">โรงเรียนบ้านรัตนะ</div>
+      <div class="school-sub">ระบบเช็คชื่อนักเรียนรายวัน (ระบบคลาวด์ออนไลน์)</div>
+    </div>
+  </div>
+  <div id="today-display" class="today-display"></div>
+</div>
 
-    /* ซ่อนแผนภูมิแท่ง และปุ่มควบคุม ไม่ให้โผล่บนกระดาษ */
-    .no-print, #chart-container, #attendanceChart {
-        display: none !important;
-    }
+<div class="tabs no-print">
+  <button class="tab-btn active" onclick="switchTab('checkin')">📋 เช็คชื่อ</button>
+  <button class="tab-btn" onclick="switchTab('report')">📊 รายงานประจำวัน</button>
+  <button class="tab-btn" onclick="switchTab('students')">👥 จัดการนักเรียน</button>
+  <button class="tab-btn" onclick="switchTab('stats')">📈 สถิติสะสม</button>
+</div>
 
-    /* บังคับให้ส่วนลายเซ็นโผล่ขึ้นมาเฉพาะในกระดาษพิมพ์เท่านั้น */
-    .report-signature-container {
-        display: flex !important; 
-        margin-top: 20px !important;
-        page-break-inside: avoid !important; /* ป้องกันกล่องลายเซ็นฉีกแบ่งหน้า */
-    }
+<div id="tab-attendance" class="section active">
+<div class="content">
+  <div class="date-bar">
+    <label>📅 วันที่เช็คชื่อ</label>
+    <input type="date" id="att-date" onchange="renderAttendance()">
+    <span class="save-notice" id="save-notice">✓ อัพเดทข้อมูลลงคลาวด์แล้ว Real-time</span>
+  </div>
+  <div class="summary-grid" id="att-summary"></div>
+  <div class="class-grid" id="class-list"></div>
+</div>
+</div>
 
-    body {
-        background: #fff !important;
+<div id="tab-report" class="section">
+<div class="content">
+  <div class="print-header">
+    <h2>โรงเรียนบ้านรัตนะ</h2>
+    <p id="print-date-label"></p>
+  </div>
+  <div class="action-bar no-print">
+    <div class="date-bar" style="margin:0">
+      <label>📅 วันที่</label>
+      <input type="date" id="rep-date" onchange="renderReport()">
+    </div>
+    <button class="btn btn-secondary" onclick="window.print()">🖨️ พิมพ์รายงาน</button>
+  </div>
+  <div class="report-wrap">
+    <div id="report-content"></div>
+    <div id="chart-container" class="no-print" style="max-width: 100%; margin: 25px auto 0 auto; background: #fff; padding: 15px; border: 1px solid #D3D1C7; border-radius: 10px;">
+      <canvas id="attendanceChart" style="max-height: 280px; width: 100%;"></canvas>
+    </div>
+  </div>
+  <div class="report-signature-container">
+     <div class="signature-col">
+       <p>ลงชื่อ..................................................ผู้ตรวจ</p>
+       <p>(..................................................)</p>
+       <p>ตำแหน่ง ครูประจำชั้น</p>
+     </div>
+     <div class="signature-col">
+       <p>ลงชื่อ..................................................ผู้รับรอง</p>
+       <p>(..................................................)</p>
+       <p>ตำแหน่ง ผู้อำนวยการโรงเรียนบ้านรัตนะ</p>
+     </div>
+  </div>
+</div>
+</div>
+
+<div id="tab-students" class="section">
+<div class="content">
+  <div class="notice">
+    <strong>✨ ระบบออนไลน์พร้อมใช้งาน:</strong> ข้อมูลนักเรียนและการเช็คชื่อทั้งหมดถูกบันทึกบน Firebase Firestore แล้ว คุณครูและผู้บริหารสามารถเปิดใช้งานไฟล์นี้จากมือถือหรือคอมพิวเตอร์พร้อมๆ กันได้ทันที ข้อมูลจะอัพเดทตรงกันแบบ Real-time ครับ
+  </div>
+  <div class="action-bar">
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <select id="class-filter" onchange="renderStudentList()"></select>
+      <span id="stu-count" style="font-size:13px;color:#888780"></span>
+    </div>
+    <button class="btn btn-primary" onclick="openAddModal()">+ เพิ่มนักเรียน</button>
+  </div>
+  <div id="student-list"></div>
+</div>
+</div>
+
+<div id="tab-stats" class="tab-content">
+<div class="content">
+  <div class="card" style="margin-bottom: 20px;">
+    <h3 style="margin-bottom:15px; font-size:16px; color:#2C2C2A; font-weight:600;">📊 ตัวกรองข้อมูลสถิติ</h3>
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap:12px;">
+      <div>
+        <label style="font-size:12px; color:#666; display:block; margin-bottom:4px;">เลือกภาคเรียน</label>
+        <select id="stats-term" onchange="renderStatsTable()" style="width:100%; padding:8px; border:1px solid #D3D1C7; border-radius:6px; font-family:inherit;">
+          <option value="1">ภาคเรียนที่ 1 (มิ.ย. - ต.ค.)</option>
+          <option value="2" selected>ภาคเรียนที่ 2 (พ.ย. - มี.ค.)</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:12px; color:#666; display:block; margin-bottom:4px;">เลือกช่วงเวลา</label>
+        <select id="stats-month" onchange="renderStatsTable()" style="width:100%; padding:8px; border:1px solid #D3D1C7; border-radius:6px; font-family:inherit;">
+          <option value="all" selected>ดูภาพรวมทั้งภาคเรียน</option>
+          <option value="05">พฤษภาคม</option>
+          <option value="06">มิถุนายน</option>
+          <option value="07">กรกฎาคม</option>
+          <option value="08">สิงหาคม</option>
+          <option value="09">กันยายน</option>
+          <option value="10">ตุลาคม</option>
+          <option value="11">พฤศจิกายน</option>
+          <option value="12">ธันวาคม</option>
+          <option value="01">มกราคม</option>
+          <option value="02">กุมภาพันธ์</option>
+          <option value="03">มีนาคม</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:12px; color:#666; display:block; margin-bottom:4px;">กรองระดับชั้น</label>
+        <select id="stats-class" onchange="renderStatsTable()" style="width:100%; padding:8px; border:1px solid #D3D1C7; border-radius:6px; font-family:inherit;">
+          <option value="all">นักเรียนทั้งหมด</option>
+          <option value="อนุบาล 1">อนุบาล 1</option>
+          <option value="อนุบาล 2">อนุบาล 2</option>
+          <option value="อนุบาล 3">อนุบาล 3</option>
+          <option value="ป.1">ป.1</option>
+          <option value="ป.2">ป.2</option>
+          <option value="ป.3">ป.3</option>
+          <option value="ป.4">ป.4</option>
+          <option value="ป.5">ป.5</option>
+          <option value="ป.6">ป.6</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="padding:10px; overflow-x:auto;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin: 5px 10px 12px 10px;">
+      <span id="stats-title-label" style="font-weight:600; font-size:14px; color:#2C2C2A;">รายชื่อสถิติการมาเรียน</span>
+      <button class="btn btn-secondary no-print" onclick="window.print()" style="padding:5px 12px; font-size:12px;">🖨️ พิมพ์สถิตินี้</button>
+    </div>
+    <table class="report-table" style="width:100%; border-collapse:collapse;">
+      <thead>
+        <tr style="background:#F2ECE4;">
+          <th style="width:50px; text-align:center;">ที่</th>
+          <th style="min-width:160px; text-align:left; padding-left:10px;">ชื่อ - นามสกุล</th>
+          <th style="width:80px; text-align:center;">ชั้น</th>
+          <th style="width:80px; text-align:center; color:#0F6E56; background:#E1F5EE;">มา (วัน)</th>
+          <th style="width:80px; text-align:center; color:#185FA5; background:#EBF3FB;">ลา (วัน)</th>
+          <th style="width:80px; text-align:center; color:#A32D2D; background:#FCEBEB;">ขาด (วัน)</th>
+          <th style="width:90px; text-align:center; background:#FAF8F2;">ร้อยละมาเรียน</th>
+        </tr>
+      </thead>
+      <tbody id="stats-table-body"></tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+</div>
+
+<div class="modal-bg" id="student-modal">
+  <div class="modal">
+    <h3 id="modal-title">เพิ่มนักเรียนใหม่</h3>
+    <div class="form-row">
+      <label>ชื่อ-นามสกุล</label>
+      <input type="text" id="s-name" placeholder="เช่น เด็กชาย สมชาย ใจดี">
+    </div>
+    <div class="form-row">
+      <label>เพศ</label>
+      <select id="s-gender" style="width:100%">
+        <option value="ชาย">ชาย</option>
+        <option value="หญิง">หญิง</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label>ชั้น</label>
+      <select id="s-class" style="width:100%"></select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">ยกเลิก</button>
+      <button class="btn btn-primary" onclick="saveStudent()">💾 บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // โหลดหน้าแรกสุดให้แสดงเป็นหน้าเช็คชื่ออัตโนมัติเมื่อเปิดไฟล์
+  document.addEventListener("DOMContentLoaded", function() {
+    const todayLabel = document.getElementById('today-display');
+    if(todayLabel) {
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      todayLabel.textContent = new Date().toLocaleDateString('th-TH', options);
     }
-    .report-wrap {
-        padding: 0 !important;
-        margin: 0 !important;
-    }
-    .report-table {
-        width: 100% !important;
-        margin-bottom: 6px !important;
-    }
-    
-    /* บีบความสูงของตารางทุกตัวเมื่อสั่งพิมพ์ เพื่อลดการใช้พื้นที่ ป้องกันการหลุดหน้า 2 */
-    .report-table th, .report-table td {
-        padding: 3px 4px !important; 
-        font-size: 12px !important;
-    }
-    
-    .absent-detail-section {
-        margin-top: 10px !important;
-    }
-    
-    .signature-col p {
-        font-size: 13.5px !important;
-        color: #000 !important;
-    }
-}
-</style>
+    switchTab('checkin');
+  });
+</script>
 </body>
 </html>
